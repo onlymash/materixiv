@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_navigation"
+    app:startDestination="@+id/navigation_illust">
+
+    <fragment
+        android:id="@+id/navigation_illust"
+        android:name="onlymash.materixiv.ui.module.illust.IllustPagerFragment"
+        android:label="@string/title_illust"
+        tools:layout="@layout/fragment_searchbar_pager" />
+
+    <fragment
+        android:id="@+id/navigation_trend"
+        android:name="onlymash.materixiv.ui.module.trend.TrendPagerFragment"
+        android:label="@string/title_trend"
+        tools:layout="@layout/fragment_searchbar_pager" />
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="onlymash.materixiv.ui.module.user.UserPagerFragment"
+        android:label="@string/title_user"
+        tools:layout="@layout/fragment_searchbar_pager" />
+
+    <fragment
+        android:id="@+id/navigation_novel"
+        android:name="onlymash.materixiv.ui.module.novel.NovelPagerFragment"
+        android:label="@string/title_novel"
+        tools:layout="@layout/fragment_searchbar_pager" />
+
+</navigation>

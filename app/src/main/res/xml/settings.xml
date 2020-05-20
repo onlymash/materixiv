@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:key="screen_settings"
+    app:initialExpandedChildrenCount="4">
+
+    <PreferenceCategory
+        app:key="category_network"
+        app:title="@string/settings_category_network">
+
+        <SwitchPreference
+            app:key="network_doh"
+            app:title="@string/settings_category_network_doh"
+            app:icon="@drawable/ic_enhanced_encryption_outline_24dp"
+            android:defaultValue="true"
+            app:summary="@string/settings_category_network_doh_summary"/>
+
+        <com.takisoft.preferencex.SimpleMenuPreference
+            app:key="network_doh_provider"
+            app:title="@string/settings_category_network_doh_provider"
+            app:icon="@drawable/ic_dns_outline_24dp"
+            app:entries="@array/doh_providers"
+            app:entryValues="@array/doh_providers_value"
+            app:defaultValue="cloudflare"
+            app:useSimpleSummaryProvider="true"/>
+
+        <SwitchPreference
+            app:key="network_fuck_gfw"
+            app:title="@string/settings_category_network_fuck_gfw"
+            app:icon="@drawable/ic_grid_off_outline_24dp"
+            android:defaultValue="true"
+            app:summary="@string/settings_category_network_fuck_gfw_summary"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:key="category_storage"
+        app:title="@string/settings_category_storage">
+
+        <Preference
+            app:icon="@drawable/ic_folder_outline_24dp"
+            app:title="@string/settings_category_storage_folder"
+            app:key="storage_folder"
+            app:summary="@string/settings_category_storage_folder_summary_default"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

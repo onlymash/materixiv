@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="illust_type_entries">
+        <item>@string/illust_recommended</item>
+        <item>@string/illust_following</item>
+        <item>@string/illust_ranking</item>
+    </string-array>
+    <string-array name="user_type_entries">
+        <item>@string/user_recommended</item>
+        <item>@string/user_following</item>
+    </string-array>
+    <string-array name="novel_type_entries">
+        <item>@string/novel_recommended</item>
+        <item>@string/novel_following</item>
+        <item>@string/novel_ranking</item>
+    </string-array>
+    <string-array name="trend_type_entries">
+        <item>@string/trend_illust</item>
+        <item>@string/trend_novel</item>
+    </string-array>
+    <string-array name="user_detail_type_entries">
+        <item>@string/user_detail_bookmarks_illust</item>
+        <item>@string/user_detail_illust</item>
+        <item>@string/user_detail_bookmarks_novel</item>
+        <item>@string/user_detail_novel</item>
+        <item>@string/user_detail_following</item>
+        <item>@string/user_detail_friends</item>
+    </string-array>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+
+    <string-array name="doh_providers">
+        <item>@string/settings_category_network_doh_cloudflare</item>
+        <item>@string/settings_category_network_doh_google</item>
+    </string-array>
+
+    <string-array name="doh_providers_value">
+        <item>cloudflare</item>
+        <item>google</item>
+    </string-array>
+</resources>

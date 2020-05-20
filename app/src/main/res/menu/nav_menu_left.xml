@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/general"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_downloads"
+            android:icon="@drawable/ic_get_app_outline_24dp"
+            android:title="@string/title_downloads" />
+    </group>
+
+    <group
+        android:id="@+id/preference"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_applications_outline_24dp"
+            android:title="@string/title_settings" />
+    </group>
+</menu>

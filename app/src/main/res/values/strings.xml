@@ -1,0 +1,129 @@
+<resources>
+    <string name="app_name">Materixiv</string>
+    <string name="title_illust">Illustration</string>
+    <string name="title_user">User</string>
+    <string name="title_trend">Trend</string>
+    <string name="title_login">Login</string>
+    <string name="title_novel">Novel</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_downloads">Downloads</string>
+
+    <string name="home_logout">Logout</string>
+    <string name="home_logout_tip">Are you sure you want to logout?</string>
+
+    <string name="search_hint">Search</string>
+    <string name="search_hint_illust">Search illustration</string>
+    <string name="search_hint_novel">Search novel</string>
+    <string name="search_hint_user">Search user</string>
+
+    <string name="login_sign_in">Sign in</string>
+    <string name="login_register">Register</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_msg_tip_empty">Username or Password can not be empty.</string>
+
+    <string name="illust_following">Following</string>
+    <string name="illust_recommended">Recommended</string>
+    <string name="illust_ranking">Ranking</string>
+    <string name="illust_detail_views_format">%d views</string>
+    <string name="illust_detail_likes_format">%d likes</string>
+    <string name="illust_detail_related">Related</string>
+    <string name="illust_detail_comments">Comments</string>
+
+    <string name="user_follow">Follow</string>
+    <string name="user_following">Following</string>
+    <string name="user_recommended">Recommended</string>
+    <string name="user_detail_following">Following</string>
+    <string name="user_detail_friends">Friends</string>
+    <string name="user_detail_following_format">%d Following</string>
+    <string name="user_detail_friends_format">%d Friends</string>
+    <string name="user_detail_bookmarks_illust">Illustration ❤️</string>
+    <string name="user_detail_bookmarks_novel">Novel ❤️</string>
+    <string name="user_detail_illust">Illustration️</string>
+    <string name="user_detail_novel">Novel</string>
+
+    <string name="novel_following">Following</string>
+    <string name="novel_recommended">Recommended</string>
+    <string name="novel_ranking">Ranking</string>
+
+    <string name="trend_illust">Illustration</string>
+    <string name="trend_novel">Novel</string>
+
+    <string name="button_retry">Retry</string>
+
+    <string name="sort">Sort</string>
+    <string name="sort_date_desc">Newest</string>
+    <string name="sort_date_asc">Oldest</string>
+    <string name="sort_popular_desc">Popular</string>
+
+    <string name="search_target">Search target</string>
+    <string name="search_target_partial_match_for_tags">Match tags partially</string>
+    <string name="search_target_exact_match_for_tags">Match tags exactly</string>
+    <string name="search_target_title_and_caption">Match title and caption</string>
+
+    <string name="duration">Duration</string>
+    <string name="duration_within_all">All</string>
+    <string name="duration_within_last_day">Last day</string>
+    <string name="duration_within_last_week">Last week</string>
+    <string name="duration_within_last_month">Last month</string>
+    <string name="duration_within_half_year">Half year</string>
+    <string name="duration_within_year">Last year</string>
+
+    <string name="restrict">Restrict</string>
+    <string name="restrict_all">All</string>
+    <string name="restrict_public">Public</string>
+    <string name="restrict_private">Private</string>
+
+    <string name="ranking_date">Date</string>
+    <string name="ranking_mode">Ranking mode</string>
+    <string name="ranking_mode_day">Day</string>
+    <string name="ranking_mode_day_male">Day male</string>
+    <string name="ranking_mode_day_female">Day female</string>
+    <string name="ranking_mode_day_r18">Day R18</string>
+    <string name="ranking_mode_day_male_r18">Day male R18</string>
+    <string name="ranking_mode_day_female_r18">Day female R18</string>
+    <string name="ranking_mode_week">Week</string>
+    <string name="ranking_mode_week_original">Week original</string>
+    <string name="ranking_mode_week_rookie">Week rookie</string>
+    <string name="ranking_mode_week_r18">Week R18</string>
+    <string name="ranking_mode_week_r18g">Week R18G</string>
+    <string name="ranking_mode_month">Month</string>
+
+    <string name="settings_summary_restart">Restart takes effect</string>
+    <string name="settings_category_storage">Storage</string>
+    <string name="settings_category_storage_folder">Storage folder</string>
+    <string name="settings_category_storage_folder_summary_default">Unset</string>
+    <string name="settings_category_network">Network</string>
+    <string name="settings_category_network_doh">DNS over HTTPS</string>
+    <string name="settings_category_network_doh_summary">Encrypted and secure DNS</string>
+    <string name="settings_category_network_doh_provider">DNS Provider</string>
+    <string name="settings_category_network_doh_google">Google</string>
+    <string name="settings_category_network_doh_cloudflare">Cloudflare</string>
+    <string name="settings_category_network_fuck_gfw">Fuck GFW</string>
+    <string name="settings_category_network_fuck_gfw_summary">Prevent blocked by GFW</string>
+
+    <string name="msg_path_denied">Not supported path</string>
+    <string name="msg_download_complete">Download complete</string>
+    <string name="msg_download_failed">Download failed</string>
+
+    <string name="common_download">Download</string>
+    <string name="common_download_all">Download all</string>
+    <string name="common_download_ugoira">Download ugoira</string>
+    <string name="common_share">Share</string>
+    <string name="common_share_via">Via</string>
+    <string name="common_set_as">Set as</string>
+
+    <string name="download_state_running">Running</string>
+    <string name="download_state_blocked">Blocked</string>
+    <string name="download_state_cancelled">Cancelled</string>
+    <string name="download_state_enqueued">Enqueued</string>
+    <string name="download_state_failed">Failed</string>
+    <string name="download_state_succeeded">Succeeded</string>
+    <string name="download_state_unknown">Unknown</string>
+    <string name="download_clear_all">Clear all</string>
+    <string name="download_clear_all_tip">All downloads history will be cleared.</string>
+    <string name="download_ugoira_to_video">Convert to video</string>
+
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+</resources>

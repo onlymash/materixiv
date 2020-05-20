@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_illust"
+        android:icon="@drawable/ic_state_photo_album"
+        android:title="@string/title_illust" />
+
+    <item
+        android:id="@+id/navigation_trend"
+        android:icon="@drawable/ic_state_whatshot"
+        android:title="@string/title_trend" />
+
+    <item
+        android:id="@+id/navigation_user"
+        android:icon="@drawable/ic_state_people"
+        android:title="@string/title_user" />
+
+    <item
+        android:id="@+id/navigation_novel"
+        android:icon="@drawable/ic_state_books"
+        android:title="@string/title_novel" />
+</menu>

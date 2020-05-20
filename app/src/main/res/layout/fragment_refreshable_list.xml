@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <include
+        layout="@layout/layout_refreshable_list"
+        android:id="@+id/refreshable_list"/>
+
+    <include
+        layout="@layout/progress_bar_circular"
+        android:id="@+id/progress_circular" />
+
+    <include
+        layout="@layout/progress_bar_horizontal"
+        android:id="@+id/progress_horizontal" />
+
+</FrameLayout>

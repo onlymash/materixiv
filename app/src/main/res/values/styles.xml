@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Primary">
+        <item name="background">?android:colorBackground</item>
+        <item name="android:background">?android:colorBackground</item>
+    </style>
+
+    <style name="ClickableItemStyle">
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
+    <style name="ClickableItemBorderlessStyle">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="ClickableItemStyleForeground">
+        <item name="android:foreground" tools:targetApi="m">?selectableItemBackground</item>
+    </style>
+
+    <style name="ClickableItemBorderlessStyleForeground">
+        <item name="android:foreground" tools:targetApi="m">?selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="Widget.OverflowMenuStyle" parent="Widget.MaterialComponents.PopupMenu.Overflow">
+        <item name="android:dropDownVerticalOffset">@dimen/popup_drop_down_offset</item>
+        <item name="android:popupElevation">@dimen/elevation_size</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.Button.TextButton.Dialog</item>
+    </style>
+
+    <style name="Widget.Button" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="cornerRadius">@dimen/corner_radius_size</item>
+    </style>
+
+    <style name="Widget.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="MaterialCardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/elevation_size</item>
+        <item name="cardCornerRadius">@dimen/corner_radius_size</item>
+    </style>
+
+    <style name="BookmarkFloatingActionButtonStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="elevation">@dimen/elevation_size</item>
+        <item name="backgroundTint">@color/bookmark_fab_bg_color_selector</item>
+        <item name="tint">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppBarStyle">
+        <item name="android:background">?android:colorBackground</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
+    </style>
+    <style name="AppBarTransparentStyle">
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="TabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabMode">scrollable</item>
+        <item name="tabGravity">center</item>
+        <item name="tabInlineLabel">false</item>
+        <item name="tabIndicatorFullWidth">true</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlayCircle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlayCorner">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/spacing_20dp</item>
+    </style>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_restrict"
+        android:icon="@drawable/ic_visibility_outline_24dp"
+        android:title="@string/restrict"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_restrict_public"
+                android:title="@string/restrict_public"/>
+            <item
+                android:id="@+id/action_restrict_private"
+                android:title="@string/restrict_private"/>
+        </menu>
+    </item>
+</menu>

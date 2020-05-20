@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_sort"
+        android:title="@string/sort"
+        android:icon="@drawable/ic_sort_24dp"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:id="@+id/action_sort_date_desc"
+                android:title="@string/sort_date_desc"/>
+            <item
+                android:id="@+id/action_sort_date_asc"
+                android:title="@string/sort_date_asc"/>
+            <item
+                android:id="@+id/action_sort_popular_desc"
+                android:title="@string/sort_popular_desc"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_search_target"
+        android:title="@string/search_target"
+        android:icon="@drawable/ic_filter_list_24dp"
+        app:showAsAction="never">
+
+        <menu>
+            <item
+                android:id="@+id/action_search_target_partial_match_for_tags"
+                android:title="@string/search_target_partial_match_for_tags"/>
+            <item
+                android:id="@+id/action_search_target_exact_match_for_tags"
+                android:title="@string/search_target_exact_match_for_tags"/>
+            <item
+                android:id="@+id/action_search_target_title_and_caption"
+                android:title="@string/search_target_title_and_caption"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_duration"
+        android:title="@string/duration"
+        android:icon="@drawable/ic_date_range_24dp"
+        app:showAsAction="never">
+
+        <menu>
+            <item
+                android:id="@+id/action_duration_within_all"
+                android:title="@string/duration_within_all"/>
+            <item
+                android:id="@+id/action_duration_within_last_day"
+                android:title="@string/duration_within_last_day"/>
+            <item
+                android:id="@+id/action_duration_within_last_week"
+                android:title="@string/duration_within_last_week"/>
+            <item
+                android:id="@+id/action_duration_within_last_month"
+                android:title="@string/duration_within_last_month"/>
+            <item
+                android:id="@+id/action_duration_within_last_half_year"
+                android:title="@string/duration_within_half_year"/>
+            <item
+                android:id="@+id/action_duration_within_last_year"
+                android:title="@string/duration_within_year"/>
+        </menu>
+    </item>
+</menu>

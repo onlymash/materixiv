@@ -1,0 +1,72 @@
+package onlymash.materixiv.data.repository.common
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import onlymash.materixiv.data.action.Restrict
+import onlymash.materixiv.data.api.PixivAppApi
+import onlymash.materixiv.data.db.dao.IllustDao
+import onlymash.materixiv.data.db.entity.Illustration
+import onlymash.materixiv.data.model.common.UgoiraMetadata
+
+class CommonRepositoryImpl(
+    private val pixivAppApi: PixivAppApi,
+    private val illustDao: IllustDao? = null) : CommonRepository {
+
+    override suspend fun addFollowUser(auth: String, userId: Long, restrict: Restrict): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.addFollowUser(auth = auth, userId = userId, restrict = restrict.value)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    override suspend fun deleteFollowUser(auth: String, userId: Long): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.deleteFollowUser(auth = auth, userId = userId)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    override suspend fun addBookmarkIllust(illust: Illustration, auth: String, restrict: Restrict): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.addBookmarkIllust(auth = auth, illustId = illust.id, restrict = restrict.value)
+                illust.illust.isBookmarked = true
+                illustDao?.update(illust)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    override suspend fun deleteBookmarkIllust(illust: Illustration, auth: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.deleteBookmarkIllust(auth = auth, illustId = illust.id)
+                illust.illust.isBookmarked = false
+                illustDao?.update(illust)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    override suspend fun getUgoiraMetadata(auth: String, illustId: Long): UgoiraMetadata? {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.getUgoiraMetadata(auth, illustId).body()?.ugoiraMetadata
+            } catch (_: Exception) {
+                null
+            }
+        }
+    }
+}

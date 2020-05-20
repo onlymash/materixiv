@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/colorScrimBar"/>
+    <corners android:radius="24dp"/>
+    <padding
+        android:left="1dp"
+        android:right="-3dp"
+        android:top="-5dp"
+        android:bottom="-5dp" />
+    <size
+        android:height="24dp"
+        android:width="24dp"/>
+</shape>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_outline_24dp"
+        android:title="@string/common_share"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_download"
+        android:title="@string/common_download"
+        app:showAsAction="never"/>
+</menu>

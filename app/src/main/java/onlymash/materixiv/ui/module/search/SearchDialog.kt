@@ -10,6 +10,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.DialogFragment
 import onlymash.materixiv.databinding.DialogSearchBinding
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
@@ -40,7 +41,7 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.DialogThemeFullScreen)
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.DialogThemeFullScreen)
         type = arguments?.getInt(Keys.SEARCH_TYPE) ?: Values.SEARCH_TYPE_ILLUST
     }
 

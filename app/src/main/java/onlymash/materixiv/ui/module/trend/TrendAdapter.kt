@@ -55,17 +55,20 @@ class TrendAdapter(private val type: Int) : RecyclerView.Adapter<TrendAdapter.Ba
 
     abstract class BaseTrendViewHolder(private val type: Int, itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        private var tag = ""
+
         abstract val preview: AppCompatImageView
         abstract val nameJp: MaterialTextView
         abstract val nameTranslation: MaterialTextView
 
         init {
             itemView.setOnClickListener {
-                SearchActivity.startSearch(itemView.context, type, nameJp.text.toString())
+                SearchActivity.startSearch(itemView.context, type, tag)
             }
         }
 
         fun bind(trendTag: TrendTag) {
+            tag = trendTag.tag
             nameJp.text = String.format("#%s", trendTag.tag)
             nameTranslation.text = trendTag.translatedName
             val url = when (this) {

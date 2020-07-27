@@ -27,7 +27,7 @@ import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.SharedViewModel
 import onlymash.materixiv.ui.module.common.TokenFragment
 import onlymash.materixiv.widget.LinkTransformationMethod
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
 

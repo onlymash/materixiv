@@ -31,6 +31,7 @@
         <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
         <item name="materialCardViewStyle">@style/MaterialCardViewStyle</item>
         <item name="tabStyle">@style/TabLayoutStyle</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.MaterialComponents.BottomSheetDialog</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

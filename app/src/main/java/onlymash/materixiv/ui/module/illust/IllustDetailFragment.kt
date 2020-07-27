@@ -42,6 +42,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.getWindowHeight
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.base.ViewModelFragment
+import onlymash.materixiv.ui.module.comment.CommentDialog
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.StorageFolderLifecycleObserver
 import onlymash.materixiv.ui.module.search.SearchActivity
@@ -49,7 +50,7 @@ import onlymash.materixiv.ui.module.user.UserDetailActivity
 import onlymash.materixiv.utils.DateUtil
 import onlymash.materixiv.widget.LinkTransformationMethod
 import onlymash.materixiv.worker.DownloadWorker
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
 
@@ -193,6 +194,9 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
                     illustId = illustId
                 )
             }
+        }
+        binding.detailContent.chipComments.setOnClickListener {
+            CommentDialog.create(illustId).show(childFragmentManager, "comment")
         }
     }
 

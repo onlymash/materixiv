@@ -11,7 +11,7 @@ import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.autocomplete.AutocompleteRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.TokenDialog
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 abstract class BaseSearchDialog<T: ViewBinding> : TokenDialog<T>() {
 

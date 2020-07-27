@@ -11,7 +11,7 @@ import onlymash.materixiv.data.repository.token.TokenRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.base.KodeinActivity
 import onlymash.materixiv.ui.module.login.LoginActivity
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 abstract class TokenActivity : KodeinActivity() {
 

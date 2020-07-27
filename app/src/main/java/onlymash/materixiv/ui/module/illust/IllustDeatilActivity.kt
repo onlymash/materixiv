@@ -21,7 +21,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.isNightTheme
 import onlymash.materixiv.ui.module.common.TokenActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 class IllustDeatilActivity : TokenActivity() {
 

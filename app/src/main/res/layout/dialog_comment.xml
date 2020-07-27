@@ -2,10 +2,8 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="onlymash.materixiv.ui.module.comment.CommentActivity">
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_list"
@@ -14,6 +12,22 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/Widget.AppCompat.ProgressBar"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/retry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_retry"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        style="?materialButtonOutlinedStyle"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

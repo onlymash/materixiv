@@ -2,7 +2,7 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    id("com.github.ben-manes.versions") version("0.28.0")
+    id("com.github.ben-manes.versions") version("0.29.0")
 }
 
 buildscript {
@@ -14,7 +14,7 @@ buildscript {
         val kotlinVersion = "1.3.72"
         classpath(kotlin("gradle-plugin", kotlinVersion))
         classpath(kotlin("serialization", kotlinVersion))
-        classpath("com.android.tools.build:gradle:4.0.0-rc01")
+        classpath("com.android.tools.build:gradle:4.0.1")
     }
 }
 

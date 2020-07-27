@@ -24,7 +24,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.getWindowWidth
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 import kotlin.math.roundToInt
 
 class IllustFragment : SharedViewModelFragment() {

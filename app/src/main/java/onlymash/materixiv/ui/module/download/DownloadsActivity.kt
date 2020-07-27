@@ -21,7 +21,7 @@ import onlymash.materixiv.ui.base.KodeinActivity
 import onlymash.materixiv.ui.helper.ItemTouchCallback
 import onlymash.materixiv.ui.helper.ItemTouchHelperCallback
 import onlymash.materixiv.ui.viewbinding.viewBinding
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 class DownloadsActivity : KodeinActivity() {
 

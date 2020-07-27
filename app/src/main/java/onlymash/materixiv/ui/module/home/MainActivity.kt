@@ -22,7 +22,7 @@ import onlymash.materixiv.ui.module.download.DownloadsActivity
 import onlymash.materixiv.ui.module.settings.SettingsActivity
 import onlymash.materixiv.ui.module.user.UserDetailActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 class MainActivity : KodeinActivity() {
 

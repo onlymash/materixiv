@@ -11,11 +11,12 @@ import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.token.TokenRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
-import onlymash.materixiv.ui.base.ViewModelDialog
+import onlymash.materixiv.ui.base.ViewModelBottomSheetDialog
 import onlymash.materixiv.ui.module.login.LoginActivity
 import org.kodein.di.instance
 
-abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
+
+abstract class TokenBottomSheetDialog<T: ViewBinding> : ViewModelBottomSheetDialog<T>() {
 
     private val tokenDao by instance<TokenDao>()
     private val pixivOauthApi by instance<PixivOauthApi>()

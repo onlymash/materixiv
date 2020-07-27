@@ -88,13 +88,13 @@ android {
 }
 
 dependencies {
-    val lifecycleVersion = "2.3.0-alpha02"
-    val navVersion = "2.3.0-alpha06"
-    val coroutinesVersion = "1.3.7"
-    val kodeinVersion = "6.5.5"
-    val okhttpVersion = "4.7.1"
-    val retrofitVersion = "2.8.2"
-    val roomVersion = "2.2.5"
+    val lifecycleVersion = "2.3.0-alpha06"
+    val navVersion = "2.3.0"
+    val coroutinesVersion = "1.3.8"
+    val kodeinVersion = "7.0.0"
+    val okhttpVersion = "4.8.0"
+    val retrofitVersion = "2.9.0"
+    val roomVersion = "2.3.0-alpha02"
     val glideVersion = "4.11.0"
     val markwonVersion = "4.4.0"
 
@@ -102,22 +102,22 @@ dependencies {
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-    implementation("org.kodein.di:kodein-di-erased-jvm:$kodeinVersion")
+    implementation("org.kodein.di:kodein-di-framework-android-core:$kodeinVersion")
     implementation("org.kodein.di:kodein-di-framework-android-x:$kodeinVersion")
 
-    implementation("com.google.android.material:material:1.2.0-alpha06")
+    implementation("com.google.android.material:material:1.3.0-alpha02")
     implementation("androidx.annotation:annotation:1.2.0-alpha01")
-    implementation("androidx.appcompat:appcompat:1.2.0-rc01")
-    implementation("androidx.activity:activity-ktx:1.2.0-alpha04")
-    implementation("androidx.fragment:fragment-ktx:1.3.0-alpha04")
+    implementation("androidx.appcompat:appcompat:1.3.0-alpha01")
+    implementation("androidx.activity:activity-ktx:1.2.0-alpha07")
+    implementation("androidx.fragment:fragment-ktx:1.3.0-alpha07")
     implementation("androidx.preference:preference-ktx:1.1.1")
-    implementation("androidx.core:core-ktx:1.3.0-rc01")
-    implementation("androidx.drawerlayout:drawerlayout:1.1.0-beta01")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha03")
+    implementation("androidx.core:core-ktx:1.5.0-alpha01")
+    implementation("androidx.drawerlayout:drawerlayout:1.1.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha05")
     implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-rc01")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta6")
-    implementation("androidx.browser:browser:1.3.0-alpha01")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta8")
+    implementation("androidx.browser:browser:1.3.0-alpha04")
     implementation("androidx.documentfile:documentfile:1.0.1")
 
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
@@ -129,12 +129,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
     implementation("androidx.paging:paging-runtime-ktx:2.1.2")
-    implementation("androidx.work:work-runtime-ktx:2.4.0-alpha03")
+    implementation("androidx.work:work-runtime-ktx:2.4.0")
 
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
     implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:$okhttpVersion")
-    implementation("com.squareup.okio:okio:2.6.0")
+    implementation("com.squareup.okio:okio:2.7.0")
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.5.0")
 

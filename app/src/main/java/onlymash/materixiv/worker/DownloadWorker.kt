@@ -13,7 +13,7 @@ import androidx.work.*
 import onlymash.materixiv.app.App
 import onlymash.materixiv.data.db.dao.DownloadDao
 import onlymash.materixiv.network.OkHttpDownloader
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 import onlymash.materixiv.R
 import onlymash.materixiv.receiver.DownloadNotificationClickReceiver
 import java.util.concurrent.TimeUnit

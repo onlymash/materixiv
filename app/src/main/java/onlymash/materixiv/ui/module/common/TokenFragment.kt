@@ -14,7 +14,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.base.ViewModelFragment
 import onlymash.materixiv.ui.module.login.LoginActivity
 import onlymash.materixiv.ui.module.login.LoginFragment
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 abstract class TokenFragment<T: ViewBinding> : ViewModelFragment<T>() {
 

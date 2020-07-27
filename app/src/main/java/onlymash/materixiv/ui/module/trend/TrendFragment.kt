@@ -22,7 +22,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.getWindowWidth
 import onlymash.materixiv.ui.module.common.TokenFragment
 import onlymash.materixiv.ui.module.common.SharedViewModel
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 import kotlin.math.roundToInt
 
 class TrendFragment : TokenFragment<FragmentTrendBinding>() {

@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import okhttp3.dnsoverhttps.DnsOverHttps
 import onlymash.materixiv.network.DoHProviders
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 inline fun <reified T> SharedPreferences?.getValue(key: String, default: T): T {
     if (this == null) {

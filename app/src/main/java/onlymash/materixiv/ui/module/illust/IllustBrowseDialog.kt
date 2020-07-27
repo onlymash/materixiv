@@ -40,7 +40,7 @@ import onlymash.materixiv.ui.module.common.StorageFolderLifecycleObserver
 import onlymash.materixiv.ui.viewbinding.viewBinding
 import onlymash.materixiv.widget.DismissFrameLayout
 import onlymash.materixiv.worker.DownloadWorker
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream

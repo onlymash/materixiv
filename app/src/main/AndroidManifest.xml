@@ -14,7 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.module.comment.CommentActivity"></activity>
         <activity android:name=".ui.module.download.DownloadsActivity" />
         <activity
             android:name=".ui.module.settings.SettingsActivity"

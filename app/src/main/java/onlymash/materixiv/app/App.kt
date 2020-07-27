@@ -8,20 +8,15 @@ import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.api.PixivOauthApi
 import onlymash.materixiv.network.pixiv.createApi
 import onlymash.materixiv.data.db.MyDatabase
-import org.kodein.di.Kodein
-import org.kodein.di.KodeinAware
-import org.kodein.di.erased.bind
-import org.kodein.di.erased.instance
-import org.kodein.di.erased.provider
-import org.kodein.di.erased.singleton
+import org.kodein.di.*
 
-class App : Application(), KodeinAware {
+class App : Application(), DIAware {
 
     companion object {
         lateinit var app: App
     }
 
-    override val kodein: Kodein by Kodein.lazy {
+    override val di by DI.lazy {
         bind<Context>() with instance(this@App)
         bind<SharedPreferences>() with provider {
             instance<Context>().getSharedPreferences(Values.PREFERENCE_NAME_SETTINGS, Context.MODE_PRIVATE)

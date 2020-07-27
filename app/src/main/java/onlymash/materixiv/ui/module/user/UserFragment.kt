@@ -20,7 +20,7 @@ import onlymash.materixiv.data.repository.user.UserRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
-import org.kodein.di.erased.instance
+import org.kodein.di.instance
 
 class UserFragment : SharedViewModelFragment() {
 

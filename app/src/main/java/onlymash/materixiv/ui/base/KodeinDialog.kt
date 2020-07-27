@@ -1,10 +1,9 @@
 package onlymash.materixiv.ui.base
 
-import androidx.fragment.app.DialogFragment
-import org.kodein.di.Kodein
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.kodein
+import androidx.appcompat.app.AppCompatDialogFragment
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.di
 
-abstract class KodeinDialog : DialogFragment(), KodeinAware {
-    override val kodein: Kodein by kodein()
+abstract class KodeinDialog : AppCompatDialogFragment(), DIAware {
+    override val di by di()
 }

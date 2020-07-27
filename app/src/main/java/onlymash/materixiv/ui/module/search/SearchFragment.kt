@@ -140,7 +140,7 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
             R.id.action_duration_within_last_month -> sharedViewModel.updateDuration(Duration.LAST_MONTH)
             R.id.action_duration_within_last_half_year -> sharedViewModel.updateDuration(Duration.HALF_YEAR)
             R.id.action_duration_within_last_year -> sharedViewModel.updateDuration(Duration.YEAR)
-            R.id.action_duration_within_all -> sharedViewModel.updateDuration(null)
+            R.id.action_duration_within_all -> sharedViewModel.updateDuration(Duration.ALL)
         }
     }
 }

@@ -155,9 +155,9 @@ class IllustFragment : SharedViewModelFragment() {
                             refresh()
                         }
                     })
-                    duration.observe(viewLifecycleOwner, Observer {
-                        if (_action != null && action.duration != it) {
-                            action.duration = it
+                    duration.observe(viewLifecycleOwner, Observer { d ->
+                        if (_action != null && d != null && action.duration != d) {
+                            action.duration = d
                             refresh()
                         }
                     })

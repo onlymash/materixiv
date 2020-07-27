@@ -36,7 +36,7 @@ class IllustRepositoryImpl(
             scope = scope,
             handleResponse = this::insertResultToDb
         )
-        val refreshTrigger = MutableLiveData<Unit>()
+        val refreshTrigger = MutableLiveData<Unit?>()
         val refreshState = Transformations.switchMap(refreshTrigger) {
             refreshIllusts(action, scope)
         }

@@ -1,5 +1,6 @@
 package onlymash.materixiv.ui.module.illust
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -24,8 +25,11 @@ class IllustDetailPagerViewModel(
     private val _token = MutableLiveData<Token>()
     var token: Token?
         get() = _token.value
+        @SuppressLint("NullSafeMutableLiveData")
         set(value) {
-            _token.value = value
+            if (value != null) {
+                _token.value = value
+            }
         }
 
     val illusts = MediatorLiveData<PagedList<Illustration>>()

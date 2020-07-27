@@ -33,7 +33,7 @@ class SharedViewModel : ViewModel() {
     //search
     val sort = MutableLiveData(Sort.DATE_DESC)
     val searchTarget = MutableLiveData(SearchTarget.PARTIAL_MATCH)
-    val duration = MutableLiveData<Duration?>()
+    val duration = MutableLiveData<Duration>()
 
     var selectedTime: Long
         get() = _selectedTime.value ?: getTime()
@@ -64,7 +64,7 @@ class SharedViewModel : ViewModel() {
         return calendar.timeInMillis
     }
 
-    fun updateDate(date: String?) {
+    fun updateDate(date: String) {
         if (this.date.value != date) {
             this.date.postValue(date)
         }
@@ -88,7 +88,7 @@ class SharedViewModel : ViewModel() {
         }
     }
 
-    fun updateDuration(duration: Duration?) {
+    fun updateDuration(duration: Duration) {
         if (this.duration.value != duration) {
             this.duration.postValue(duration)
         }

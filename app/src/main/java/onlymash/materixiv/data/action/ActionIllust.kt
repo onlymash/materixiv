@@ -22,7 +22,7 @@ data class ActionIllust(
     var endDate: String? = null,
     var bookmarkNum: Int? = null,
     var searchTarget: SearchTarget = SearchTarget.PARTIAL_MATCH,
-    var duration: Duration? = null,
+    var duration: Duration = Duration.ALL,
     //bookmarks
     var destUserId: String = "-1",
     // related
@@ -106,8 +106,8 @@ data class ActionIllust(
             if (bookmarkNum != null) {
                 builder.addQueryParameter("bookmark_num", bookmarkNum.toString())
             }
-            if (duration != null) {
-                builder.addQueryParameter("duration", duration?.value)
+            if (duration != Duration.ALL) {
+                builder.addQueryParameter("duration", duration.value)
             }
             return builder
         }

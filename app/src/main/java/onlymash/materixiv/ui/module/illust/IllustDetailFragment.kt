@@ -232,7 +232,8 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         lifecycleScope.launch {
             val downloads = context.getDownloads(
                 illustId = illust.id,
-                dirName = illust.user.id.toString(),
+                userId = illust.user.id.toString(),
+                dirName = "ugoira",
                 urls = urls,
                 previews = previews
             ) {
@@ -260,7 +261,8 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         lifecycleScope.launch {
             val downloads = context.getDownloads(
                 illustId = illust.id,
-                dirName = illust.user.id.toString(),
+                userId = illust.user.id.toString(),
+                dirName = "image",
                 urls = listOf(url),
                 previews = listOf(preview)
             ) {
@@ -285,7 +287,8 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         lifecycleScope.launch {
             val downloads = context.getDownloads(
                 illustId = illust.id,
-                dirName = illust.user.id.toString(),
+                userId = illust.user.id.toString(),
+                dirName = "image",
                 urls = urls,
                 previews = previews
             ) {

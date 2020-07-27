@@ -197,7 +197,8 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
             val preview = previews[position]
             val downloads = context.getDownloads(
                 illustId = illustId,
-                dirName = userId,
+                userId = userId,
+                dirName = "image",
                 urls = listOf(url),
                 previews = listOf(preview)
             ) {
@@ -219,7 +220,8 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
         lifecycleScope.launch {
             val downloads = context.getDownloads(
                 illustId = illustId,
-                dirName = userId,
+                userId = userId,
+                dirName = "image",
                 urls = urls,
                 previews = previews
             ) {

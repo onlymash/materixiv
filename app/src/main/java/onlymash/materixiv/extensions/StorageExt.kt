@@ -25,6 +25,7 @@ fun Context.getUriForFile(file: File): Uri {
 
 suspend fun Context.getDownloads(
     illustId: Long,
+    userId: String,
     dirName: String,
     urls: List<String>,
     previews: List<String>,
@@ -58,7 +59,7 @@ suspend fun Context.getDownloads(
     return withContext(Dispatchers.IO) {
         val downloads: MutableList<Download> = mutableListOf()
         urls.forEachIndexed { index, url ->
-            val fileName = url.fileName()
+            val fileName = "${userId}_${url.fileName()}"
             val fileId= getDocumentFileId(dirId, fileName)
             val fileUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, fileId)
             val file = DocumentFile.fromSingleUri(this@getDownloads, fileUri)

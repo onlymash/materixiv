@@ -14,7 +14,7 @@ buildscript {
         val kotlinVersion = "1.3.72"
         classpath(kotlin("gradle-plugin", kotlinVersion))
         classpath(kotlin("serialization", kotlinVersion))
-        classpath("com.android.tools.build:gradle:4.0.1")
+        classpath("com.android.tools.build:gradle:4.1.0-beta05")
     }
 }
 

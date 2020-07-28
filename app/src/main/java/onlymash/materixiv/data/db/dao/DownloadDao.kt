@@ -37,4 +37,7 @@ interface DownloadDao {
 
     @Query("DELETE FROM `downloads` WHERE `uid` = :uid")
     fun delete(uid: Long)
+
+    @Delete
+    fun delete(downloads: List<Download>)
 }

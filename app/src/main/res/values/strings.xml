@@ -121,7 +121,10 @@
     <string name="download_state_succeeded">Succeeded</string>
     <string name="download_state_unknown">Unknown</string>
     <string name="download_clear_all">Clear all</string>
-    <string name="download_clear_all_tip">All downloads history will be cleared.</string>
+    <string name="download_clear_completed">Clear completed</string>
+    <string name="download_clear_all_tip">All downloads will be cleared.</string>
+    <string name="download_clear_completed_tip">All completed downloads will be cleared.</string>
+    <string name="download_retry_failed">Retry failed</string>
     <string name="download_ugoira_to_video">Convert to video</string>
 
     <string name="dialog_yes">Yes</string>

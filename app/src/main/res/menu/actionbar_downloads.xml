@@ -3,8 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_retry_failed"
+        android:title="@string/download_retry_failed"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_clear_completed"
+        android:title="@string/download_clear_completed"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/action_clear_all"
-        android:icon="@drawable/ic_clear_all_outline_24dp"
         android:title="@string/download_clear_all"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 </menu>

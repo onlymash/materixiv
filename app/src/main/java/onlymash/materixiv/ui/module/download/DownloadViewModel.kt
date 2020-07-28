@@ -35,4 +35,10 @@ class DownloadViewModel(private val downloadDao: DownloadDao) : ScopeViewModel()
             downloadDao.delete(uid)
         }
     }
+
+    fun deleteCompleted(downloads: List<Download>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            downloadDao.delete(downloads)
+        }
+    }
 }

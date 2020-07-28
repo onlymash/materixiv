@@ -46,6 +46,29 @@ class DownloadsAdapter(
 
     private val items: MutableList<Download> = mutableListOf()
 
+    val completedDownloads: List<Download>
+        get() {
+            val newItems: MutableList<Download> = mutableListOf()
+            items.forEach { download ->
+                if (download.isDone) {
+                    newItems.add(download)
+                }
+            }
+            return newItems
+        }
+
+    val failedDownloadUids: List<Long>
+        get() {
+            val uids: MutableList<Long> = mutableListOf()
+            items.forEach { download ->
+                val workInfo = workManager.getWorkInfosByTag(download.uid.toString()).get()
+                if (!workInfo.isNullOrEmpty() && workInfo.last().state == WorkInfo.State.FAILED) {
+                    uids.add(download.uid)
+                }
+            }
+            return uids
+        }
+
     fun updateData(downloads: List<Download>) {
         val result = DiffUtil.calculateDiff(diffCallback(items, downloads))
         items.clear()

@@ -27,6 +27,7 @@ class DownloadWorker(
         const val INPUT_DATA_KEY = "input_data"
         private const val DOWNLOAD_UID_KEY = "download_uid"
         private const val NOTIFICATION_ELAPSED_TIME = 1000L
+        private const val DELAY = 2L
 
         fun runWork(appContext: Context, downloadUid: Long) {
             val data = workDataOf(DOWNLOAD_UID_KEY to downloadUid)
@@ -45,7 +46,7 @@ class DownloadWorker(
                 .setInputData(data)
                 .setConstraints(constraints)
                 .addTag(uid.toString())
-                .setInitialDelay(2L, TimeUnit.SECONDS)
+                .setInitialDelay(DELAY, TimeUnit.SECONDS)
                 .build()
             WorkManager.getInstance(appContext).enqueue(request)
         }
@@ -57,12 +58,12 @@ class DownloadWorker(
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
-            val requests = downloadUids.mapIndexed { index, uid ->
+            val requests = downloadUids.map { uid ->
                 OneTimeWorkRequestBuilder<DownloadWorker>()
                     .setInputData(workDataOf(DOWNLOAD_UID_KEY to uid))
                     .setConstraints(constraints)
                     .addTag(uid.toString())
-                    .setInitialDelay(index + 1L, TimeUnit.SECONDS)
+                    .setInitialDelay(DELAY, TimeUnit.SECONDS)
                     .build()
             }
             if (requests.size == 1) {

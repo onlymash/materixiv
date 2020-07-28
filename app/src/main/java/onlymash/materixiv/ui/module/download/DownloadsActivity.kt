@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.work.WorkManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ import onlymash.materixiv.ui.base.KodeinActivity
 import onlymash.materixiv.ui.helper.ItemTouchCallback
 import onlymash.materixiv.ui.helper.ItemTouchHelperCallback
 import onlymash.materixiv.ui.viewbinding.viewBinding
+import onlymash.materixiv.worker.DownloadWorker
 import org.kodein.di.instance
 
 class DownloadsActivity : KodeinActivity() {
@@ -77,6 +79,12 @@ class DownloadsActivity : KodeinActivity() {
         when (item.itemId) {
             android.R.id.home -> onBackPressed()
             R.id.action_clear_all -> handleDeleteAll()
+            R.id.action_clear_completed -> handleDeleteCompleted()
+            R.id.action_retry_failed -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    DownloadWorker.runWorks(applicationContext, adapter.failedDownloadUids)
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -94,6 +102,21 @@ class DownloadsActivity : KodeinActivity() {
             .setNegativeButton(R.string.dialog_no, null)
             .create()
             .show()
+    }
+
+    private fun handleDeleteCompleted() {
+        if (isFinishing) {
+            return
+        }
+        AlertDialog.Builder(this)
+                .setTitle(R.string.download_clear_completed)
+                .setMessage(R.string.download_clear_completed_tip)
+                .setPositiveButton(R.string.dialog_yes) { _, _ ->
+                    viewModel.deleteCompleted(adapter.completedDownloads)
+                }
+                .setNegativeButton(R.string.dialog_no, null)
+                .create()
+                .show()
     }
 
     override fun onResume() {

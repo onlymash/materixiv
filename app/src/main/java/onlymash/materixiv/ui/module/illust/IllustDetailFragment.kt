@@ -13,6 +13,8 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.chip.Chip
 import io.noties.markwon.Markwon
@@ -40,6 +42,7 @@ import onlymash.materixiv.databinding.FragmentIllustDetailBinding
 import onlymash.materixiv.extensions.getDownloads
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.getWindowHeight
+import onlymash.materixiv.glide.BlurTransformation
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.base.ViewModelFragment
 import onlymash.materixiv.ui.module.comment.CommentDialog
@@ -315,6 +318,11 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
         val illust = illustCache.illust
         this.illust = illust
+        GlideApp.with(this)
+            .load(illust.imageUrls.medium)
+            .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 3)))
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(binding.imageViewBlur)
         adapter.illust = illust
         val context = context ?: return
         val pageCount = illust.metaPages.size

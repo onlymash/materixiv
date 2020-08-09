@@ -18,7 +18,6 @@ import onlymash.materixiv.data.model.common.Illust
 import onlymash.materixiv.data.model.common.Illust.Companion.originUrls
 import onlymash.materixiv.data.model.common.Illust.Companion.previewUrls
 import onlymash.materixiv.databinding.ItemIllustDetailBinding
-import onlymash.materixiv.glide.BlurTransformation
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.glide.RoundedCornersTransformation
 import onlymash.materixiv.ui.viewbinding.viewBinding
@@ -77,7 +76,6 @@ class IllustDetailAdapter(
         constructor(parent: ViewGroup) : this(parent.viewBinding(ItemIllustDetailBinding::inflate))
 
         private val imageView = binding.imageView
-        private val imageViewBlur = binding.imageViewBlur
         private val progressBar = binding.progressBar
 
         init {
@@ -120,13 +118,8 @@ class IllustDetailAdapter(
                     return false
                 }
             }
-            val glide = GlideApp.with(itemView)
-            glide.load(url)
-                .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 3)))
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageViewBlur)
             val radius = itemView.resources.getDimensionPixelSize(R.dimen.spacing_10dp)
-            glide.load(url)
+            GlideApp.with(itemView).load(url)
                 .apply(RequestOptions.bitmapTransform(RoundedCornersTransformation(radius, 0)))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .addListener(listener)

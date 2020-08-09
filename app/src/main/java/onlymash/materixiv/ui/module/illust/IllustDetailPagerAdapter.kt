@@ -3,50 +3,49 @@ package onlymash.materixiv.ui.module.illust
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.DiffUtil
-import onlymash.materixiv.data.db.entity.Illustration
-import onlymash.materixiv.ui.base.PagedListFragmentStateAdapter
+import onlymash.materixiv.data.db.entity.IllustCache
+import onlymash.materixiv.data.db.entity.Token
+import onlymash.materixiv.ui.base.PagingFragmentStateAdapter
 
 class IllustDetailPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle
-) : PagedListFragmentStateAdapter<Illustration>(fragmentManager, lifecycle, ILLUST_DETAIL_COMPARATOR) {
+) : PagingFragmentStateAdapter<IllustCache>(fragmentManager, lifecycle, ILLUST_DETAIL_COMPARATOR) {
 
     companion object {
-        val ILLUST_DETAIL_COMPARATOR = object : DiffUtil.ItemCallback<Illustration>() {
-            override fun areContentsTheSame(oldItem: Illustration, newItem: Illustration): Boolean {
+        val ILLUST_DETAIL_COMPARATOR = object : DiffUtil.ItemCallback<IllustCache>() {
+            override fun areContentsTheSame(oldItem: IllustCache, newItem: IllustCache): Boolean {
                 return oldItem.id == newItem.id
             }
-            override fun areItemsTheSame(oldItem: Illustration, newItem: Illustration): Boolean {
+            override fun areItemsTheSame(oldItem: IllustCache, newItem: IllustCache): Boolean {
                 return oldItem.id == newItem.id
             }
         }
     }
 
-    private var tokenUid: Long = 0
-    private var auth: String = ""
-    private var query: String = ""
+    private var _token: Token? = null
+    var token: Token
+        get() = _token!!
+        set(value) {
+            _token = value
+        }
+
+    var query: String = ""
 
     override fun createFragment(position: Int): Fragment {
         return IllustDetailFragment.create(
-            tokenUid = tokenUid,
-            auth = auth,
+            tokenUid = token.uid,
+            auth = token.auth,
             id = getItem(position)?.id ?: 0,
             query = query
         )
     }
 
-    fun submitData(
-        lists: PagedList<Illustration>,
-        tokenUid: Long,
-        auth: String,
-        query: String,
-        commitCallback: () -> Unit
-    ) {
-        this.tokenUid = tokenUid
-        this.auth = auth
-        this.query = query
-        submitList(lists, Runnable { commitCallback.invoke() })
+    override fun getItemCount(): Int {
+        if (_token == null) {
+            return 0
+        }
+        return super.getItemCount()
     }
 }

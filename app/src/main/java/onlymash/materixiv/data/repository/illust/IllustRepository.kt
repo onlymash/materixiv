@@ -1,11 +1,11 @@
 package onlymash.materixiv.data.repository.illust
 
-import kotlinx.coroutines.CoroutineScope
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import onlymash.materixiv.data.action.ActionIllust
-import onlymash.materixiv.data.db.entity.Illustration
-import onlymash.materixiv.data.repository.Listing
+import onlymash.materixiv.data.db.entity.IllustCache
 
 interface IllustRepository {
 
-    fun getIllusts(action: ActionIllust, scope: CoroutineScope): Listing<Illustration>
+    fun getIllusts(action: ActionIllust): Flow<PagingData<IllustCache>>
 }

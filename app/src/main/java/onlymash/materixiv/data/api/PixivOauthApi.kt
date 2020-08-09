@@ -2,7 +2,6 @@ package onlymash.materixiv.data.api
 
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.model.TokenResponse
-import retrofit2.Response
 import retrofit2.http.*
 
 interface PixivOauthApi {
@@ -20,7 +19,7 @@ interface PixivOauthApi {
             "include_policy" to "1",
             "device_token" to "pixiv"
         )
-    ): Response<TokenResponse>
+    ): TokenResponse
 
     @FormUrlEncoded
     @POST("auth/token")
@@ -34,5 +33,5 @@ interface PixivOauthApi {
             "get_secure_url" to "1",
             "include_policy" to "1"
         )
-    ): Response<TokenResponse>
+    ): TokenResponse
 }

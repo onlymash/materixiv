@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import kotlinx.serialization.json.Json
 import onlymash.materixiv.data.model.TokenResponse
 import onlymash.materixiv.data.model.common.Illust
+import onlymash.materixiv.data.model.common.UserPreview
 
 class MyConverters {
 
@@ -22,4 +23,12 @@ class MyConverters {
     @TypeConverter
     fun stringToIllust(json: String): Illust =
         Json.parse(Illust.serializer(), json)
+
+    @TypeConverter
+    fun userPreviewToString(userPreview: UserPreview): String =
+        Json.stringify(UserPreview.serializer(), userPreview)
+
+    @TypeConverter
+    fun stringToUserPreview(json: String): UserPreview =
+        Json.parse(UserPreview.serializer(), json)
 }

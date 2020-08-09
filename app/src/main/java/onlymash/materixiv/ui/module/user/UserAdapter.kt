@@ -2,42 +2,41 @@ package onlymash.materixiv.ui.module.user
 
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import onlymash.materixiv.R
 import onlymash.materixiv.data.action.Restrict
-import onlymash.materixiv.data.model.common.UserPreview
+import onlymash.materixiv.data.db.entity.UserCache
 import onlymash.materixiv.databinding.ItemUserBinding
 import onlymash.materixiv.glide.GlideApp
-import onlymash.materixiv.ui.base.FooterPagedAdapter
 import onlymash.materixiv.ui.module.illust.IllustDeatilActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
 class UserAdapter(
-    private val followCallback: (Long, Boolean, Restrict) -> Unit,
-    retryCallback: () -> Unit
-) : FooterPagedAdapter<UserPreview>(USER_PREVIEW_COMPARATOR, retryCallback) {
+    private val followCallback: (UserCache, Restrict) -> Unit
+) : PagingDataAdapter<UserCache, UserAdapter.UserViewHolder>(USER_PREVIEW_COMPARATOR) {
     companion object {
-        val USER_PREVIEW_COMPARATOR = object : DiffUtil.ItemCallback<UserPreview>() {
+        val USER_PREVIEW_COMPARATOR = object : DiffUtil.ItemCallback<UserCache>() {
             override fun areContentsTheSame(
-                oldItem: UserPreview,
-                newItem: UserPreview
-            ): Boolean = oldItem == newItem
+                oldItem: UserCache,
+                newItem: UserCache
+            ): Boolean = oldItem.id == newItem.id && oldItem.userPreview.user.isFollowed == newItem.userPreview.user.isFollowed
 
             override fun areItemsTheSame(
-                oldItem: UserPreview,
-                newItem: UserPreview
-            ): Boolean = oldItem.user.id == newItem.user.id
+                oldItem: UserCache,
+                newItem: UserCache
+            ): Boolean = oldItem.id == newItem.id
         }
     }
 
-    override fun onCreateItemViewHolder(
-        parent: ViewGroup,
-        viewType: Int): RecyclerView.ViewHolder = UserViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        return UserViewHolder(parent)
+    }
 
-    override fun onBindItemViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as UserViewHolder).bind(getSafeItem(position))
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
     inner class UserViewHolder(binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -50,50 +49,47 @@ class UserAdapter(
         private val avatar = binding.avatar
         private val name = binding.name
         private val follow = binding.follow
-        private var userPreview: UserPreview? = null
+        private var userCache: UserCache? = null
 
         init {
             itemView.setOnClickListener {
-                userPreview?.user?.id?.let { userId ->
+                userCache?.userPreview?.user?.id?.let { userId ->
                     UserDetailActivity.start(itemView.context, userId.toString())
                 }
             }
             preview0.setOnClickListener {
-                userPreview?.illusts?.let { illusts ->
+                userCache?.userPreview?.illusts?.let { illusts ->
                     if (illusts.isNotEmpty()) {
                         IllustDeatilActivity.start(itemView.context, illusts[0].id)
                     }
                 }
             }
             preview1.setOnClickListener {
-                userPreview?.illusts?.let { illusts ->
+                userCache?.userPreview?.illusts?.let { illusts ->
                     if (illusts.size >= 2) {
                         IllustDeatilActivity.start(itemView.context, illusts[1].id)
                     }
                 }
             }
             preview2.setOnClickListener {
-                userPreview?.illusts?.let { illusts ->
+                userCache?.userPreview?.illusts?.let { illusts ->
                     if (illusts.size >= 3) {
                         IllustDeatilActivity.start(itemView.context, illusts[2].id)
                     }
                 }
             }
             follow.setOnClickListener {
-                userPreview?.let {
-                    val isFollowed = !it.user.isFollowed
-                    val userId = it.user.id
-                    setFollowState(isFollowed)
-                    followCallback.invoke(userId, isFollowed, Restrict.PUBLIC)
+                userCache?.let { user ->
+                    setFollowState(!user.userPreview.user.isFollowed)
+                    followCallback.invoke(user, Restrict.PUBLIC)
                 }
             }
             follow.setOnLongClickListener {
-                userPreview?.let {
-                    val isFollowed = !it.user.isFollowed
+                userCache?.let { user ->
+                    val isFollowed = !user.userPreview.user.isFollowed
                     if (isFollowed) {
-                        val userId = it.user.id
                         setFollowState(isFollowed)
-                        followCallback.invoke(userId, isFollowed, Restrict.PRIVATE)
+                        followCallback.invoke(user, Restrict.PRIVATE)
                     }
                 }
                 true
@@ -110,8 +106,9 @@ class UserAdapter(
             }
         }
 
-        fun bind(preview: UserPreview?) {
-            userPreview = preview ?: return
+        fun bind(userCache: UserCache?) {
+            this.userCache = userCache ?: return
+            val preview = userCache.userPreview
             val context = itemView.context
             name.text = preview.user.name
             setFollowState(preview.user.isFollowed)

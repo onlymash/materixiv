@@ -1,9 +1,11 @@
 package onlymash.materixiv.data.repository.comment
 
-import kotlinx.coroutines.CoroutineScope
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+import onlymash.materixiv.data.action.ActionComment
 import onlymash.materixiv.data.model.common.Comment
-import onlymash.materixiv.data.repository.Listing
 
 interface CommentRepository {
-    fun getComments(scope: CoroutineScope, auth: String, illustId: Long): Listing<Comment>
+
+    suspend fun getComments(action: ActionComment): Flow<PagingData<Comment>>
 }

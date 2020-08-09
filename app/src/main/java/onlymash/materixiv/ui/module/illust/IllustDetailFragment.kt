@@ -29,8 +29,8 @@ import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.dao.DownloadDao
-import onlymash.materixiv.data.db.dao.IllustDao
-import onlymash.materixiv.data.db.entity.Illustration
+import onlymash.materixiv.data.db.dao.IllustCacheDao
+import onlymash.materixiv.data.db.entity.IllustCache
 import onlymash.materixiv.data.model.common.Illust
 import onlymash.materixiv.data.model.common.Illust.Companion.originUrls
 import onlymash.materixiv.data.model.common.Illust.Companion.previewUrls
@@ -72,7 +72,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
 
     private val sp by instance<SharedPreferences>()
     private val downloadDao by instance<DownloadDao>()
-    private val illustDao by instance<IllustDao>()
+    private val illustDao by instance<IllustCacheDao>()
     private val pixivAppApi by instance<PixivAppApi>()
 
     private var auth: String = ""
@@ -111,7 +111,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
     override fun onCreateViewModel() {
         illustDeatilViewModel = getViewModel(
             IllustDetailViewModel(
-                illustDao = illustDao,
+                illustCacheDao = illustDao,
                 tokenUid = tokenUid,
                 query = query,
                 illustId = illustId
@@ -308,12 +308,12 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         UserDetailActivity.start(context, userId.toString())
     }
 
-    private fun bindData(illustration: Illustration) {
-        if (this.illust?.id == illustration.id) {
-            binding.fabBookmark.isActivated = illustration.illust.isBookmarked
+    private fun bindData(illustCache: IllustCache) {
+        if (this.illust?.id == illustCache.id) {
+            binding.fabBookmark.isActivated = illustCache.illust.isBookmarked
             return
         }
-        val illust = illustration.illust
+        val illust = illustCache.illust
         this.illust = illust
         adapter.illust = illust
         val context = context ?: return
@@ -333,11 +333,11 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
         binding.fabBookmark.isActivated = illust.isBookmarked
         binding.fabBookmark.setOnClickListener {
-            bookmark(!binding.fabBookmark.isActivated, illustration)
+            bookmark(!binding.fabBookmark.isActivated, illustCache)
         }
         binding.fabBookmark.setOnLongClickListener {
             if (!binding.fabBookmark.isActivated) {
-                bookmark(true, illustration, Restrict.PRIVATE)
+                bookmark(true, illustCache, Restrict.PRIVATE)
             }
             true
         }
@@ -382,11 +382,11 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
     }
 
-    private fun bookmark(isAdd: Boolean, illustration: Illustration, restrict: Restrict = Restrict.PUBLIC) {
+    private fun bookmark(isAdd: Boolean, illustCache: IllustCache, restrict: Restrict = Restrict.PUBLIC) {
         if (isAdd) {
-            commonViewModel.addBookmarkIllust(illustration, auth, restrict)
+            commonViewModel.addBookmarkIllust(illustCache, auth, restrict)
         } else {
-            commonViewModel.deleteBookmarkIllust(illustration, auth)
+            commonViewModel.deleteBookmarkIllust(illustCache, auth)
         }
     }
 }

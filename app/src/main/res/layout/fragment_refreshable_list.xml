@@ -13,6 +13,10 @@
         android:id="@+id/progress_circular" />
 
     <include
+        layout="@layout/button_retry"
+        android:id="@+id/button_retry" />
+
+    <include
         layout="@layout/progress_bar_horizontal"
         android:id="@+id/progress_horizontal" />
 

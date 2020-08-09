@@ -5,6 +5,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import onlymash.materixiv.app.Keys
@@ -12,15 +14,13 @@ import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.ActionNovel
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
-import onlymash.materixiv.data.repository.isRefreshToken
-import onlymash.materixiv.data.repository.isRunning
 import onlymash.materixiv.data.repository.novel.NovelRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
 import org.kodein.di.instance
+import retrofit2.HttpException
 
 class NovelFragment : SharedViewModelFragment() {
 
@@ -65,33 +65,18 @@ class NovelFragment : SharedViewModelFragment() {
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onBaseViewCreated(view, savedInstanceState)
-        novelAdapter = NovelAdapter(
-            retryCallback = {
-                novelViewModel.retry()
-            }
-        )
+        novelAdapter = NovelAdapter()
         list.apply {
             updatePadding(left = 0, right = 0)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = novelAdapter
         }
-        novelViewModel.novels.observe(viewLifecycleOwner, Observer { novels ->
-            if (novels != null) {
-                novelAdapter.submitList(novels)
-                progressBarCircular.isVisible = novels.size == 0
-            }
+        novelAdapter.addLoadStateListener { handleNetworkState(it) }
+        novelViewModel.novels.observe(viewLifecycleOwner, Observer {
+            novelAdapter.submitData(lifecycle, it)
         })
-        novelViewModel.refreshState.observe(viewLifecycleOwner, Observer {
-            if (!it.isRunning()) {
-                swipeRefreshLayout.isRefreshing = false
-            }
-        })
-        novelViewModel.networkState.observe(viewLifecycleOwner, Observer {
-            handleNetworkState(it)
-        })
-        swipeRefreshLayout.setOnRefreshListener {
-            novelViewModel.refresh()
-        }
+        swipeRefreshLayout.setOnRefreshListener { novelAdapter.refresh() }
+        retryButton.setOnClickListener { novelAdapter.retry() }
         when (type) {
             Values.PAGE_TYPE_FOLLOWING -> {
                 sharedViewModel.restrict.observe(viewLifecycleOwner, Observer {
@@ -120,27 +105,52 @@ class NovelFragment : SharedViewModelFragment() {
 
     private fun refresh() {
         novelViewModel.show(action)
-        novelViewModel.refresh()
+        novelAdapter.refresh()
     }
 
-    private fun handleNetworkState(state: NetworkState?) {
-        if (!state.isRunning()) {
-            swipeRefreshLayout.isRefreshing = false
-        }
-        novelAdapter.setNetworkState(state)
-        val isRunning = state.isRunning()
-        val isRefreshToken = if (isRunning) false else state.isRefreshToken()
-        progressBarCircular.isVisible = (isRefreshToken || isRunning) && novelAdapter.itemCount == 0
-        progressBarHorizontal.isVisible = isRunning
-        if (isRefreshToken) {
-            val token = sharedViewModel.token.value
-            if (token != null) {
-                refreshToken(
-                    uid = token.uid,
-                    refreshToken = token.data.refreshToken,
-                    deviceToken = token.data.deviceToken
-                )
+    private fun handleNetworkState(loadStates: CombinedLoadStates) {
+        val refresh = loadStates.refresh
+        val append = loadStates.append
+        val isEmptyList = novelAdapter.itemCount == 0
+        if (refresh is LoadState.Error || append is LoadState.Error) {
+            val error = if (refresh is LoadState.Error) {
+                refresh.error
+            } else {
+                (append as LoadState.Error).error
             }
+            handleException(error, isEmptyList)
+        } else {
+            retryButton.isVisible = false
+            swipeRefreshLayout.isVisible = true
+        }
+        val isRefreshing = refresh is LoadState.Loading
+        setSwipeRefreshing(isRefreshing && !isEmptyList)
+        progressBarCircular.isVisible = isRefreshing && isEmptyList
+        progressBarHorizontal.isVisible = append is LoadState.Loading
+    }
+
+    private fun setSwipeRefreshing(isRefreshing: Boolean) {
+        if (swipeRefreshLayout.isRefreshing != isRefreshing) {
+            swipeRefreshLayout.isRefreshing = isRefreshing
+        }
+    }
+
+    private fun handleException(error: Throwable, isEmptyList: Boolean) {
+        val token = sharedViewModel.token.value
+        if (token != null && error is HttpException && error.code() == 400) {
+            retryButton.isVisible = false
+            swipeRefreshLayout.isVisible = true
+            setSwipeRefreshing(!isEmptyList)
+            progressBarCircular.isVisible = isEmptyList
+            refreshToken(
+                uid = token.uid,
+                refreshToken = token.data.refreshToken,
+                deviceToken = token.data.deviceToken
+            )
+        } else {
+            swipeRefreshLayout.isVisible = false
+            progressBarCircular.isVisible = false
+            retryButton.isVisible = true
         }
     }
 

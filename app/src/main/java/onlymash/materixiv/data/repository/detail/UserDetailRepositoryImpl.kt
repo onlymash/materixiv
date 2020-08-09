@@ -10,7 +10,7 @@ class UserDetailRepositoryImpl(private val pixivAppApi: PixivAppApi) : UserDetai
     override suspend fun getUserDetail(auth: String, userId: String): UserDetailResponse? {
         return withContext(Dispatchers.IO) {
             try {
-                pixivAppApi.getUserDetail(auth, userId).body()
+                pixivAppApi.getUserDetail(auth, userId)
             } catch (_: Exception) {
                 null
             }

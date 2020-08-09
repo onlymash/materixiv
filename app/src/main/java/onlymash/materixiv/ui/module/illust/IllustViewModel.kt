@@ -1,43 +1,33 @@
 package onlymash.materixiv.ui.module.illust
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import onlymash.materixiv.data.action.ActionIllust
+import onlymash.materixiv.data.db.entity.IllustCache
 import onlymash.materixiv.data.repository.illust.IllustRepository
 import onlymash.materixiv.ui.base.ScopeViewModel
 
 class IllustViewModel(private val repo: IllustRepository) : ScopeViewModel() {
 
-    private val _action: MutableLiveData<ActionIllust?> = MutableLiveData()
+    private val _action = MutableLiveData<ActionIllust>()
+    private val _clearListCh = Channel<Unit>(Channel.CONFLATED)
 
-    private val _result = Transformations.map(_action) { action ->
-        if (action != null) {
-            repo.getIllusts(action, viewModelScope)
-        } else {
-            null
-        }
-    }
+    val illusts = flowOf(
+        _clearListCh.consumeAsFlow().map { PagingData.empty<IllustCache>() },
+        _action.asFlow().flatMapLatest { repo.getIllusts(it) }
+    )
+        .flattenMerge(2)
+        .cachedIn(viewModelScope)
+        .asLiveData()
 
-    val illusts = Transformations.switchMap(_result) { it?.pagedList }
+    private fun shouldShow(action: ActionIllust) = _action.value != action
 
-    val refreshState = Transformations.switchMap(_result) { it?.refreshState }
-
-    val networkState = Transformations.switchMap(_result) { it?.networkState }
-
-    fun show(action: ActionIllust): Boolean {
-        if (_action.value == action) {
-            return false
-        }
+    fun show(action: ActionIllust) {
+        if (!shouldShow(action)) return
+        _clearListCh.offer(Unit)
         _action.value = action
-        return true
-    }
-
-    fun refresh() {
-        _result.value?.refresh?.invoke()
-    }
-
-    fun retry() {
-        _result.value?.retry?.invoke()
     }
 }

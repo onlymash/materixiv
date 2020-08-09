@@ -12,7 +12,7 @@ class AutocompleteRepositoryImpl(private val api: PixivAppApi) : AutocompleteRep
     override suspend fun getTags(auth: String, word: String?): List<Tag>? {
         return withContext(Dispatchers.IO) {
             try {
-                api.autocomplete(auth, word).body()?.tags
+                api.autocomplete(auth, word).tags
             } catch (_: Exception) {
                 null
             }
@@ -25,7 +25,7 @@ class AutocompleteRepositoryImpl(private val api: PixivAppApi) : AutocompleteRep
         }
         return withContext(Dispatchers.IO) {
             try {
-                api.getUsers(auth, getSearchUserUrl(word)).body()?.userPreviews?.map { it.user.name }
+                api.getUsers(auth, getSearchUserUrl(word)).userPreviews.map { it.user.name }
             } catch (_: Exception) {
                 null
             }

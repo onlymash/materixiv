@@ -8,8 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.launch
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
@@ -103,12 +105,6 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
             true
         }
         binding.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
-        commonViewModel.followState.observe(viewLifecycleOwner, Observer { isFollowed ->
-            if (isFollowed != null) {
-                userDetail?.user?.isFollowed = isFollowed
-                userDetailViewModel.updateFollowState(isFollowed)
-            }
-        })
         val clickListener = View.OnClickListener { handleFollow(it, Restrict.PUBLIC) }
         val longClickListener = View.OnLongClickListener {
             handleFollow(it, Restrict.PRIVATE)
@@ -138,10 +134,16 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
         val user = userDetail?.user ?: return
         val isFollow = !user.isFollowed
         updateFollowState(isFollow)
-        if (isFollow) {
-            commonViewModel.addFollowUser(auth, user.id, restrict)
-        } else {
-            commonViewModel.deleteFollowUser(auth, user.id)
+        lifecycleScope.launch {
+            val success = if (isFollow) {
+                commonViewModel.addFollowUser(auth, user.id, restrict)
+            } else {
+                commonViewModel.deleteFollowUser(auth, user.id)
+            }
+            if (success) {
+                userDetail?.user?.isFollowed = isFollow
+                userDetailViewModel.updateFollowState(isFollow)
+            }
         }
     }
 

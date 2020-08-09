@@ -4,7 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import onlymash.materixiv.R
@@ -15,16 +17,14 @@ import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.MyDatabase
 import onlymash.materixiv.data.db.entity.Token
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
 import onlymash.materixiv.data.repository.illust.IllustRepositoryImpl
-import onlymash.materixiv.data.repository.isRefreshToken
-import onlymash.materixiv.data.repository.isRunning
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.getWindowWidth
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
 import org.kodein.di.instance
+import retrofit2.HttpException
 import kotlin.math.roundToInt
 
 class IllustFragment : SharedViewModelFragment() {
@@ -78,44 +78,29 @@ class IllustFragment : SharedViewModelFragment() {
     override fun onCreateViewModel() {
         super.onCreateViewModel()
         commonViewModel = getViewModel(CommonViewModel(CommonRepositoryImpl(pixivAppApi, db.illustDao())))
-        illustViewModel = getViewModel(IllustViewModel(IllustRepositoryImpl(db, pixivAppApi)))
+        illustViewModel = getViewModel(IllustViewModel(IllustRepositoryImpl(pixivAppApi, db)))
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onBaseViewCreated(view, savedInstanceState)
-        illustAdapter = IllustAdapter(
-            bookmarkCallback = { isAdd, illust ->
-                if (isAdd) {
-                    commonViewModel.addBookmarkIllust(illust, action.token.auth, Restrict.PUBLIC)
-                } else {
-                    commonViewModel.deleteBookmarkIllust(illust, action.token.auth)
-                }
-            },
-            retryCallback = {
-                illustViewModel.retry()
+        illustAdapter = IllustAdapter { isAdd, illust ->
+            if (isAdd) {
+                commonViewModel.addBookmarkIllust(illust, action.token.auth, Restrict.PUBLIC)
+            } else {
+                commonViewModel.deleteBookmarkIllust(illust, action.token.auth)
             }
-        )
+        }
         list.apply {
             layoutManager = StaggeredGridLayoutManager(spanCount, RecyclerView.VERTICAL)
             adapter = illustAdapter
         }
-        illustViewModel.illusts.observe(viewLifecycleOwner, Observer { illusts ->
-            if (illusts != null) {
-                illustAdapter.submitList(illusts)
-                progressBarCircular.isVisible = illusts.size == 0
-            }
+        illustAdapter.addLoadStateListener { handleNetworkState(it) }
+        illustViewModel.illusts.observe(viewLifecycleOwner, Observer {
+            illustAdapter.submitData(lifecycle, it)
+            progressBarCircular.isVisible = illustAdapter.itemCount == 0
         })
-        illustViewModel.refreshState.observe(viewLifecycleOwner, Observer {
-            if (!it.isRunning()) {
-                swipeRefreshLayout.isRefreshing = false
-            }
-        })
-        illustViewModel.networkState.observe(viewLifecycleOwner, Observer {
-            handleNetworkState(it)
-        })
-        swipeRefreshLayout.setOnRefreshListener {
-            illustViewModel.refresh()
-        }
+        swipeRefreshLayout.setOnRefreshListener { illustAdapter.refresh() }
+        retryButton.setOnClickListener { illustAdapter.retry() }
         when (type) {
             Values.PAGE_TYPE_FOLLOWING, Values.PAGE_TYPE_BOOKMARKS -> {
                 sharedViewModel.restrict.observe(viewLifecycleOwner, Observer {
@@ -167,23 +152,52 @@ class IllustFragment : SharedViewModelFragment() {
     }
 
     private fun refresh() {
-        swipeRefreshLayout.isRefreshing = true
         illustViewModel.show(action)
-        illustViewModel.refresh()
+        illustAdapter.refresh()
     }
 
-    private fun handleNetworkState(state: NetworkState?) {
-        illustAdapter.setNetworkState(state)
-        val isRunning = state.isRunning()
-        val isRefreshToken = if (isRunning) false else state.isRefreshToken()
-        progressBarCircular.isVisible = (isRefreshToken || isRunning) && illustAdapter.itemCount == 0
-        progressBarHorizontal.isVisible = isRunning
-        if (isRefreshToken) {
+    private fun handleNetworkState(loadStates: CombinedLoadStates) {
+        val refresh = loadStates.refresh
+        val append = loadStates.append
+        val isEmptyList = illustAdapter.itemCount == 0
+        if (refresh is LoadState.Error || append is LoadState.Error) {
+            val error = if (refresh is LoadState.Error) {
+                refresh.error
+            } else {
+                (append as LoadState.Error).error
+            }
+            handleException(error, isEmptyList)
+        } else {
+            retryButton.isVisible = false
+            swipeRefreshLayout.isVisible = true
+        }
+        val isRefreshing = refresh is LoadState.Loading
+        setSwipeRefreshing(isRefreshing && !isEmptyList)
+        progressBarCircular.isVisible = isRefreshing && isEmptyList
+        progressBarHorizontal.isVisible = append is LoadState.Loading
+    }
+
+    private fun setSwipeRefreshing(isRefreshing: Boolean) {
+        if (swipeRefreshLayout.isRefreshing != isRefreshing) {
+            swipeRefreshLayout.isRefreshing = isRefreshing
+        }
+    }
+
+    private fun handleException(error: Throwable, isEmptyList: Boolean) {
+        if (error is HttpException && error.code() == 400) {
+            retryButton.isVisible = false
+            swipeRefreshLayout.isVisible = true
+            setSwipeRefreshing(!isEmptyList)
+            progressBarCircular.isVisible = isEmptyList
             refreshToken(
                 uid = action.token.uid,
                 refreshToken = action.token.data.refreshToken,
                 deviceToken = action.token.data.deviceToken
             )
+        } else {
+            swipeRefreshLayout.isVisible = false
+            progressBarCircular.isVisible = false
+            retryButton.isVisible = true
         }
     }
 

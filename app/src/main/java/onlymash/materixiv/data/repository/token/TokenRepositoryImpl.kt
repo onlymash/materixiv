@@ -23,18 +23,13 @@ class TokenRepositoryImpl(private val api: PixivOauthApi,
             try {
                 val time = System.currentTimeMillis()
                 val response = api.login(username = username, password = password)
-                val tokenResponse = response.body()
-                if (response.isSuccessful && tokenResponse != null) {
-                    val token = Token(
-                        time = time,
-                        userId = tokenResponse.data.profile.id,
-                        data = tokenResponse.data
-                    )
-                    dao.insert(token)
-                    NetResult.Success(true)
-                } else {
-                    NetResult.HttpCode(response.code())
-                }
+                val token = Token(
+                    time = time,
+                    userId = response.data.profile.id,
+                    data = response.data
+                )
+                dao.insert(token)
+                NetResult.Success(true)
             } catch (e: Exception) {
                 if (e is HttpException) {
                     NetResult.HttpCode(e.code())
@@ -50,19 +45,14 @@ class TokenRepositoryImpl(private val api: PixivOauthApi,
             try {
                 val time = System.currentTimeMillis()
                 val response = api.refreshToken(refreshToken, deviceToken)
-                val tokenResponse = response.body()
-                if (response.isSuccessful && tokenResponse != null) {
-                    val token = Token(
-                        uid = uid,
-                        time = time,
-                        userId = tokenResponse.data.profile.id,
-                        data = tokenResponse.data
-                    )
-                    dao.update(token)
-                    NetResult.Success(true)
-                } else {
-                    NetResult.HttpCode(response.code())
-                }
+                val token = Token(
+                    uid = uid,
+                    time = time,
+                    userId = response.data.profile.id,
+                    data = response.data
+                )
+                dao.update(token)
+                NetResult.Success(true)
             } catch (e: Exception) {
                 if (e is HttpException) {
                     NetResult.HttpCode(e.code())

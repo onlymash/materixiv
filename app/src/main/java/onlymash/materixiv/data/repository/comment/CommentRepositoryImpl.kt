@@ -1,45 +1,19 @@
 package onlymash.materixiv.data.repository.comment
 
-import androidx.lifecycle.Transformations
-import androidx.paging.Config
-import androidx.paging.toLiveData
-import kotlinx.coroutines.CoroutineScope
+import androidx.paging.*
+import kotlinx.coroutines.flow.Flow
+import onlymash.materixiv.data.action.ActionComment
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.model.common.Comment
-import onlymash.materixiv.data.repository.Listing
 
 class CommentRepositoryImpl(
     private val api: PixivAppApi
 ) : CommentRepository {
 
-    override fun getComments(
-        scope: CoroutineScope,
-        auth: String,
-        illustId: Long
-    ): Listing<Comment> {
-        val sourceFactory = CommentDataSourceFactory(auth, illustId, api, scope)
-        val livePagedList = sourceFactory.toLiveData(
-            config = Config(
-                pageSize = 30,
-                enablePlaceholders = true
-            )
-        )
-        val refreshState = Transformations
-            .switchMap(sourceFactory.sourceLiveData) { it.initialLoadState }
-
-        val networkState = Transformations
-            .switchMap(sourceFactory.sourceLiveData) { it.networkState }
-
-        return Listing(
-            pagedList = livePagedList,
-            refreshState = refreshState,
-            networkState = networkState,
-            refresh = {
-                sourceFactory.sourceLiveData.value?.invalidate()
-            },
-            retry = {
-                sourceFactory.sourceLiveData.value?.retryAllFailed()
-            }
-        )
+    override suspend fun getComments(action: ActionComment): Flow<PagingData<Comment>> {
+        return Pager(config = PagingConfig(pageSize = 10)) {
+            CommentPagingSource(action, api)
+        }
+            .flow
     }
 }

@@ -2,7 +2,7 @@ package onlymash.materixiv.ui.module.comment
 
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import onlymash.materixiv.R
@@ -12,7 +12,7 @@ import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.viewbinding.viewBinding
 import onlymash.materixiv.utils.DateUtil
 
-class CommentAdapter : PagedListAdapter<Comment, CommentAdapter.CommentViewHolder>(COMMENT_COMPARATOR) {
+class CommentAdapter : PagingDataAdapter<Comment, CommentAdapter.CommentViewHolder>(COMMENT_COMPARATOR) {
 
     companion object {
         val COMMENT_COMPARATOR = object : DiffUtil.ItemCallback<Comment>() {

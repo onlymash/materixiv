@@ -1,43 +1,33 @@
 package onlymash.materixiv.ui.module.novel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import onlymash.materixiv.data.action.ActionNovel
+import onlymash.materixiv.data.model.common.Novel
 import onlymash.materixiv.data.repository.novel.NovelRepository
 import onlymash.materixiv.ui.base.ScopeViewModel
 
 class NovelViewModel(private val repo: NovelRepository) : ScopeViewModel() {
 
-    private val _action: MutableLiveData<ActionNovel?> = MutableLiveData()
+    private val _clearListCh = Channel<Unit>(Channel.CONFLATED)
+    private val _action = MutableLiveData<ActionNovel>()
 
-    private val _result = Transformations.map(_action) { action ->
-        if (action != null) {
-            repo.getNovels(action, viewModelScope)
-        } else {
-            null
-        }
-    }
+    val novels = flowOf(
+        _clearListCh.consumeAsFlow().map { PagingData.empty<Novel>() },
+        _action.asFlow().flatMapLatest { repo.getNovels(it) }
+    )
+        .flattenMerge(2)
+        .cachedIn(viewModelScope)
+        .asLiveData()
 
-    val novels = Transformations.switchMap(_result) { it?.pagedList }
+    private fun shouldShow(action: ActionNovel) = _action.value != action
 
-    val refreshState = Transformations.switchMap(_result) { it?.refreshState }
-
-    val networkState = Transformations.switchMap(_result) { it?.networkState }
-
-    fun show(action: ActionNovel): Boolean {
-        if (_action.value == action) {
-            return false
-        }
+    fun show(action: ActionNovel) {
+        if (!shouldShow(action)) return
+        _clearListCh.offer(Unit)
         _action.value = action
-        return true
-    }
-
-    fun refresh() {
-        _result.value?.refresh?.invoke()
-    }
-
-    fun retry() {
-        _result.value?.retry?.invoke()
     }
 }

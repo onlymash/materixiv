@@ -1,6 +1,8 @@
 package onlymash.materixiv.app
 
 object Values {
+    const val APP_DB_NAME = "Materixiv.db"
+
     const val APP_VERSION = "5.0.195"
     const val APP_HASH_SALT = "28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0bae2c"
 

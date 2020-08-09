@@ -2,17 +2,18 @@ package onlymash.materixiv.ui.module.illust
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.paging.LoadState
 import androidx.viewpager2.widget.ViewPager2
 import onlymash.materixiv.app.Values
+import onlymash.materixiv.data.action.ActionDetail
 import onlymash.materixiv.data.api.PixivAppApi
-import onlymash.materixiv.data.db.dao.IllustDao
+import onlymash.materixiv.data.db.dao.IllustCacheDao
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.detail.IllustDeatilRepositoryImpl
@@ -44,7 +45,7 @@ class IllustDeatilActivity : TokenActivity() {
     }
 
     private val binding by viewBinding(ActivityIllustDeatilBinding::inflate)
-    private val illustDao by instance<IllustDao>()
+    private val illustDao by instance<IllustCacheDao>()
     private val pixivAppApi by instance<PixivAppApi>()
 
     private val fragmentPager get() = binding.detailFragmentPager
@@ -110,16 +111,15 @@ class IllustDeatilActivity : TokenActivity() {
                 query = "id:$illustId"
             }
         }
-        pagerViewModel.illusts.observe(this, Observer { illusts ->
-            val token = pagerViewModel.token
-            if (illusts != null && illusts.isNotEmpty() && token != null) {
-                adapter.submitData(illusts, token.uid, token.auth, query ?: "") {
-                    if (savedInstanceState == null && pagerViewModel.position < illusts.size) {
-                        fragmentPager.setCurrentItem(pagerViewModel.position, false)
-                    }
-                    binding.progressBar.isVisible = false
-                }
+        adapter.addLoadStateListener {
+            binding.progressBar.isVisible = it.refresh is LoadState.Loading
+            val position = pagerViewModel.position
+            if (it.refresh is LoadState.NotLoading && isPositionSettable(position)) {
+                fragmentPager.setCurrentItem(position, false)
             }
+        }
+        pagerViewModel.illusts.observe(this, Observer {
+            adapter.submitData(lifecycle, it)
         })
         if (illustId > 0) {
             pagerViewModel.isSuccess.observe(this, Observer { success ->
@@ -137,10 +137,15 @@ class IllustDeatilActivity : TokenActivity() {
         fragmentPager.registerOnPageChangeCallback(pageChangeCallback)
     }
 
+    private fun isPositionSettable(position: Int): Boolean {
+        return adapter.itemCount > position && fragmentPager.currentItem != position
+    }
+
     override fun onTokenLoaded(token: Token) {
-        pagerViewModel.token = token
+        adapter.token = token
         val query = query ?: return
-        pagerViewModel.load(tokenUid = token.uid, query = query, initialPosition = pagerViewModel.position)
+        adapter.query = query
+        pagerViewModel.action = ActionDetail(token, query, pagerViewModel.position)
         if (illustId > 0) {
             fetchIllustFromNet()
         }

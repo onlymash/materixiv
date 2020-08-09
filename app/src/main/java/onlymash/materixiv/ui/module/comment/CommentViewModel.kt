@@ -1,46 +1,38 @@
 package onlymash.materixiv.ui.module.comment
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
+import onlymash.materixiv.data.action.ActionComment
+import onlymash.materixiv.data.model.common.Comment
 import onlymash.materixiv.data.repository.comment.CommentRepository
 import onlymash.materixiv.ui.base.ScopeViewModel
 
 class CommentViewModel(
-    private val illustId: Long,
     private val repo: CommentRepository
 ) : ScopeViewModel() {
+    
+    private val _action = MutableLiveData<ActionComment>()
+    private val _clearListCh = Channel<Unit>(Channel.CONFLATED)
 
+    val comments = flowOf(
+        _clearListCh.consumeAsFlow().map { PagingData.empty<Comment>() },
+        _action.asFlow().flatMapLatest { repo.getComments(it) }
+    )
+        .flattenMerge(2)
+        .cachedIn(viewModelScope)
+        .asLiveData()
 
-    private val _auth: MutableLiveData<String?> = MutableLiveData()
+    private fun shouldShow(action: ActionComment) = _action.value != action
 
-    private val _result = Transformations.map(_auth) { auth ->
-        if (auth != null) {
-            repo.getComments(viewModelScope, auth, illustId)
-        } else {
-            null
-        }
-    }
-
-    val comments = Transformations.switchMap(_result) { it?.pagedList }
-
-    val refreshState = Transformations.switchMap(_result) { it?.refreshState }
-
-    val networkState = Transformations.switchMap(_result) { it?.networkState }
-
-    fun show(auth: String): Boolean {
-        if (_auth.value == auth) {
-            return false
-        }
-        _auth.value = auth
-        return true
-    }
-
-    fun refresh() {
-        _result.value?.refresh?.invoke()
-    }
-
-    fun retry() {
-        _result.value?.retry?.invoke()
+    fun show(action: ActionComment) {
+        if (!shouldShow(action)) return
+        _clearListCh.offer(Unit)
+        _action.value = action
     }
 }

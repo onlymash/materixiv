@@ -5,11 +5,21 @@ import onlymash.materixiv.app.Values
 
 data class ActionUser(
     var type: Int = Values.PAGE_TYPE_FOLLOWING,
+    var tokenUid: Long,
     var auth: String = "",
     var userId: String = "",
     var restrict: Restrict = Restrict.PUBLIC,
     var word: String = ""
 ) {
+    val dbQuery: String
+        get() = when (type) {
+            Values.PAGE_TYPE_RECOMMENDED -> "$type:recommended:$userId"
+            Values.PAGE_TYPE_FOLLOWING -> "$type:following:$userId"
+            Values.PAGE_TYPE_FOLLOWER -> "$type:follower:$userId"
+            Values.PAGE_TYPE_FRIENDS -> "$type:friends:$userId"
+            else -> "$type:search:$word"
+        }
+
     val url: HttpUrl
         get() = when (type) {
             Values.PAGE_TYPE_RECOMMENDED -> recommendedUrl

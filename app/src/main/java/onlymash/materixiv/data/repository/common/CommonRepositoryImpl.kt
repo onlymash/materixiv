@@ -4,13 +4,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
-import onlymash.materixiv.data.db.dao.IllustDao
-import onlymash.materixiv.data.db.entity.Illustration
+import onlymash.materixiv.data.db.dao.IllustCacheDao
+import onlymash.materixiv.data.db.entity.IllustCache
 import onlymash.materixiv.data.model.common.UgoiraMetadata
 
 class CommonRepositoryImpl(
     private val pixivAppApi: PixivAppApi,
-    private val illustDao: IllustDao? = null) : CommonRepository {
+    private val illustCacheDao: IllustCacheDao? = null) : CommonRepository {
 
     override suspend fun addFollowUser(auth: String, userId: Long, restrict: Restrict): Boolean {
         return withContext(Dispatchers.IO) {
@@ -34,12 +34,12 @@ class CommonRepositoryImpl(
         }
     }
 
-    override suspend fun addBookmarkIllust(illust: Illustration, auth: String, restrict: Restrict): Boolean {
+    override suspend fun addBookmarkIllust(illust: IllustCache, auth: String, restrict: Restrict): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 pixivAppApi.addBookmarkIllust(auth = auth, illustId = illust.id, restrict = restrict.value)
                 illust.illust.isBookmarked = true
-                illustDao?.update(illust)
+                illustCacheDao?.update(illust)
                 true
             } catch (e: Exception) {
                 false
@@ -47,12 +47,12 @@ class CommonRepositoryImpl(
         }
     }
 
-    override suspend fun deleteBookmarkIllust(illust: Illustration, auth: String): Boolean {
+    override suspend fun deleteBookmarkIllust(illust: IllustCache, auth: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 pixivAppApi.deleteBookmarkIllust(auth = auth, illustId = illust.id)
                 illust.illust.isBookmarked = false
-                illustDao?.update(illust)
+                illustCacheDao?.update(illust)
                 true
             } catch (e: Exception) {
                 false
@@ -63,7 +63,7 @@ class CommonRepositoryImpl(
     override suspend fun getUgoiraMetadata(auth: String, illustId: Long): UgoiraMetadata? {
         return withContext(Dispatchers.IO) {
             try {
-                pixivAppApi.getUgoiraMetadata(auth, illustId).body()?.ugoiraMetadata
+                pixivAppApi.getUgoiraMetadata(auth, illustId).ugoiraMetadata
             } catch (_: Exception) {
                 null
             }

@@ -3,6 +3,7 @@ package onlymash.materixiv.ui.module.novel
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -10,12 +11,10 @@ import onlymash.materixiv.R
 import onlymash.materixiv.data.model.common.Novel
 import onlymash.materixiv.databinding.ItemNovelBinding
 import onlymash.materixiv.glide.GlideApp
-import onlymash.materixiv.ui.base.FooterPagedAdapter
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
-class NovelAdapter(
-    retryCallback: () -> Unit
-) : FooterPagedAdapter<Novel>(NOVEL_COMPARATOR, retryCallback) {
+class NovelAdapter : PagingDataAdapter<Novel, NovelAdapter.NovelViewHolder>(NOVEL_COMPARATOR) {
+
     companion object {
         val NOVEL_COMPARATOR = object : DiffUtil.ItemCallback<Novel>() {
             override fun areContentsTheSame(
@@ -30,12 +29,12 @@ class NovelAdapter(
         }
     }
 
-    override fun onCreateItemViewHolder(
-        parent: ViewGroup,
-        viewType: Int): RecyclerView.ViewHolder = NovelViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NovelViewHolder {
+        return NovelViewHolder(parent)
+    }
 
-    override fun onBindItemViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as NovelViewHolder).bind(getSafeItem(position))
+    override fun onBindViewHolder(holder: NovelViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
     inner class NovelViewHolder(binding: ItemNovelBinding) : RecyclerView.ViewHolder(binding.root) {

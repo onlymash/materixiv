@@ -17,20 +17,20 @@ interface PixivAppApi {
         @Query("merge_plain_keyword_results") marge: Boolean = true,
         @Query("include_translated_tag_results") includeTranslated: Boolean = true,
         @Query("filter") filter: String = "for_android"
-    ): Response<TagResponse>
+    ): TagResponse
 
     @GET
     suspend fun getUsers(
         @Header(AUTHORIZATION) auth: String,
         @Url url: HttpUrl
-    ): Response<UserResponse>
+    ): UserResponse
 
     @GET("v1/user/detail?filter=for_android")
     suspend fun getUserDetail(
         @Header(AUTHORIZATION) auth: String,
         @Query("user_id") userId: String,
         @Query("filter") filter: String = "for_android"
-    ): Response<UserDetailResponse>
+    ): UserDetailResponse
 
     @FormUrlEncoded
     @POST("v1/user/follow/add")
@@ -67,26 +67,20 @@ interface PixivAppApi {
     suspend fun getIllusts(
         @Header(AUTHORIZATION) auth: String,
         @Url url: HttpUrl
-    ): Response<IllustResponse>
+    ): IllustResponse
 
     @GET("v1/illust/detail")
     suspend fun getIllustDetail(
         @Header(AUTHORIZATION) auth: String,
         @Query("illust_id") illustId: Long,
         @Query("filter") filter: String = "for_android"
-    ): Response<IllustDetailResponse>
-
-    @GET("v1/illust/comments")
-    suspend fun getIllustComments(
-        @Header(AUTHORIZATION) auth: String,
-        @Query("illust_id") illustId: Long
-    ): Response<CommentResponse>
+    ): IllustDetailResponse
 
     @GET
-    suspend fun getIllustCommentsNext(
+    suspend fun getIllustComments(
         @Header(AUTHORIZATION) auth: String,
-        @Url url: String
-    ): Response<CommentResponse>
+        @Url url: HttpUrl
+    ): CommentResponse
 
     @FormUrlEncoded
     @POST("v1/illust/comment/add")
@@ -101,25 +95,25 @@ interface PixivAppApi {
     suspend fun getTrendTagsIllust(
         @Header(AUTHORIZATION) auth: String,
         @Query("filter") filter: String = "for_android"
-    ): Response<TrendTagResponse>
+    ): TrendTagResponse
 
     @GET("v1/trending-tags/novel")
     suspend fun getTrendTagsNovel(
         @Header(AUTHORIZATION) auth: String,
         @Query("filter") filter: String = "for_android"
-    ): Response<TrendTagResponse>
+    ): TrendTagResponse
 
     @GET
     suspend fun getNovels(
         @Header(AUTHORIZATION) auth: String,
         @Url url: HttpUrl
-    ): Response<NovelResponse>
+    ): NovelResponse
 
     @GET("v1/ugoira/metadata")
     suspend fun getUgoiraMetadata(
         @Header(AUTHORIZATION) auth: String,
         @Query("illust_id") illustId: Long
-    ): Response<UgoiraResponse>
+    ): UgoiraResponse
 
     @GET("v1/user/bookmark-tags/illust")
     suspend fun getIllustBookmarkTags(

@@ -12,9 +12,9 @@ class TrendRepositoryImpl(private val pixivAppApi: PixivAppApi) : TrendRepositor
         return withContext(Dispatchers.IO) {
             try {
                 if (type == Values.SEARCH_TYPE_ILLUST) {
-                    pixivAppApi.getTrendTagsIllust(auth = auth).body()?.trendTags
+                    pixivAppApi.getTrendTagsIllust(auth = auth).trendTags
                 } else {
-                    pixivAppApi.getTrendTagsNovel(auth = auth).body()?.trendTags
+                    pixivAppApi.getTrendTagsNovel(auth = auth).trendTags
                 }
             } catch (_: Exception) {
                 null

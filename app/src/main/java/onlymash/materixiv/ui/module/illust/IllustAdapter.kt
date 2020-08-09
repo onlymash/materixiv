@@ -5,65 +5,60 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import onlymash.materixiv.R
-import onlymash.materixiv.data.db.entity.Illustration
+import onlymash.materixiv.data.db.entity.IllustCache
 import onlymash.materixiv.databinding.ItemIllustBinding
 import onlymash.materixiv.glide.GlideApp
-import onlymash.materixiv.ui.base.FooterPagedAdapter
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
 class IllustAdapter(
-    private val bookmarkCallback: (Boolean, Illustration) -> Unit,
-    retryCallback: () -> Unit
-) : FooterPagedAdapter<Illustration>(ILLUST_COMPARATOR, retryCallback){
+    private val bookmarkCallback: (Boolean, IllustCache) -> Unit
+) : PagingDataAdapter<IllustCache, IllustAdapter.IllustViewHolder>(ILLUST_COMPARATOR){
 
     companion object {
-        val ILLUST_COMPARATOR = object : DiffUtil.ItemCallback<Illustration>() {
+        val ILLUST_COMPARATOR = object : DiffUtil.ItemCallback<IllustCache>() {
             override fun areContentsTheSame(
-                    oldItem: Illustration,
-                    newItem: Illustration
+                    oldItem: IllustCache,
+                    newItem: IllustCache
             ): Boolean = oldItem.id == newItem.id &&
                     oldItem.illust.isBookmarked == newItem.illust.isBookmarked
 
             override fun areItemsTheSame(
-                    oldItem: Illustration,
-                    newItem: Illustration
+                    oldItem: IllustCache,
+                    newItem: IllustCache
             ): Boolean = oldItem.id == newItem.id
         }
     }
 
-    override fun onCreateItemViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): RecyclerView.ViewHolder = IllustViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IllustViewHolder {
+        return IllustViewHolder(parent)
+    }
 
-    override fun onBindItemViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int
-    ) {
-        (holder as IllustViewHolder).bindView(getSafeItem(position))
+    override fun onBindViewHolder(holder: IllustViewHolder, position: Int) {
+        holder.bindView(getItem(position))
     }
 
     inner class IllustViewHolder(binding: ItemIllustBinding) : RecyclerView.ViewHolder(binding.root) {
 
         constructor(parent: ViewGroup): this(parent.viewBinding(ItemIllustBinding::inflate))
 
-        private var illustration: Illustration? = null
+        private var illustCache: IllustCache? = null
         private val preview = binding.illustPreview
         private val count = binding.count
         private val bookmark = binding.bookmark
 
         init {
             itemView.setOnClickListener {
-                illustration?.let { illust ->
+                illustCache?.let { illust ->
                     IllustDeatilActivity.start(itemView.context, illust.query, layoutPosition)
                 }
             }
             bookmark.setOnClickListener {
-                illustration?.let { illust ->
+                illustCache?.let { illust ->
                     val isAdd = !bookmark.isActivated
                     bookmarkCallback.invoke(isAdd, illust)
                     bookmark.isActivated = isAdd
@@ -71,9 +66,9 @@ class IllustAdapter(
             }
         }
 
-        fun bindView(illustration: Illustration?) {
-            this.illustration = illustration ?: return
-            val illust = illustration.illust
+        fun bindView(illustCache: IllustCache?) {
+            this.illustCache = illustCache ?: return
+            val illust = illustCache.illust
             val pageCount = illust.pageCount
             count.text = String.format("%dP", pageCount)
             count.isVisible = pageCount > 1

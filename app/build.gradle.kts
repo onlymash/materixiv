@@ -74,7 +74,9 @@ android {
             "-Xopt-in=kotlinx.serialization.UnstableDefault",
             "-Xopt-in=kotlinx.serialization.ImplicitReflectionSerializer",
             "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xopt-in=kotlinx.coroutines.ObsoleteCoroutinesApi"
+            "-Xopt-in=kotlinx.coroutines.ObsoleteCoroutinesApi",
+            "-Xopt-in=kotlinx.coroutines.FlowPreview",
+            "-Xopt-in=androidx.paging.ExperimentalPagingApi"
         )
     }
     kapt {
@@ -116,8 +118,8 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.2.0-alpha05")
     implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta8")
-    implementation("androidx.browser:browser:1.3.0-alpha04")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-rc1")
+    implementation("androidx.browser:browser:1.3.0-alpha05")
     implementation("androidx.documentfile:documentfile:1.0.1")
 
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
@@ -128,7 +130,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
-    implementation("androidx.paging:paging-runtime-ktx:2.1.2")
+    implementation("androidx.paging:paging-runtime-ktx:3.0.0-alpha04")
     implementation("androidx.work:work-runtime-ktx:2.4.0")
 
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")

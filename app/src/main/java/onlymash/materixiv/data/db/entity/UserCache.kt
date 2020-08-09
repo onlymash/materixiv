@@ -1,10 +1,10 @@
 package onlymash.materixiv.data.db.entity
 
 import androidx.room.*
-import onlymash.materixiv.data.model.common.Illust
+import onlymash.materixiv.data.model.common.UserPreview
 
 @Entity(
-    tableName = "illusts",
+    tableName = "users",
     indices = [(Index(value = ["token_uid", "query", "id"], unique = true))],
     foreignKeys = [(ForeignKey(
         entity = Token::class,
@@ -12,7 +12,7 @@ import onlymash.materixiv.data.model.common.Illust
         childColumns = ["token_uid"],
         onDelete = ForeignKey.CASCADE))]
 )
-data class Illustration(
+data class UserCache(
     @ColumnInfo(name = "uid")
     @PrimaryKey(autoGenerate = true)
     var uid: Long = 0,
@@ -22,8 +22,8 @@ data class Illustration(
     val query: String,
     @ColumnInfo(name = "id")
     val id: Long,
-    @ColumnInfo(name = "index")
-    val index: Int,
-    @ColumnInfo(name = "illust")
-    val illust: Illust
+    @ColumnInfo(name = "next_url")
+    val nextUrl: String? = null,
+    @ColumnInfo(name = "user_preview")
+    val userPreview: UserPreview
 )

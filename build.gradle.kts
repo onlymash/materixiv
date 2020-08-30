@@ -3,6 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     id("com.github.ben-manes.versions") version("0.29.0")
+    kotlin("plugin.serialization") version("1.4.0")
 }
 
 buildscript {
@@ -11,10 +12,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        val kotlinVersion = "1.3.72"
-        classpath(kotlin("gradle-plugin", kotlinVersion))
-        classpath(kotlin("serialization", kotlinVersion))
-        classpath("com.android.tools.build:gradle:4.1.0-beta05")
+        classpath(kotlin("gradle-plugin", "1.4.0"))
+        classpath("com.android.tools.build:gradle:4.1.0-rc01")
     }
 }
 

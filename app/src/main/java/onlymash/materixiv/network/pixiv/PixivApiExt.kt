@@ -3,7 +3,6 @@ package onlymash.materixiv.network.pixiv
 import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,16 +16,15 @@ import java.util.concurrent.TimeUnit
 
 inline fun <reified T> createApi(): T {
     val contentType = "application/json".toMediaType()
-    val jsonConfiguration = JsonConfiguration(
-        ignoreUnknownKeys = true,
-        isLenient = true
-    )
     val baseUrl = when (T::class.java) {
         PixivOauthApi::class.java -> Values.BASE_URL_OAUTH
         PixivAppApi::class.java -> Values.BASE_URL_APP
         else -> Values.BASE_URL
     }
-    val factory = Json(jsonConfiguration).asConverterFactory(contentType)
+    val factory = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+    }.asConverterFactory(contentType)
     return Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(pixivClient)

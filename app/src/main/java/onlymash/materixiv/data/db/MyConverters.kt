@@ -10,25 +10,25 @@ class MyConverters {
 
     @TypeConverter
     fun tokenInfoToString(data: TokenResponse.TokenInfo): String =
-        Json.stringify(TokenResponse.TokenInfo.serializer(), data)
+        Json.encodeToString(TokenResponse.TokenInfo.serializer(), data)
 
     @TypeConverter
     fun stringToTokenInfo(json: String): TokenResponse.TokenInfo =
-        Json.parse(TokenResponse.TokenInfo.serializer(), json)
+        Json.decodeFromString(TokenResponse.TokenInfo.serializer(), json)
 
     @TypeConverter
     fun illustToString(illust: Illust): String =
-        Json.stringify(Illust.serializer(), illust)
+        Json.encodeToString(Illust.serializer(), illust)
 
     @TypeConverter
     fun stringToIllust(json: String): Illust =
-        Json.parse(Illust.serializer(), json)
+        Json.decodeFromString(Illust.serializer(), json)
 
     @TypeConverter
     fun userPreviewToString(userPreview: UserPreview): String =
-        Json.stringify(UserPreview.serializer(), userPreview)
+        Json.encodeToString(UserPreview.serializer(), userPreview)
 
     @TypeConverter
     fun stringToUserPreview(json: String): UserPreview =
-        Json.parse(UserPreview.serializer(), json)
+        Json.decodeFromString(UserPreview.serializer(), json)
 }

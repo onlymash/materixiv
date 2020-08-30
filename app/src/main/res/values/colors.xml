@@ -41,6 +41,7 @@
     <color name="scrim_bar_light">#66ffffff</color>
     <color name="scrim_bar_dark">#66000000</color>
 
+    <color name="launcher_background">#0773DB</color>
     <color name="blue_700">#1976D2</color>
     <color name="blue_700_light">#63A4FF</color>
     <color name="blue_700_dark">#004BA0</color>

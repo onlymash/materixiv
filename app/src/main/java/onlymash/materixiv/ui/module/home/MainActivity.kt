@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
@@ -58,7 +57,7 @@ class MainActivity : KodeinActivity() {
         headerView.findViewById<View>(R.id.logout).setOnClickListener {
             showLogoutDialog()
         }
-        homeViewModel.tokens.observe(this, Observer { tokens ->
+        homeViewModel.tokens.observe(this, { tokens ->
             if (!tokens.isNullOrEmpty()) {
                 bindDrawerHeader(tokens[0])
             }
@@ -71,10 +70,10 @@ class MainActivity : KodeinActivity() {
         val avatar = headerView.findViewById<ShapeableImageView>(R.id.avatar)
         val name = headerView.findViewById<MaterialTextView>(R.id.name)
         val email = headerView.findViewById<MaterialTextView>(R.id.email)
-        name.text = token.data.profile.name
-        email.text = token.data.profile.mailAddress
+        name.text = token.data.user.name
+        email.text = token.data.user.mailAddress
         GlideApp.with(this)
-            .load(token.data.profile.profileImageUrls.px170x170)
+            .load(token.data.user.profileImageUrls.px170x170)
             .placeholder(ContextCompat.getDrawable(this, R.drawable.placeholder_avatar))
             .into(avatar)
     }

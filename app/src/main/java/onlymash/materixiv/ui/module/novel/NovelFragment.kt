@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.ActionNovel
@@ -16,8 +20,10 @@ import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
 import onlymash.materixiv.data.repository.novel.NovelRepositoryImpl
+import onlymash.materixiv.extensions.asMergedLoadStates
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.CommonViewModel
+import onlymash.materixiv.ui.module.common.NetworkLoadStateAdapter
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
 import org.kodein.di.instance
 import retrofit2.HttpException
@@ -69,17 +75,25 @@ class NovelFragment : SharedViewModelFragment() {
         list.apply {
             updatePadding(left = 0, right = 0)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = novelAdapter
+            adapter = novelAdapter.withLoadStateFooter(NetworkLoadStateAdapter(novelAdapter))
         }
         novelAdapter.addLoadStateListener { handleNetworkState(it) }
-        novelViewModel.novels.observe(viewLifecycleOwner, Observer {
-            novelAdapter.submitData(lifecycle, it)
-        })
+        lifecycleScope.launchWhenCreated {
+            novelViewModel.novels.collectLatest {
+                novelAdapter.submitData(it)
+            }
+        }
+        lifecycleScope.launchWhenCreated {
+            novelAdapter.loadStateFlow
+                .asMergedLoadStates()
+                .distinctUntilChangedBy { it.refresh }
+                .filter { it.refresh is LoadState.NotLoading }
+                .collect { list.scrollToPosition(0) }
+        }
         swipeRefreshLayout.setOnRefreshListener { novelAdapter.refresh() }
-        retryButton.setOnClickListener { novelAdapter.retry() }
         when (type) {
             Values.PAGE_TYPE_FOLLOWING -> {
-                sharedViewModel.restrict.observe(viewLifecycleOwner, Observer {
+                sharedViewModel.restrict.observe(viewLifecycleOwner, {
                     if (_action != null) {
                         action.restrict = it
                         refresh()
@@ -87,13 +101,13 @@ class NovelFragment : SharedViewModelFragment() {
                 })
             }
             Values.PAGE_TYPE_RANKING -> {
-                sharedViewModel.rankingMode.observe(viewLifecycleOwner, Observer {
+                sharedViewModel.rankingMode.observe(viewLifecycleOwner, {
                     if (_action != null) {
                         action.modeRanking = it
                         refresh()
                     }
                 })
-                sharedViewModel.date.observe(viewLifecycleOwner, Observer {
+                sharedViewModel.date.observe(viewLifecycleOwner, {
                     if (_action != null) {
                         action.date = it
                         refresh()
@@ -109,48 +123,27 @@ class NovelFragment : SharedViewModelFragment() {
     }
 
     private fun handleNetworkState(loadStates: CombinedLoadStates) {
-        val refresh = loadStates.refresh
-        val append = loadStates.append
-        val isEmptyList = novelAdapter.itemCount == 0
-        if (refresh is LoadState.Error || append is LoadState.Error) {
-            val error = if (refresh is LoadState.Error) {
-                refresh.error
-            } else {
-                (append as LoadState.Error).error
-            }
-            handleException(error, isEmptyList)
-        } else {
-            retryButton.isVisible = false
-            swipeRefreshLayout.isVisible = true
-        }
-        val isRefreshing = refresh is LoadState.Loading
-        setSwipeRefreshing(isRefreshing && !isEmptyList)
-        progressBarCircular.isVisible = isRefreshing && isEmptyList
+        val refresh = loadStates.source.refresh
+        val append = loadStates.source.append
+        swipeRefreshLayout.isRefreshing = refresh is LoadState.Loading
         progressBarHorizontal.isVisible = append is LoadState.Loading
-    }
-
-    private fun setSwipeRefreshing(isRefreshing: Boolean) {
-        if (swipeRefreshLayout.isRefreshing != isRefreshing) {
-            swipeRefreshLayout.isRefreshing = isRefreshing
+        val error = when {
+            refresh is LoadState.Error -> refresh.error
+            append is LoadState.Error -> append.error
+            else -> null
+        }
+        if (error != null) {
+            handleException(error)
         }
     }
 
-    private fun handleException(error: Throwable, isEmptyList: Boolean) {
-        val token = sharedViewModel.token.value
-        if (token != null && error is HttpException && error.code() == 400) {
-            retryButton.isVisible = false
-            swipeRefreshLayout.isVisible = true
-            setSwipeRefreshing(!isEmptyList)
-            progressBarCircular.isVisible = isEmptyList
+    private fun handleException(error: Throwable) {
+        val token = sharedViewModel.token.value ?: return
+        if (error is HttpException && error.code() == 400) {
             refreshToken(
                 uid = token.uid,
-                refreshToken = token.data.refreshToken,
-                deviceToken = token.data.deviceToken
+                refreshToken = token.data.refreshToken
             )
-        } else {
-            swipeRefreshLayout.isVisible = false
-            progressBarCircular.isVisible = false
-            retryButton.isVisible = true
         }
     }
 

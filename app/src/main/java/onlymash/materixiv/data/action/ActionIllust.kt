@@ -88,7 +88,7 @@ data class ActionIllust(
 
     private val searchUrlBuilder: HttpUrl.Builder
         get() {
-            val builder = if (!token.data.profile.isPremium && sort == Sort.POPULAR_DESC) {
+            val builder = if (!token.data.user.isPremium && sort == Sort.POPULAR_DESC) {
                 baseUrlBuilder.addPathSegments("v1/search/popular-preview/illust")
             } else {
                 baseUrlBuilder.addPathSegments("v1/search/illust")

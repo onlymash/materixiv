@@ -4,13 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
@@ -22,8 +24,10 @@ import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.db.entity.UserCache
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
 import onlymash.materixiv.data.repository.user.UserRepositoryImpl
+import onlymash.materixiv.extensions.asMergedLoadStates
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.CommonViewModel
+import onlymash.materixiv.ui.module.common.NetworkLoadStateAdapter
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
 import org.kodein.di.instance
 import retrofit2.HttpException
@@ -91,16 +95,24 @@ class UserFragment : SharedViewModelFragment() {
         list.apply {
             updatePadding(left = 0, right = 0)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = userAdapter
+            adapter = userAdapter.withLoadStateFooterSafe(NetworkLoadStateAdapter(userAdapter))
         }
         userAdapter.addLoadStateListener { handleNetworkState(it) }
-        userViewModel.users.observe(viewLifecycleOwner, Observer {
-            userAdapter.submitData(lifecycle, it)
-        })
+        lifecycleScope.launchWhenCreated {
+            userViewModel.users.collectLatest {
+                userAdapter.submitData(it)
+            }
+        }
+        lifecycleScope.launchWhenCreated {
+            userAdapter.loadStateFlow
+                .asMergedLoadStates()
+                .distinctUntilChangedBy { it.refresh }
+                .filter { it.refresh is LoadState.NotLoading }
+                .collect { list.scrollToPosition(0) }
+        }
         swipeRefreshLayout.setOnRefreshListener { userAdapter.refresh() }
-        retryButton.setOnClickListener { userAdapter.retry() }
         if (type == Values.PAGE_TYPE_FOLLOWING) {
-            sharedViewModel.restrict.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.restrict.observe(viewLifecycleOwner, {
                 if (_action != null) {
                     action.restrict = it
                     refresh()
@@ -115,48 +127,27 @@ class UserFragment : SharedViewModelFragment() {
     }
 
     private fun handleNetworkState(loadStates: CombinedLoadStates) {
-        val refresh = loadStates.refresh
-        val append = loadStates.append
-        val isEmptyList = userAdapter.itemCount == 0
-        if (refresh is LoadState.Error || append is LoadState.Error) {
-            val error = if (refresh is LoadState.Error) {
-                refresh.error
-            } else {
-                (append as LoadState.Error).error
-            }
-            handleException(error, isEmptyList)
-        } else {
-            retryButton.isVisible = false
-            swipeRefreshLayout.isVisible = true
-        }
-        val isRefreshing = refresh is LoadState.Loading
-        setSwipeRefreshing(isRefreshing && !isEmptyList)
-        progressBarCircular.isVisible = isRefreshing && isEmptyList
+        val refresh = loadStates.mediator?.refresh
+        val append = loadStates.mediator?.append
+        swipeRefreshLayout.isRefreshing = refresh is LoadState.Loading
         progressBarHorizontal.isVisible = append is LoadState.Loading
-    }
-
-    private fun setSwipeRefreshing(isRefreshing: Boolean) {
-        if (swipeRefreshLayout.isRefreshing != isRefreshing) {
-            swipeRefreshLayout.isRefreshing = isRefreshing
+        val error = when {
+            refresh is LoadState.Error -> refresh.error
+            append is LoadState.Error -> append.error
+            else -> null
+        }
+        if (error != null) {
+            handleException(error)
         }
     }
 
-    private fun handleException(error: Throwable, isEmptyList: Boolean) {
-        val token = sharedViewModel.token.value
-        if (token != null && error is HttpException && error.code() == 400) {
-            retryButton.isVisible = false
-            swipeRefreshLayout.isVisible = true
-            setSwipeRefreshing(!isEmptyList)
-            progressBarCircular.isVisible = isEmptyList
+    private fun handleException(error: Throwable) {
+        val token = sharedViewModel.token.value ?: return
+        if (error is HttpException && error.code() == 400) {
             refreshToken(
                 uid = token.uid,
-                refreshToken = token.data.refreshToken,
-                deviceToken = token.data.deviceToken
+                refreshToken = token.data.refreshToken
             )
-        } else {
-            swipeRefreshLayout.isVisible = false
-            progressBarCircular.isVisible = false
-            retryButton.isVisible = true
         }
     }
 

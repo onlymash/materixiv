@@ -26,10 +26,8 @@
             android:theme="@style/AppTheme.NoActionBar.Detail">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="www.pixiv.net"
                     android:pathPattern="/artworks/.*"
@@ -41,7 +39,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.module.login.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="account"
+                    android:scheme="pixiv"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.module.home.MainActivity"
             android:label="@string/app_name"

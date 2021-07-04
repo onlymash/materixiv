@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.work.WorkManager
@@ -63,7 +62,7 @@ class DownloadsActivity : KodeinActivity() {
         ItemTouchHelper(ItemTouchHelperCallback(itemTouchCAllback))
             .attachToRecyclerView(binding.list)
         viewModel = getViewModel(DownloadViewModel(downloadDao))
-        viewModel.downloads.observe(this, Observer {
+        viewModel.downloads.observe(this, {
             downloads = it
             updated = true
         })

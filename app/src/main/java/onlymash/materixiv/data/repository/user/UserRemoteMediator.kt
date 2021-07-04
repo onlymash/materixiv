@@ -16,6 +16,9 @@ class UserRemoteMediator(
     private val db: MyDatabase
 ) : RemoteMediator<Int, UserCache>() {
 
+    private val userNotEmpty: Boolean
+        get() = db.userDao().isNotEmpty(action.tokenUid, action.dbQuery)
+
     override suspend fun load(loadType: LoadType, state: PagingState<Int, UserCache>): MediatorResult {
         val tokenUid = action.tokenUid
         val dbQuery = action.dbQuery
@@ -23,7 +26,7 @@ class UserRemoteMediator(
         val url = when (loadType) {
             LoadType.REFRESH -> action.url
             LoadType.PREPEND -> null
-            LoadType.APPEND -> userDao.nextUrl(tokenUid, dbQuery)?.toHttpUrl()
+            LoadType.APPEND -> if (userNotEmpty) userDao.nextUrl(tokenUid, dbQuery)?.toHttpUrl() else action.url
         }
             ?: return MediatorResult.Success(endOfPaginationReached = true)
         return try {
@@ -51,10 +54,6 @@ class UserRemoteMediator(
     }
 
     override suspend fun initialize(): InitializeAction {
-        return if (db.userDao().isNotEmpty(action.tokenUid, action.dbQuery)) {
-            InitializeAction.SKIP_INITIAL_REFRESH
-        } else {
-            InitializeAction.LAUNCH_INITIAL_REFRESH
-        }
+        return InitializeAction.SKIP_INITIAL_REFRESH
     }
 }

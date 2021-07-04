@@ -1,18 +1,20 @@
 package onlymash.materixiv.ui.module.common
 
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import android.widget.ProgressBar
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.databinding.FragmentRefreshableListBinding
 
 abstract class RefreshableListFragment : TokenFragment<FragmentRefreshableListBinding>() {
 
-    protected val list get() = binding.refreshableList.list
-    protected val retryButton get() = binding.buttonRetry.retryButton
-    protected val progressBarCircular get() = binding.progressCircular.progressBarCircular
-    protected val progressBarHorizontal get() = binding.progressHorizontal.progressBarHorizontal
-    protected val swipeRefreshLayout get() = binding.refreshableList.swipeRefreshLayout
+    protected lateinit var list: RecyclerView
+    protected lateinit var progressBarHorizontal: ProgressBar
+    protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateBinding(
         inflater: LayoutInflater,
@@ -21,13 +23,17 @@ abstract class RefreshableListFragment : TokenFragment<FragmentRefreshableListBi
         return FragmentRefreshableListBinding.inflate(inflater, container, false)
     }
 
+    override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
+        list = binding.refreshableList.list
+        progressBarHorizontal = binding.progressHorizontal.progressBarHorizontal
+        swipeRefreshLayout = binding.refreshableList.swipeRefreshLayout
+    }
+
     override fun onLoginStateChange(state: NetworkState?) {
 
     }
 
     override fun onRefreshStateChange(state: NetworkState?) {
-        if (state == NetworkState.LOADING) {
-            progressBarCircular.isVisible = true
-        }
+
     }
 }

@@ -13,7 +13,8 @@ class IllustRepositoryImpl(
 
     override fun getIllusts(action: ActionIllust) = Pager(
         config = PagingConfig(30),
-        remoteMediator = IllustRemoteMediator(action, api, db)
+        remoteMediator = IllustRemoteMediator(action, api, db),
+        initialKey = 0
     ) {
         db.illustDao().getIllusts(action.token.uid, action.dbQuery)
     }.flow

@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.paging.LoadState
 import androidx.viewpager2.widget.ViewPager2
 import onlymash.materixiv.app.Values
@@ -118,11 +117,11 @@ class IllustDeatilActivity : TokenActivity() {
                 fragmentPager.setCurrentItem(position, false)
             }
         }
-        pagerViewModel.illusts.observe(this, Observer {
+        pagerViewModel.illusts.observe(this, {
             adapter.submitData(lifecycle, it)
         })
         if (illustId > 0) {
-            pagerViewModel.isSuccess.observe(this, Observer { success ->
+            pagerViewModel.isSuccess.observe(this, { success ->
                 if (!success) {
                     binding.progressBar.isVisible = false
                     binding.retryButton.isVisible = true

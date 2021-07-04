@@ -40,7 +40,7 @@ inline fun <reified T> SharedPreferences.setValue(key: String, value: T) {
 object Settings {
     private val sp by App.app.instance<SharedPreferences>()
 
-    val dohEnabled get() = sp.getValue(Keys.NETWORK_DOH, true)
+    val dohEnabled get() = sp.getValue(Keys.NETWORK_DOH, false)
 
     private val dohProviderString get() = sp.getValue(Keys.NETWORK_DOH_PROVIDER, "cloudflare")
 
@@ -52,5 +52,5 @@ object Settings {
             }
         }
 
-    val fuckGFW get() = sp.getValue(Keys.NETWORK_FUCK_GFW, true)
+    val fuckGFW get() = sp.getValue(Keys.NETWORK_FUCK_GFW, false)
 }

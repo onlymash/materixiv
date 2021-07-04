@@ -3,13 +3,16 @@ package onlymash.materixiv.extensions
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.net.Uri
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import onlymash.materixiv.R
 
 private fun getCustomTabsIntent(context: Context): CustomTabsIntent {
     return CustomTabsIntent.Builder()
-        .setToolbarColor(ContextCompat.getColor(context, R.color.colorBackground))
+        .setDefaultColorSchemeParams(CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(ContextCompat.getColor(context, R.color.colorBackground))
+            .build())
         .build()
 }
 

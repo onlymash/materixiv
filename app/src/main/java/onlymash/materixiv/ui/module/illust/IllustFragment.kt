@@ -9,6 +9,10 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
@@ -19,9 +23,11 @@ import onlymash.materixiv.data.db.MyDatabase
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
 import onlymash.materixiv.data.repository.illust.IllustRepositoryImpl
+import onlymash.materixiv.extensions.asMergedLoadStates
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.getWindowWidth
 import onlymash.materixiv.ui.module.common.CommonViewModel
+import onlymash.materixiv.ui.module.common.NetworkLoadStateAdapter
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
 import org.kodein.di.instance
 import retrofit2.HttpException
@@ -92,15 +98,22 @@ class IllustFragment : SharedViewModelFragment() {
         }
         list.apply {
             layoutManager = StaggeredGridLayoutManager(spanCount, RecyclerView.VERTICAL)
-            adapter = illustAdapter
+            adapter = illustAdapter.withLoadStateFooterSafe(NetworkLoadStateAdapter(illustAdapter))
         }
         illustAdapter.addLoadStateListener { handleNetworkState(it) }
-        illustViewModel.illusts.observe(viewLifecycleOwner, Observer {
-            illustAdapter.submitData(lifecycle, it)
-            progressBarCircular.isVisible = illustAdapter.itemCount == 0
-        })
+        lifecycleScope.launchWhenCreated {
+            illustViewModel.illusts.collectLatest {
+                illustAdapter.submitData(it)
+            }
+        }
+        lifecycleScope.launchWhenCreated {
+            illustAdapter.loadStateFlow
+                .asMergedLoadStates()
+                .distinctUntilChangedBy { it.refresh }
+                .filter { it.refresh is LoadState.NotLoading }
+                .collect { list.scrollToPosition(0) }
+        }
         swipeRefreshLayout.setOnRefreshListener { illustAdapter.refresh() }
-        retryButton.setOnClickListener { illustAdapter.retry() }
         when (type) {
             Values.PAGE_TYPE_FOLLOWING, Values.PAGE_TYPE_BOOKMARKS -> {
                 sharedViewModel.restrict.observe(viewLifecycleOwner, Observer {
@@ -157,47 +170,26 @@ class IllustFragment : SharedViewModelFragment() {
     }
 
     private fun handleNetworkState(loadStates: CombinedLoadStates) {
-        val refresh = loadStates.refresh
-        val append = loadStates.append
-        val isEmptyList = illustAdapter.itemCount == 0
-        if (refresh is LoadState.Error || append is LoadState.Error) {
-            val error = if (refresh is LoadState.Error) {
-                refresh.error
-            } else {
-                (append as LoadState.Error).error
-            }
-            handleException(error, isEmptyList)
-        } else {
-            retryButton.isVisible = false
-            swipeRefreshLayout.isVisible = true
-        }
-        val isRefreshing = refresh is LoadState.Loading
-        setSwipeRefreshing(isRefreshing && !isEmptyList)
-        progressBarCircular.isVisible = isRefreshing && isEmptyList
+        val refresh = loadStates.mediator?.refresh
+        val append = loadStates.mediator?.append
+        swipeRefreshLayout.isRefreshing = refresh is LoadState.Loading
         progressBarHorizontal.isVisible = append is LoadState.Loading
-    }
-
-    private fun setSwipeRefreshing(isRefreshing: Boolean) {
-        if (swipeRefreshLayout.isRefreshing != isRefreshing) {
-            swipeRefreshLayout.isRefreshing = isRefreshing
+        val error = when {
+            refresh is LoadState.Error -> refresh.error
+            append is LoadState.Error -> append.error
+            else -> null
+        }
+        if (error != null) {
+            handleException(error)
         }
     }
 
-    private fun handleException(error: Throwable, isEmptyList: Boolean) {
+    private fun handleException(error: Throwable) {
         if (error is HttpException && error.code() == 400) {
-            retryButton.isVisible = false
-            swipeRefreshLayout.isVisible = true
-            setSwipeRefreshing(!isEmptyList)
-            progressBarCircular.isVisible = isEmptyList
             refreshToken(
                 uid = action.token.uid,
-                refreshToken = action.token.data.refreshToken,
-                deviceToken = action.token.data.deviceToken
+                refreshToken = action.token.data.refreshToken
             )
-        } else {
-            swipeRefreshLayout.isVisible = false
-            progressBarCircular.isVisible = false
-            retryButton.isVisible = true
         }
     }
 

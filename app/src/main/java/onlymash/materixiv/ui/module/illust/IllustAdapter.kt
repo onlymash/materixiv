@@ -5,7 +5,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.paging.LoadState
+import androidx.paging.LoadStateAdapter
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -32,6 +35,22 @@ class IllustAdapter(
                     newItem: IllustCache
             ): Boolean = oldItem.id == newItem.id
         }
+    }
+
+    fun withLoadStateFooterSafe(
+        footer: LoadStateAdapter<*>
+    ): ConcatAdapter {
+        val containerAdapter = ConcatAdapter(this)
+        addLoadStateListener { loadStates ->
+            footer.loadState = loadStates.append
+            if (loadStates.append is LoadState.Error && !containerAdapter.adapters.contains(footer)) {
+                containerAdapter.addAdapter(footer)
+                footer.loadState = loadStates.append
+            } else if (containerAdapter.adapters.contains(footer)){
+                containerAdapter.removeAdapter(footer)
+            }
+        }
+        return containerAdapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IllustViewHolder {

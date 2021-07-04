@@ -14,21 +14,25 @@ import onlymash.materixiv.data.api.PixivOauthApi
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
+private val defaultJson
+    get() = Json {
+    ignoreUnknownKeys = true
+    isLenient = true
+}
+
+val converterFactory
+    get() = defaultJson.asConverterFactory("application/json".toMediaType())
+
 inline fun <reified T> createApi(): T {
-    val contentType = "application/json".toMediaType()
     val baseUrl = when (T::class.java) {
         PixivOauthApi::class.java -> Values.BASE_URL_OAUTH
         PixivAppApi::class.java -> Values.BASE_URL_APP
         else -> Values.BASE_URL
     }
-    val factory = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }.asConverterFactory(contentType)
     return Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(pixivClient)
-        .addConverterFactory(factory)
+        .addConverterFactory(converterFactory)
         .build()
         .create(T::class.java)
 }

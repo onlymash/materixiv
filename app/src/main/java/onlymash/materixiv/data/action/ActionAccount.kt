@@ -9,8 +9,8 @@ data class ActionAccount(
     var newAccount: String = "",
     var newMail: String = ""
 ) {
-    private val currentAccount get() = token.data.profile.account
-    private val currentMail get() = token.data.profile.mailAddress
+    private val currentAccount get() = token.data.user.account
+    private val currentMail get() = token.data.user.mailAddress
 
     val updatedMap: Map<String, String>
         get() {

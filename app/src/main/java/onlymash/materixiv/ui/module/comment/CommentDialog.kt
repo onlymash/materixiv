@@ -1,14 +1,17 @@
 package onlymash.materixiv.ui.module.comment
 
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.data.action.ActionComment
 import onlymash.materixiv.data.api.PixivAppApi
@@ -16,7 +19,9 @@ import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.comment.CommentRepositoryImpl
 import onlymash.materixiv.databinding.DialogCommentBinding
+import onlymash.materixiv.extensions.asMergedLoadStates
 import onlymash.materixiv.extensions.getViewModel
+import onlymash.materixiv.extensions.getWindowHeight
 import onlymash.materixiv.ui.module.common.TokenBottomSheetDialog
 import org.kodein.di.instance
 import retrofit2.HttpException
@@ -58,13 +63,22 @@ class CommentDialog : TokenBottomSheetDialog<DialogCommentBinding>() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.root.minimumHeight = getWindowHeight() / 2
+        binding.root.minimumHeight = requireActivity().getWindowHeight() / 2
         commentApapter = CommentAdapter()
         binding.commentList.adapter = commentApapter
         commentApapter.addLoadStateListener { handleNetworkState(it) }
-        commentViewModel.comments.observe(viewLifecycleOwner, Observer {
-            commentApapter.submitData(lifecycle, it)
-        })
+        lifecycleScope.launchWhenCreated {
+            commentViewModel.comments.collectLatest {
+                commentApapter.submitData(it)
+            }
+        }
+        lifecycleScope.launchWhenCreated {
+            commentApapter.loadStateFlow
+                .asMergedLoadStates()
+                .distinctUntilChangedBy { it.refresh }
+                .filter { it.refresh is LoadState.NotLoading }
+                .collect { binding.commentList.scrollToPosition(0) }
+        }
         binding.retryButton.setOnClickListener { commentApapter.retry() }
     }
 
@@ -94,8 +108,7 @@ class CommentDialog : TokenBottomSheetDialog<DialogCommentBinding>() {
             binding.progressBar.isVisible = false
             refreshToken(
                 uid = token.uid,
-                refreshToken = token.data.refreshToken,
-                deviceToken = token.data.deviceToken
+                refreshToken = token.data.refreshToken
             )
         } else {
             binding.commentList.isVisible = false
@@ -115,11 +128,5 @@ class CommentDialog : TokenBottomSheetDialog<DialogCommentBinding>() {
 
     override fun onRefreshStateChange(state: NetworkState?) {
 
-    }
-
-    private fun getWindowHeight(): Int {
-        val displayMetrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-        return displayMetrics.heightPixels
     }
 }

@@ -18,6 +18,7 @@ abstract class SharedViewModelFragment : RefreshableListFragment() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onBaseViewCreated(view, savedInstanceState)
         if (activity is SearchActivity) {
             val searchBarHeight = resources.getDimensionPixelSize(R.dimen.searchbar_height) + 2 * resources.getDimensionPixelSize(R.dimen.searchbar_margin_vertical)
             list.updatePadding(top = searchBarHeight)

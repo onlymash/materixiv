@@ -12,7 +12,7 @@
             app:key="network_doh"
             app:title="@string/settings_category_network_doh"
             app:icon="@drawable/ic_enhanced_encryption_outline_24dp"
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:summary="@string/settings_category_network_doh_summary"/>
 
         <com.takisoft.preferencex.SimpleMenuPreference
@@ -28,7 +28,7 @@
             app:key="network_fuck_gfw"
             app:title="@string/settings_category_network_fuck_gfw"
             app:icon="@drawable/ic_grid_off_outline_24dp"
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:summary="@string/settings_category_network_fuck_gfw_summary"/>
     </PreferenceCategory>
     <PreferenceCategory

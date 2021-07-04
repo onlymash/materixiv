@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import onlymash.materixiv.R
@@ -82,7 +81,7 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
             layoutManager = StaggeredGridLayoutManager(spanCount, RecyclerView.VERTICAL)
             adapter = trendAdapter
         }
-        trendViewModel.trendTags.observe(viewLifecycleOwner, Observer { trendTags ->
+        trendViewModel.trendTags.observe(viewLifecycleOwner, { trendTags ->
             if (trendTags == null) {
                 if (trendAdapter.trendTags.isEmpty()) {
                     retryButton.isVisible = true
@@ -92,7 +91,7 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
                 trendAdapter.trendTags = trendTags
             }
         })
-        trendViewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+        trendViewModel.loading.observe(viewLifecycleOwner, { isLoading ->
             if (isLoading) {
                 retryButton.isVisible = false
             }

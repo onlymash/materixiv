@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -160,7 +159,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
             }
         }
         adapter = IllustDetailAdapter(listener)
-        sharedViewModel.topWindowSize.observe(viewLifecycleOwner, Observer { systemWindowInsetTop ->
+        sharedViewModel.topWindowSize.observe(viewLifecycleOwner, { systemWindowInsetTop ->
             binding.toolbar.updateLayoutParams<CollapsingToolbarLayout.LayoutParams> {
                 topMargin = systemWindowInsetTop
                 adapter.imageMarginTop = systemWindowInsetTop + binding.toolbar.minimumHeight
@@ -177,12 +176,12 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
         binding.detailList.registerOnPageChangeCallback(pageChangeCallback)
         binding.detailList.offscreenPageLimit = 2
-        illustDeatilViewModel.illust.observe(viewLifecycleOwner, Observer { illust ->
+        illustDeatilViewModel.illust.observe(viewLifecycleOwner, { illust ->
             if (illust != null) {
                 bindData(illust)
             }
         })
-        commonViewModel.ugoira.observe(viewLifecycleOwner, Observer { ugoiraMetadata ->
+        commonViewModel.ugoira.observe(viewLifecycleOwner, { ugoiraMetadata ->
             ugoira = ugoiraMetadata
             if (toDownloadUgoira) {
                 downloadUgoira()

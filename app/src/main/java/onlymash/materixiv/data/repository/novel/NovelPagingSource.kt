@@ -1,6 +1,7 @@
 package onlymash.materixiv.data.repository.novel
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import onlymash.materixiv.data.action.ActionNovel
 import onlymash.materixiv.data.api.PixivAppApi
@@ -23,5 +24,12 @@ class NovelPagingSource(
         } catch (ex: Exception) {
             LoadResult.Error(ex)
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<String, Novel>): String? {
+        state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)
+        }
+        return null
     }
 }

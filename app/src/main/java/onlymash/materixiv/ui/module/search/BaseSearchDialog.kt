@@ -2,7 +2,6 @@ package onlymash.materixiv.ui.module.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.viewbinding.ViewBinding
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
@@ -29,10 +28,10 @@ abstract class BaseSearchDialog<T: ViewBinding> : TokenDialog<T>() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
-        autocompleteViewModel.tags.observe(viewLifecycleOwner, Observer {
+        autocompleteViewModel.tags.observe(viewLifecycleOwner, {
             onTagsUpdated(it)
         })
-        autocompleteViewModel.names.observe(viewLifecycleOwner, Observer {
+        autocompleteViewModel.names.observe(viewLifecycleOwner, {
             onNamesUpdated(it)
         })
     }

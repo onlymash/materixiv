@@ -18,15 +18,15 @@ class TokenRepositoryImpl(private val api: PixivOauthApi,
         }
     }
 
-    override suspend fun login(username: String, password: String): NetResult<Boolean> {
+    override suspend fun getToken(code: String, codeVerifier: String): NetResult<Boolean> {
         return withContext(Dispatchers.IO) {
             try {
                 val time = System.currentTimeMillis()
-                val response = api.login(username = username, password = password)
+                val response = api.getToken(code = code, codeVerifier = codeVerifier)
                 val token = Token(
                     time = time,
-                    userId = response.data.profile.id,
-                    data = response.data
+                    userId = response.detail.user.id,
+                    data = response.detail
                 )
                 dao.insert(token)
                 NetResult.Success(true)
@@ -40,16 +40,16 @@ class TokenRepositoryImpl(private val api: PixivOauthApi,
         }
     }
 
-    override suspend fun refresh(uid: Long, refreshToken: String, deviceToken: String): NetResult<Boolean> {
+    override suspend fun refresh(uid: Long, refreshToken: String): NetResult<Boolean> {
         return withContext(Dispatchers.IO) {
             try {
                 val time = System.currentTimeMillis()
-                val response = api.refreshToken(refreshToken, deviceToken)
+                val response = api.refreshToken(refreshToken = refreshToken)
                 val token = Token(
                     uid = uid,
                     time = time,
-                    userId = response.data.profile.id,
-                    data = response.data
+                    userId = response.detail.user.id,
+                    data = response.detail
                 )
                 dao.update(token)
                 NetResult.Success(true)

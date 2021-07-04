@@ -10,6 +10,7 @@ object Keys {
     const val X_CLIENT_HASH = "X-Client-Hash"
     const val X_CLIENT_TIME = "X-Client-Time"
     const val ACCEPT_LANGUAGE = "Accept-Language"
+    const val APP_ACCEPT_LANGUAGE = "App-Accept-Language"
     const val AUTHORIZATION = "Authorization"
     const val REFERER = "referer"
 
@@ -23,4 +24,6 @@ object Keys {
     const val NETWORK_FUCK_GFW = "network_fuck_gfw"
     const val NETWORK_DOH = "network_doh"
     const val NETWORK_DOH_PROVIDER = "network_doh_provider"
+
+    const val LOGIN_URL = "login_url"
 }

@@ -28,10 +28,10 @@ class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
         return _tokens
     }
 
-    fun login(username: String, password: String) {
+    fun fetchToken(code: String, codeVerifier: String) {
         loginState.postValue(NetworkState.LOADING)
         viewModelScope.launch {
-            when (val result = repo.login(username, password)) {
+            when (val result = repo.getToken(code, codeVerifier)) {
                 is NetResult.Success -> {
                     loginState.postValue(NetworkState.LOADED)
                 }
@@ -45,10 +45,10 @@ class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
         }
     }
 
-    fun refresh(uid: Long, refreshToken: String, deviceToken: String) {
+    fun refresh(uid: Long, refreshToken: String) {
         refreshState.postValue(NetworkState.LOADING)
         viewModelScope.launch {
-            when (val result = repo.refresh(uid, refreshToken, deviceToken)) {
+            when (val result = repo.refresh(uid, refreshToken)) {
                 is NetResult.Success -> {
                     refreshState.postValue(NetworkState.LOADED)
                 }

@@ -16,8 +16,9 @@ class UserRepositoryImpl(
 
     override fun getUsers(action: ActionUser): Flow<PagingData<UserCache>> {
         return Pager(
-            PagingConfig(20),
-            remoteMediator = UserRemoteMediator(action, api, db)
+            config = PagingConfig(pageSize = 20),
+            remoteMediator = UserRemoteMediator(action, api, db),
+            initialKey = 0
         ) {
             db.userDao().getUsers(action.tokenUid, action.dbQuery)
         }.flow

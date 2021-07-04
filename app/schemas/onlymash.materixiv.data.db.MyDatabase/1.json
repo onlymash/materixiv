@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "357e0fdc3c1d7bcfb9d50ab9dba65d6a",
+    "identityHash": "25f02f644c0e5e5367261f0b7a7bb86c",
     "entities": [
       {
         "tableName": "tokens",
@@ -52,8 +52,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "illusts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `token_uid` INTEGER NOT NULL, `query` TEXT NOT NULL, `id` INTEGER NOT NULL, `index` INTEGER NOT NULL, `illust` TEXT NOT NULL, FOREIGN KEY(`token_uid`) REFERENCES `tokens`(`uid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `token_uid` INTEGER NOT NULL, `query` TEXT NOT NULL, `id` INTEGER NOT NULL, `next_url` TEXT, `user_preview` TEXT NOT NULL, FOREIGN KEY(`token_uid`) REFERENCES `tokens`(`uid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "uid",
@@ -80,10 +80,83 @@
             "notNull": true
           },
           {
-            "fieldPath": "index",
-            "columnName": "index",
+            "fieldPath": "nextUrl",
+            "columnName": "next_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userPreview",
+            "columnName": "user_preview",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_users_token_uid_query_id",
+            "unique": true,
+            "columnNames": [
+              "token_uid",
+              "query",
+              "id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_users_token_uid_query_id` ON `${TABLE_NAME}` (`token_uid`, `query`, `id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tokens",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "token_uid"
+            ],
+            "referencedColumns": [
+              "uid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "illusts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `token_uid` INTEGER NOT NULL, `query` TEXT NOT NULL, `id` INTEGER NOT NULL, `next_url` TEXT, `illust` TEXT NOT NULL, FOREIGN KEY(`token_uid`) REFERENCES `tokens`(`uid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "tokenUid",
+            "columnName": "token_uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "query",
+            "columnName": "query",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nextUrl",
+            "columnName": "next_url",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "illust",
@@ -211,7 +284,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '357e0fdc3c1d7bcfb9d50ab9dba65d6a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '25f02f644c0e5e5367261f0b7a7bb86c')"
     ]
   }
 }

@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.google.android.material.snackbar.Snackbar
-import onlymash.materixiv.R
+import okhttp3.HttpUrl
+import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.isFailed
 import onlymash.materixiv.data.repository.isRunning
 import onlymash.materixiv.databinding.FragmentLoginBinding
+import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.launchUrl
 import onlymash.materixiv.extensions.setupTooltipText
 import onlymash.materixiv.ui.module.common.TokenFragment
@@ -23,7 +24,10 @@ import onlymash.materixiv.ui.module.settings.SettingsActivity
 class LoginFragment : TokenFragment<FragmentLoginBinding>() {
 
     private val signInButton get() = binding.signInButton
-    private val processBar get() = binding.progressCircular.progressBarCircular
+    private val retry get() = binding.retryButton
+    private val message get() = binding.message
+    private val progressBar get() = binding.progressBar
+    private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreateBinding(
         inflater: LayoutInflater,
@@ -32,9 +36,25 @@ class LoginFragment : TokenFragment<FragmentLoginBinding>() {
         return FragmentLoginBinding.inflate(inflater, container, false)
     }
 
+    override fun onCreateViewModel() {
+        super.onCreateViewModel()
+        loginViewModel = requireActivity().getViewModel()
+    }
+
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
+        loginViewModel.code.observe(viewLifecycleOwner, { code ->
+            if (code != null) {
+                fetchToken(code, loginViewModel.codeVerifier)
+            }
+        })
         signInButton.setOnClickListener {
             attemptSignIn()
+        }
+        retry.setOnClickListener {
+            val code = loginViewModel.code.value
+            if (code != null) {
+                fetchToken(code, loginViewModel.codeVerifier)
+            }
         }
         binding.settingsButton.apply {
             setOnClickListener {
@@ -42,19 +62,19 @@ class LoginFragment : TokenFragment<FragmentLoginBinding>() {
             }
             setupTooltipText()
         }
-        binding.register.setOnClickListener { 
-            context?.launchUrl("https://accounts.pixiv.net/signup")
-        }
     }
 
     private fun attemptSignIn() {
-        val username = binding.usernameEdit.text?.toString()?.trim()
-        val password = binding.passwordEdit.text?.toString()
-        if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
-            Snackbar.make(requireView(), getString(R.string.login_msg_tip_empty), Snackbar.LENGTH_LONG).show()
-            return
-        }
-        login(username, password)
+        val context = context ?: return
+        val httpUrl = HttpUrl.Builder()
+            .scheme("https")
+            .host(Values.HOST_APP)
+            .addEncodedPathSegments("web/v1/login")
+            .addQueryParameter("code_challenge", loginViewModel.codeChallenge)
+            .addQueryParameter("code_challenge_method", "S256")
+            .addQueryParameter("client", "pixiv-android")
+            .build()
+        context.launchUrl(httpUrl.toString())
     }
 
     override fun onTokenLoaded(token: Token) {
@@ -64,31 +84,12 @@ class LoginFragment : TokenFragment<FragmentLoginBinding>() {
     }
 
     override fun onLoginStateChange(state: NetworkState?) {
-        bindState(state)
+        retry.isVisible = state.isFailed()
+        progressBar.isVisible = state.isRunning()
+        message.text = state?.msg
     }
 
     override fun onRefreshStateChange(state: NetworkState?) {
-        bindState(state)
-    }
 
-    private fun bindState(state: NetworkState?) {
-        if (state.isRunning()) {
-            processBar.isVisible = true
-            signInButton.isVisible = false
-        } else {
-            processBar.isVisible = false
-            signInButton.isVisible = true
-            if (state.isFailed()) {
-                binding.errorMsg.apply {
-                    isVisible = true
-                    text = state?.msg
-                }
-            } else {
-                binding.errorMsg.apply {
-                    isVisible = false
-                    text = null
-                }
-            }
-        }
     }
 }

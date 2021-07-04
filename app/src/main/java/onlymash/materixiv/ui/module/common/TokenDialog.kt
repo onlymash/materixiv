@@ -3,7 +3,6 @@ package onlymash.materixiv.ui.module.common
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.viewbinding.ViewBinding
 import onlymash.materixiv.data.api.PixivOauthApi
 import onlymash.materixiv.data.db.dao.TokenDao
@@ -33,22 +32,22 @@ abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onBaseViewCreated(view, savedInstanceState)
-        tokenViewModel.load().observe(viewLifecycleOwner, Observer { tokens ->
+        tokenViewModel.load().observe(viewLifecycleOwner, { tokens ->
             if (tokens.isNullOrEmpty()) {
                 toLoginPage()
             } else {
                 val token = tokens[0]
                 if (token.isExpired) {
-                    refreshToken(token.uid, token.data.refreshToken, token.data.deviceToken)
+                    refreshToken(token.uid, token.data.refreshToken)
                 } else {
                     onTokenLoaded(token)
                 }
             }
         })
-        tokenViewModel.loginState.observe(viewLifecycleOwner, Observer {
+        tokenViewModel.loginState.observe(viewLifecycleOwner, {
             onLoginStateChange(it)
         })
-        tokenViewModel.refreshState.observe(viewLifecycleOwner, Observer {
+        tokenViewModel.refreshState.observe(viewLifecycleOwner, {
             onRefreshStateChange(it)
         })
     }
@@ -67,11 +66,11 @@ abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
 
     abstract fun onRefreshStateChange(state: NetworkState?)
 
-    protected fun login(username: String, password: String) {
-        tokenViewModel.login(username, password)
+    protected fun fetchToken(code: String, codeVerifier: String) {
+        tokenViewModel.fetchToken(code, codeVerifier)
     }
 
-    protected fun refreshToken(uid: Long, refreshToken: String, deviceToken: String) {
-        tokenViewModel.refresh(uid, refreshToken, deviceToken)
+    protected fun refreshToken(uid: Long, refreshToken: String) {
+        tokenViewModel.refresh(uid, refreshToken)
     }
 }

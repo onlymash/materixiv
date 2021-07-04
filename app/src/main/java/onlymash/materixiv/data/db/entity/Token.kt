@@ -19,7 +19,7 @@ data class Token(
     @ColumnInfo(name = "time")
     var time: Long = 0L,
     @ColumnInfo(name = "data")
-    val data: TokenResponse.TokenInfo
+    val data: TokenResponse.Detail
 ) {
     val auth: String
         get() = "Bearer ${data.accessToken}"

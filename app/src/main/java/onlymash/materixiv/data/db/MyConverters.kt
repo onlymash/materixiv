@@ -9,12 +9,12 @@ import onlymash.materixiv.data.model.common.UserPreview
 class MyConverters {
 
     @TypeConverter
-    fun tokenInfoToString(data: TokenResponse.TokenInfo): String =
-        Json.encodeToString(TokenResponse.TokenInfo.serializer(), data)
+    fun tokenDetailToString(data: TokenResponse.Detail): String =
+        Json.encodeToString(TokenResponse.Detail.serializer(), data)
 
     @TypeConverter
-    fun stringToTokenInfo(json: String): TokenResponse.TokenInfo =
-        Json.decodeFromString(TokenResponse.TokenInfo.serializer(), json)
+    fun stringToTokenDetail(json: String): TokenResponse.Detail =
+        Json.decodeFromString(TokenResponse.Detail.serializer(), json)
 
     @TypeConverter
     fun illustToString(illust: Illust): String =

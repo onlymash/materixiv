@@ -19,7 +19,7 @@ import onlymash.materixiv.data.db.entity.UserCache
 
 @Database(
     entities = [(Token::class), (UserCache::class), (IllustCache::class), (Download::class)],
-    version = 2,
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(MyConverters::class)

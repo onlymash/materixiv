@@ -17,6 +17,9 @@ class IllustRemoteMediator(
     private val db: MyDatabase
 ) : RemoteMediator<Int, IllustCache>() {
 
+    private val illustNotEmpty: Boolean
+        get() = db.illustDao().isNotEmpty(action.token.uid, action.dbQuery)
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, IllustCache>
@@ -26,9 +29,14 @@ class IllustRemoteMediator(
         val url = when (loadType) {
             LoadType.REFRESH -> action.getUrl(0)
             LoadType.PREPEND -> null
-            LoadType.APPEND -> illustDao.nextUrl(action.token.uid, dbQuery)?.toHttpUrl()
-        }
-            ?: return MediatorResult.Success(endOfPaginationReached = true)
+            LoadType.APPEND -> {
+                if (illustNotEmpty) {
+                    illustDao.nextUrl(action.token.uid, dbQuery)?.toHttpUrl()
+                } else {
+                    action.getUrl(0)
+                }
+            }
+        } ?: return MediatorResult.Success(endOfPaginationReached = true)
         return try {
             val response = api.getIllusts(action.token.auth, url)
             val nextUrl = response.nextUrl
@@ -54,10 +62,6 @@ class IllustRemoteMediator(
     }
 
     override suspend fun initialize(): InitializeAction {
-        return if (db.illustDao().isNotEmpty(action.token.uid, action.dbQuery)) {
-            InitializeAction.SKIP_INITIAL_REFRESH
-        } else {
-            InitializeAction.LAUNCH_INITIAL_REFRESH
-        }
+        return InitializeAction.SKIP_INITIAL_REFRESH
     }
 }

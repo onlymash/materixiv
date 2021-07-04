@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.tabs.TabLayoutMediator
@@ -60,9 +59,9 @@ abstract class SearchBarPagerFragment<T: FragmentStateAdapter> : ViewModelFragme
         TabLayoutMediator(binding.tabs, viewPager) { tab, position ->
             tab.text = tabNames[position]
         }.attach()
-        sharedViewModel.token.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.token.observe(viewLifecycleOwner, {
             GlideApp.with(this)
-                .load(it.data.profile.profileImageUrls.px50x50)
+                .load(it.data.user.profileImageUrls.px50x50)
                 .placeholder(ContextCompat.getDrawable(rightIcon.context, R.drawable.placeholder_avatar))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(rightIcon)

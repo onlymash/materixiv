@@ -118,7 +118,7 @@ fun getDocumentFileId(prentId: String, fileName: String): String {
 
 fun String.getMimeType(): String {
     var extension = fileExt()
-    extension = extension.toLowerCase(Locale.getDefault())
+    extension = extension.lowercase()
     return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: ""
 }
 

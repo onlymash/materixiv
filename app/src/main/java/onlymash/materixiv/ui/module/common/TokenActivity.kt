@@ -2,7 +2,6 @@ package onlymash.materixiv.ui.module.common
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import onlymash.materixiv.data.api.PixivOauthApi
 import onlymash.materixiv.data.db.dao.TokenDao
 import onlymash.materixiv.data.db.entity.Token
@@ -24,22 +23,22 @@ abstract class TokenActivity : KodeinActivity() {
         super.onCreate(savedInstanceState)
         onLoadTokenBefore(savedInstanceState)
         tokenViewModel = getViewModel(TokenViewModel(TokenRepositoryImpl(pixivOauthApi, tokenDao)))
-        tokenViewModel.load().observe(this, Observer { tokens ->
+        tokenViewModel.load().observe(this, { tokens ->
             if (tokens.isNullOrEmpty()) {
                 toLoginPage()
             } else {
                 val token = tokens[0]
                 if (token.isExpired) {
-                    refreshToken(token.uid, token.data.refreshToken, token.data.deviceToken)
+                    refreshToken(token.uid, token.data.refreshToken)
                 } else {
                     onTokenLoaded(token)
                 }
             }
         })
-        tokenViewModel.loginState.observe(this, Observer {
+        tokenViewModel.loginState.observe(this, {
             onLoginStateChange(it)
         })
-        tokenViewModel.refreshState.observe(this, Observer {
+        tokenViewModel.refreshState.observe(this, {
             onRefreshStateChange(it)
         })
     }
@@ -57,11 +56,11 @@ abstract class TokenActivity : KodeinActivity() {
 
     abstract fun onRefreshStateChange(state: NetworkState?)
 
-    protected fun login(username: String, password: String) {
-        tokenViewModel.login(username, password)
+    protected fun fetchToken(code: String, codeVerifier: String) {
+        tokenViewModel.fetchToken(code, codeVerifier)
     }
 
-    protected fun refreshToken(uid: Long, refreshToken: String, deviceToken: String) {
-        tokenViewModel.refresh(uid, refreshToken, deviceToken)
+    protected fun refreshToken(uid: Long, refreshToken: String) {
+        tokenViewModel.refresh(uid, refreshToken)
     }
 }

@@ -9,7 +9,6 @@ import android.view.ViewTreeObserver
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
@@ -88,9 +87,9 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
         leftButton.setImageDrawable(DrawerArrowDrawable(context).apply { progress = 1.0f })
         leftButton.setOnClickListener { activity?.onBackPressed() }
         title.setOnClickListener { SearchDialog.create(type).show(childFragmentManager, "search") }
-        sharedViewModel.token.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.token.observe(viewLifecycleOwner, {
             GlideApp.with(rightIcon)
-                .load(it.data.profile.profileImageUrls.px170x170)
+                .load(it.data.user.profileImageUrls.px170x170)
                 .placeholder(ContextCompat.getDrawable(rightIcon.context, R.drawable.placeholder_avatar))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(rightIcon)

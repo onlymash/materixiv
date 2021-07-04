@@ -2,30 +2,25 @@ package onlymash.materixiv.extensions
 
 import java.security.MessageDigest
 
-/**
- * Supported algorithms on Android:
- *
- * Algorithm	Supported API Levels
- * MD5          1+
- * SHA-1	    1+
- * SHA-224	    1-8,22+
- * SHA-256	    1+
- * SHA-384	    1+
- * SHA-512	    1+
- */
 
 private fun String.hashString(type: String): String {
-    val hexChars = "0123456789abcdef"
     val bytes = MessageDigest.getInstance(type).digest(toByteArray())
-    val result = StringBuilder(bytes.size * 2)
+    return toHex(bytes)
+}
 
-    bytes.forEach { byte ->
-        val i = byte.toInt()
-        result.append(hexChars[i shr 4 and 0x0f])
-        result.append(hexChars[i and 0x0f])
+private fun toHex(bytes: ByteArray): String {
+    return with(StringBuilder()) {
+        bytes.forEach { byte ->
+            val hex = byte.toInt() and (0xFF)
+            val hexStr = Integer.toHexString(hex)
+            if (hexStr.length == 1) {
+                append("0").append(hexStr)
+            } else {
+                append(hexStr)
+            }
+        }
+        this.toString()
     }
-
-    return result.toString()
 }
 
 fun String.sha512() = hashString("SHA-512")

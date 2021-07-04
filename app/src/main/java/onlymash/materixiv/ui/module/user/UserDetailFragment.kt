@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -76,10 +75,10 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
-        userDetailViewModel.userDetail.observe(viewLifecycleOwner, Observer {
+        userDetailViewModel.userDetail.observe(viewLifecycleOwner, {
             bindData(it)
         })
-        userDetailViewModel.isFailed.observe(viewLifecycleOwner, Observer { failed ->
+        userDetailViewModel.isFailed.observe(viewLifecycleOwner, { failed ->
             if (failed) {
                 binding.layoutUserInfo.progressBar.isVisible = false
                 binding.layoutUserInfo.retryButton.isVisible = true

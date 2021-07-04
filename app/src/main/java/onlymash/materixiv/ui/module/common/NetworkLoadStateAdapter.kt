@@ -4,17 +4,20 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import onlymash.materixiv.databinding.ItemFooterBinding
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
-class NetworkLoadStateAdapter(
-        private val retryCallback: () -> Unit
+class NetworkLoadStateAdapter<T : Any, VH : RecyclerView.ViewHolder>(
+    private val adapter: PagingDataAdapter<T, VH>,
 ) : LoadStateAdapter<NetworkLoadStateAdapter.NetworkStateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): NetworkStateViewHolder {
-        return NetworkStateViewHolder(parent, retryCallback)
+        return NetworkStateViewHolder(parent) {
+            adapter.retry()
+        }
     }
 
     override fun onBindViewHolder(holder: NetworkStateViewHolder, loadState: LoadState) {
@@ -33,10 +36,8 @@ class NetworkLoadStateAdapter(
         )
 
         private val errorMsg = binding.errorMsg
-        private val retryButton = binding.retryButton
-
-        init {
-            retryButton.setOnClickListener { retryCallback.invoke() }
+        private val retryButton = binding.retryButton.also {
+            it.setOnClickListener { retryCallback() }
         }
 
         fun bindTo(loadState: LoadState) {

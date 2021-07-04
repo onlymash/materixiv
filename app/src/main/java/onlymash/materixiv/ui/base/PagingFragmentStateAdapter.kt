@@ -23,12 +23,62 @@ abstract class PagingFragmentStateAdapter<T: Any>(
     workerDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
+    /**
+     * Track whether developer called [setStateRestorationPolicy] or not to decide whether the
+     * automated state restoration should apply or not.
+     */
+    private var userSetRestorationPolicy = false
+
+    override fun setStateRestorationPolicy(strategy: StateRestorationPolicy) {
+        userSetRestorationPolicy = true
+        super.setStateRestorationPolicy(strategy)
+    }
+
     private val differ = AsyncPagingDataDiffer(
         diffCallback = diffCallback,
         updateCallback = AdapterListUpdateCallback(this),
         mainDispatcher = mainDispatcher,
         workerDispatcher = workerDispatcher
     )
+
+    init {
+        // Wait on state restoration until the first insert event.
+        super.setStateRestorationPolicy(StateRestorationPolicy.PREVENT)
+
+        fun considerAllowingStateRestoration() {
+            if (stateRestorationPolicy == StateRestorationPolicy.PREVENT && !userSetRestorationPolicy) {
+                this.stateRestorationPolicy = StateRestorationPolicy.ALLOW
+            }
+        }
+
+        // Watch for adapter insert before triggering state restoration. This is almost redundant
+        // with loadState below, but can handle cached case.
+        @Suppress("LeakingThis")
+        registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                considerAllowingStateRestoration()
+                unregisterAdapterDataObserver(this)
+                super.onItemRangeInserted(positionStart, itemCount)
+            }
+        })
+
+        // Watch for loadState update before triggering state restoration. This is almost
+        // redundant with data observer above, but can handle empty page case.
+        addLoadStateListener(object : Function1<CombinedLoadStates, Unit> {
+            // Ignore the first event we get, which is always the initial state, since we only
+            // want to observe for Insert events.
+            private var ignoreNextEvent = true
+
+            override fun invoke(loadStates: CombinedLoadStates) {
+                if (ignoreNextEvent) {
+                    ignoreNextEvent = false
+                } else if (loadStates.source.refresh is LoadState.NotLoading) {
+                    considerAllowingStateRestoration()
+                    removeLoadStateListener(this)
+                }
+            }
+        })
+    }
 
     /**
      * Note: [getItemId] is final, because stable IDs are unnecessary and therefore unsupported.
@@ -60,8 +110,6 @@ abstract class PagingFragmentStateAdapter<T: Any>(
      * up-to-date representation of your backing dataset should typically be done using
      * [collectLatest][kotlinx.coroutines.flow.collectLatest].
      *
-     * @sample androidx.paging.samples.submitDataFlowSample
-     *
      * @see [Pager]
      */
     suspend fun submitData(pagingData: PagingData<T>) {
@@ -75,9 +123,6 @@ abstract class PagingFragmentStateAdapter<T: Any>(
      * This method is typically used when observing a RxJava or LiveData stream produced by [Pager].
      * For [Flow] support, use the suspending overload of [submitData], which automates cancellation
      * via [CoroutineScope][kotlinx.coroutines.CoroutineScope] instead of relying of [Lifecycle].
-     *
-     * @sample androidx.paging.samples.submitDataLiveDataSample
-     * @sample androidx.paging.samples.submitDataRxSample
      *
      * @see submitData
      * @see [Pager]
@@ -115,7 +160,6 @@ abstract class PagingFragmentStateAdapter<T: Any>(
      *
      * @see PagingSource.invalidate
      *
-     * @sample androidx.paging.samples.refreshSample
      */
     fun refresh() {
         differ.refresh()
@@ -157,6 +201,26 @@ abstract class PagingFragmentStateAdapter<T: Any>(
     val loadStateFlow: Flow<CombinedLoadStates> = differ.loadStateFlow
 
     /**
+     * A hot [Flow] that emits after the pages presented to the UI are updated, even if the
+     * actual items presented don't change.
+     *
+     * An update is triggered from one of the following:
+     *   * [submitData] is called and initial load completes, regardless of any differences in
+     *     the loaded data
+     *   * A [Page][androidx.paging.PagingSource.LoadResult.Page] is inserted
+     *   * A [Page][androidx.paging.PagingSource.LoadResult.Page] is dropped
+     *
+     * Note: This is a [SharedFlow][kotlinx.coroutines.flow.SharedFlow] configured to replay
+     * 0 items with a buffer of size 64. If a collector lags behind page updates, it may
+     * trigger multiple times for each intermediate update that was presented while your collector
+     * was still working. To avoid this behavior, you can
+     * [conflate][kotlinx.coroutines.flow.conflate] this [Flow] so that you only receive the latest
+     * update, which is useful in cases where you are simply updating UI and don't care about
+     * tracking the exact number of page updates.
+     */
+    val onPagesUpdatedFlow: Flow<Unit> = differ.onPagesUpdatedFlow
+
+    /**
      * Add a [CombinedLoadStates] listener to observe the loading state of the current [PagingData].
      *
      * As new [PagingData] generations are submitted and displayed, the listener will be notified to
@@ -165,7 +229,6 @@ abstract class PagingFragmentStateAdapter<T: Any>(
      * @param listener [LoadStates] listener to receive updates.
      *
      * @see removeLoadStateListener
-     * @sample androidx.paging.samples.addLoadStateListenerSample
      */
     fun addLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
         differ.addLoadStateListener(listener)
@@ -179,6 +242,36 @@ abstract class PagingFragmentStateAdapter<T: Any>(
      */
     fun removeLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
         differ.removeLoadStateListener(listener)
+    }
+
+    /**
+     * Add a listener which triggers after the pages presented to the UI are updated, even if the
+     * actual items presented don't change.
+     *
+     * An update is triggered from one of the following:
+     *   * [submitData] is called and initial load completes, regardless of any differences in
+     *     the loaded data
+     *   * A [Page][androidx.paging.PagingSource.LoadResult.Page] is inserted
+     *   * A [Page][androidx.paging.PagingSource.LoadResult.Page] is dropped
+     *
+     * @param listener called after pages presented are updated.
+     *
+     * @see removeOnPagesUpdatedListener
+     */
+    fun addOnPagesUpdatedListener(listener: () -> Unit) {
+        differ.addOnPagesUpdatedListener(listener)
+    }
+
+    /**
+     * Remove a previously registered listener for new [PagingData] generations completing
+     * initial load and presenting to the UI.
+     *
+     * @param listener Previously registered listener.
+     *
+     * @see addOnPagesUpdatedListener
+     */
+    fun removeOnPagesUpdatedListener(listener: () -> Unit) {
+        differ.removeOnPagesUpdatedListener(listener)
     }
 
     /**

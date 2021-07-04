@@ -63,12 +63,6 @@ val pixivClientBuilder: OkHttpClient.Builder
     }
 
 private val loggingInterceptor: HttpLoggingInterceptor
-    get() = HttpLoggingInterceptor(
-        object : HttpLoggingInterceptor.Logger {
-            override fun log(message: String) {
-                Log.d("PixivApi", message)
-            }
-        }
-    ).apply {
+    get() = HttpLoggingInterceptor { message -> Log.d("PixivApi", message) }.apply {
         level = HttpLoggingInterceptor.Level.BASIC
     }

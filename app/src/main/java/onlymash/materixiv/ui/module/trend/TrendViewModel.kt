@@ -11,7 +11,7 @@ class TrendViewModel(private val repo: TrendRepository): ScopeViewModel() {
 
     val trendTags = MutableLiveData<List<TrendTag>?>()
 
-    val loading = MutableLiveData<Boolean>(false)
+    val loading = MutableLiveData(false)
 
     fun fetchTrendTags(auth: String, type: Int) {
         viewModelScope.launch {

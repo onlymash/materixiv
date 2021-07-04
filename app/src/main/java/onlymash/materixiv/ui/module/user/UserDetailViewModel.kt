@@ -6,7 +6,6 @@ import kotlinx.coroutines.launch
 import onlymash.materixiv.data.model.UserDetailResponse
 import onlymash.materixiv.data.repository.detail.UserDetailRepository
 import onlymash.materixiv.ui.base.ScopeViewModel
-import onlymash.materixiv.ui.module.common.CommonViewModel
 
 class UserDetailViewModel(private val repo: UserDetailRepository) : ScopeViewModel() {
 

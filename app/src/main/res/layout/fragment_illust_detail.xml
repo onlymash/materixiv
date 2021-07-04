@@ -68,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_16dp"
         android:src="@drawable/ic_state_favorite"
+        android:contentDescription="@null"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="end|right|bottom"
         style="@style/BookmarkFloatingActionButtonStyle"/>

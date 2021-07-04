@@ -37,7 +37,7 @@ class IllustDetailPagerViewModel(
     val isSuccess = MutableLiveData<Boolean>()
 
     val illusts = flowOf(
-        _clearListCh.consumeAsFlow().map { PagingData.empty<IllustCache>() },
+        _clearListCh.consumeAsFlow().map { PagingData.empty() },
         _action.asFlow().flatMapLatest { repo.getIllustsFromDb(it) }
     )
         .flattenMerge(2)

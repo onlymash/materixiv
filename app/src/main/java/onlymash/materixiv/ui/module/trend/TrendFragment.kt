@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
@@ -36,10 +39,10 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
         }
     }
 
-    private val list get() = binding.refreshableList.list
-    private val progressBarCircular get() = binding.progressCircular.progressBarCircular
-    private val swipeRefreshLayout get() = binding.refreshableList.swipeRefreshLayout
-    private val retryButton get() = binding.retryButton
+    private lateinit var list: RecyclerView
+    private lateinit var progressBarCircular: ProgressBar
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var retryButton: Button
 
     private val pixivAppApi by instance<PixivAppApi>()
     private var type = Values.SEARCH_TYPE_ILLUST
@@ -75,6 +78,10 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
+        list = binding.refreshableList.list
+        progressBarCircular = binding.progressCircular.progressBarCircular
+        swipeRefreshLayout = binding.refreshableList.swipeRefreshLayout
+        retryButton = binding.retryButton
         trendAdapter = TrendAdapter(type)
         list.apply {
             updatePadding(left = 0, right = 0)
@@ -95,14 +102,11 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
             if (isLoading) {
                 retryButton.isVisible = false
             }
+            swipeRefreshLayout.isRefreshing = isLoading && trendAdapter.itemCount != 0
             progressBarCircular.isVisible = isLoading && trendAdapter.itemCount == 0
         })
-        swipeRefreshLayout.setOnRefreshListener {
-            refresh()
-        }
-        retryButton.setOnClickListener {
-            refresh()
-        }
+        swipeRefreshLayout.setOnRefreshListener { refresh() }
+        retryButton.setOnClickListener { refresh() }
     }
 
     override fun onTokenLoaded(token: Token) {
@@ -111,8 +115,12 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
     }
 
     fun refresh() {
-        val auth = sharedViewModel.token.value?.auth ?: return
-        trendViewModel.fetchTrendTags(auth, type)
+        val auth = sharedViewModel.token.value?.auth
+        if (auth == null) {
+            swipeRefreshLayout.isRefreshing = false
+            return
+        }
+        trendViewModel.refresh(auth, type)
     }
 
     override fun onLoginStateChange(state: NetworkState?) { }

@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import okhttp3.HttpUrl
 import onlymash.materixiv.app.Values
@@ -23,10 +26,10 @@ import onlymash.materixiv.ui.module.settings.SettingsActivity
 
 class LoginFragment : TokenFragment<FragmentLoginBinding>() {
 
-    private val signInButton get() = binding.signInButton
-    private val retry get() = binding.retryButton
-    private val message get() = binding.message
-    private val progressBar get() = binding.progressBar
+    private lateinit var signInButton: Button
+    private lateinit var retry: Button
+    private lateinit var message: AppCompatTextView
+    private lateinit var progressBar: ProgressBar
     private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreateBinding(
@@ -42,6 +45,10 @@ class LoginFragment : TokenFragment<FragmentLoginBinding>() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
+        signInButton = binding.signInButton
+        retry = binding.retryButton
+        message = binding.message
+        progressBar = binding.progressBar
         loginViewModel.code.observe(viewLifecycleOwner, { code ->
             if (code != null) {
                 fetchToken(code, loginViewModel.codeVerifier)

@@ -8,8 +8,13 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.ActionMenuView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentContainerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textview.MaterialTextView
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
@@ -40,11 +45,11 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
     }
 
     private val searchBarBinding get() = binding.layoutSearchbar
-    private val leftButton get() = searchBarBinding.leftButton
-    private val rightIcon get() = searchBarBinding.rightIcon
-    private val menuView get() = searchBarBinding.menuView
-    private val child get() = binding.childFragmentContainer
-    private val title get() = searchBarBinding.title
+    private lateinit var leftButton: AppCompatImageButton
+    private lateinit var rightIcon: ShapeableImageView
+    private lateinit var menuView: ActionMenuView
+    private lateinit var child: FragmentContainerView
+    private lateinit var title: MaterialTextView
 
     private var type = Values.SEARCH_TYPE_ILLUST
     private var word = ""
@@ -75,6 +80,11 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
     @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        leftButton = searchBarBinding.leftButton
+        rightIcon = searchBarBinding.rightIcon
+        menuView = searchBarBinding.menuView
+        title = searchBarBinding.title
+        child = binding.childFragmentContainer
         child.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 child.viewTreeObserver.removeOnGlobalLayoutListener(this)

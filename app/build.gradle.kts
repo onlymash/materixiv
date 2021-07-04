@@ -7,10 +7,8 @@ import org.jetbrains.kotlin.konan.properties.Properties
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
     kotlin("plugin.serialization")
-    id("kotlin-android")
 }
 
 fun NamedDomainObjectContainer<SigningConfig>.setup() {

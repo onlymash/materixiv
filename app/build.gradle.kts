@@ -11,7 +11,6 @@ plugins {
     kotlin("kapt")
     kotlin("plugin.serialization")
     id("kotlin-android")
-    id("kotlin-android-extensions")
 }
 
 fun NamedDomainObjectContainer<SigningConfig>.setup() {
@@ -157,7 +156,7 @@ dependencies {
     implementation("me.saket:better-link-movement-method:2.2.0")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.robolectric:robolectric:4.6")
+    testImplementation("org.robolectric:robolectric:4.5.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 }

@@ -1,24 +1,22 @@
 package onlymash.materixiv.data.repository.token
 
-import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
 import onlymash.materixiv.data.api.PixivOauthApi
 import onlymash.materixiv.data.db.dao.TokenDao
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.extensions.NetResult
-import retrofit2.HttpException
 
 class TokenRepositoryImpl(private val api: PixivOauthApi,
                           private val dao: TokenDao) : TokenRepository {
 
-    override suspend fun load(): LiveData<List<Token>> {
-        return withContext(Dispatchers.IO) {
-            dao.getAllTokensLiveData()
-        }
+    override fun getAllTokens(): Flow<List<Token>> {
+        return dao.getAllTokensFlow().distinctUntilChanged()
     }
 
-    override suspend fun getToken(code: String, codeVerifier: String): NetResult<Boolean> {
+    override suspend fun getToken(code: String, codeVerifier: String): NetResult<Token> {
         return withContext(Dispatchers.IO) {
             try {
                 val time = System.currentTimeMillis()
@@ -29,18 +27,14 @@ class TokenRepositoryImpl(private val api: PixivOauthApi,
                     data = response.detail
                 )
                 dao.insert(token)
-                NetResult.Success(true)
+                NetResult.Success(token)
             } catch (e: Exception) {
-                if (e is HttpException) {
-                    NetResult.HttpCode(e.code())
-                } else {
-                    NetResult.Error(e.message.toString())
-                }
+                NetResult.Error(e)
             }
         }
     }
 
-    override suspend fun refresh(uid: Long, refreshToken: String): NetResult<Boolean> {
+    override suspend fun refresh(uid: Long, refreshToken: String): NetResult<Token> {
         return withContext(Dispatchers.IO) {
             try {
                 val time = System.currentTimeMillis()
@@ -52,13 +46,9 @@ class TokenRepositoryImpl(private val api: PixivOauthApi,
                     data = response.detail
                 )
                 dao.update(token)
-                NetResult.Success(true)
+                NetResult.Success(token)
             } catch (e: Exception) {
-                if (e is HttpException) {
-                    NetResult.HttpCode(e.code())
-                } else {
-                    NetResult.Error(e.message.toString())
-                }
+                NetResult.Error(e)
             }
         }
     }

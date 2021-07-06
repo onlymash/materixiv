@@ -78,4 +78,14 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/spacing_20dp</item>
     </style>
+
+    <style name="Widget.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.BottomSheet</item>
+    </style>
+
+    <style name="ShapeAppearance.BottomSheet" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/spacing_20dp</item>\
+        <item name="cornerSizeTopRight">@dimen/spacing_20dp</item>
+    </style>
 </resources>

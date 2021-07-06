@@ -1,20 +1,20 @@
 package onlymash.materixiv.data.repository.token
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.extensions.NetResult
 
 interface TokenRepository {
 
-    suspend fun load(): LiveData<List<Token>>
+    fun getAllTokens(): Flow<List<Token>>
 
     suspend fun getToken(
         code: String,
         codeVerifier: String,
-    ): NetResult<Boolean>
+    ): NetResult<Token>
 
     suspend fun refresh(
         uid: Long,
         refreshToken: String
-    ): NetResult<Boolean>
+    ): NetResult<Token>
 }

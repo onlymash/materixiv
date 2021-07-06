@@ -23,7 +23,7 @@ abstract class TokenActivity : KodeinActivity() {
         super.onCreate(savedInstanceState)
         onLoadTokenBefore(savedInstanceState)
         tokenViewModel = getViewModel(TokenViewModel(TokenRepositoryImpl(pixivOauthApi, tokenDao)))
-        tokenViewModel.load().observe(this, { tokens ->
+        tokenViewModel.tokens.observe(this, { tokens ->
             if (tokens.isNullOrEmpty()) {
                 toLoginPage()
             } else {

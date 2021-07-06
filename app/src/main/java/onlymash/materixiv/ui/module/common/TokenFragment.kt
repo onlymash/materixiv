@@ -29,7 +29,7 @@ abstract class TokenFragment<T: ViewBinding> : ViewModelFragment<T>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onBaseViewCreated(view, savedInstanceState)
-        tokenViewModel.load().observe(viewLifecycleOwner, { tokens ->
+        tokenViewModel.tokens.observe(viewLifecycleOwner, { tokens ->
             if (tokens.isNullOrEmpty()) {
                 if (this !is LoginFragment) {
                     toLoginPage()

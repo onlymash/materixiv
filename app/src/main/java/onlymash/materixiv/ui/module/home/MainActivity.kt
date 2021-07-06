@@ -62,7 +62,6 @@ class MainActivity : KodeinActivity() {
                 bindDrawerHeader(tokens[0])
             }
         })
-        homeViewModel.loadTokens()
     }
 
     private fun bindDrawerHeader(token: Token) {

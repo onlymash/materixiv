@@ -32,7 +32,7 @@ abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onBaseViewCreated(view, savedInstanceState)
-        tokenViewModel.load().observe(viewLifecycleOwner, { tokens ->
+        tokenViewModel.tokens.observe(viewLifecycleOwner, { tokens ->
             if (tokens.isNullOrEmpty()) {
                 toLoginPage()
             } else {

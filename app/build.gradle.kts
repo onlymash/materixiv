@@ -80,6 +80,8 @@ android {
         useBuildCache = true
         arguments {
             arg("room.schemaLocation", "$projectDir/schemas")
+            arg("room.incremental", "true")
+            arg("room.expandProjection", "true")
         }
     }
     buildFeatures.viewBinding = true

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/spacing_10dp"
+    android:paddingVertical="@dimen/spacing_20dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        android:text="@string/novel_reader_font_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:layout_marginHorizontal="@dimen/spacing_10dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:minHeight="@dimen/spacing_35dp"/>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/font_size_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_10dp"
+        android:layout_gravity="bottom"
+        android:valueFrom="12"
+        android:valueTo="20"
+        android:stepSize="1"
+        android:value="16"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

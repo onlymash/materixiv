@@ -147,4 +147,11 @@ interface PixivAppApi {
         @Query("restrict") restrict: String,
         @Query("tag") tag: String?
     )
+
+
+    @GET("v1/novel/text")
+    suspend fun getNovelDetail(
+        @Header(AUTHORIZATION) auth: String,
+        @Query("novel_id") novelId: Long
+    ): Response<NovelDetailResponse>
 }

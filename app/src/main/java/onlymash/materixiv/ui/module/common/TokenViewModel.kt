@@ -1,8 +1,8 @@
 package onlymash.materixiv.ui.module.common
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import onlymash.materixiv.data.db.entity.Token
@@ -13,20 +13,11 @@ import onlymash.materixiv.ui.base.ScopeViewModel
 
 class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
 
-    private val _tokens = MediatorLiveData<List<Token>?>()
-
     val loginState = MutableLiveData<NetworkState?>()
 
     val refreshState = MutableLiveData<NetworkState?>()
 
-    fun load(): LiveData<List<Token>?> {
-        viewModelScope.launch {
-            _tokens.addSource(repo.load()) {
-                _tokens.postValue(it)
-            }
-        }
-        return _tokens
-    }
+    val tokens: LiveData<List<Token>> = repo.getAllTokens().asLiveData()
 
     fun fetchToken(code: String, codeVerifier: String) {
         loginState.postValue(NetworkState.LOADING)
@@ -35,11 +26,8 @@ class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
                 is NetResult.Success -> {
                     loginState.postValue(NetworkState.LOADED)
                 }
-                is NetResult.HttpCode -> {
-                    loginState.postValue(NetworkState.error("code: ${result.code}"))
-                }
                 is NetResult.Error -> {
-                    loginState.postValue(NetworkState.error(result.errorMsg))
+                    loginState.postValue(NetworkState.error(result.e.message))
                 }
             }
         }
@@ -52,11 +40,8 @@ class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
                 is NetResult.Success -> {
                     refreshState.postValue(NetworkState.LOADED)
                 }
-                is NetResult.HttpCode -> {
-                    refreshState.postValue(NetworkState.error("code: ${result.code}"))
-                }
                 is NetResult.Error -> {
-                    refreshState.postValue(NetworkState.error(result.errorMsg))
+                    refreshState.postValue(NetworkState.error(result.e.message))
                 }
             }
         }

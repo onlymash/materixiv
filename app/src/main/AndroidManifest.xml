@@ -14,6 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.module.novel.NovelReaderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.module.download.DownloadsActivity" />
         <activity
             android:name=".ui.module.settings.SettingsActivity"
@@ -26,8 +29,10 @@
             android:theme="@style/AppTheme.NoActionBar.Detail">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="www.pixiv.net"
                     android:pathPattern="/artworks/.*"
@@ -39,15 +44,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.module.login.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="account"
-                    android:scheme="pixiv"/>
+                    android:scheme="pixiv" />
             </intent-filter>
         </activity>
         <activity

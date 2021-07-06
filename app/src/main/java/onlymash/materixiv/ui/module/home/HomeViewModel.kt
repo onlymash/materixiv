@@ -1,30 +1,19 @@
 package onlymash.materixiv.ui.module.home
 
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import onlymash.materixiv.data.db.dao.TokenDao
-import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.ui.base.ScopeViewModel
 
 class HomeViewModel(private val tokenDao: TokenDao) : ScopeViewModel() {
 
-    val tokens = MediatorLiveData<List<Token>>()
+    val tokens = tokenDao.getAllTokensFlow().distinctUntilChanged().asLiveData()
 
-    fun loadTokens() {
-        viewModelScope.launch {
-            val data = withContext(Dispatchers.IO) {
-                tokenDao.getAllTokensLiveData()
-            }
-            tokens.addSource(data) {
-                tokens.postValue(it)
-            }
-        }
-    }
-
-    @DelicateCoroutinesApi
     fun deleteAllTokens() {
-        GlobalScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             tokenDao.deleteAll()
         }
     }

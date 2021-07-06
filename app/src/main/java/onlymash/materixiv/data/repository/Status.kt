@@ -12,8 +12,6 @@ enum class Status {
      */
     SUCCESS,
 
-    REFRESH_TOKEN,
-
     /**
      * The last request has failed.
      */

@@ -1,7 +1,7 @@
 package onlymash.materixiv.data.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import onlymash.materixiv.data.db.entity.Token
 
 
@@ -14,7 +14,7 @@ interface TokenDao {
     @Query("SELECT * FROM `tokens` ORDER BY `uid` ASC")
     fun getAllTokens(): List<Token>
     @Query("SELECT * FROM `tokens` ORDER BY `uid` ASC")
-    fun getAllTokensLiveData(): LiveData<List<Token>>
+    fun getAllTokensFlow(): Flow<List<Token>>
     @Query("SELECT * FROM `tokens` WHERE `uid` = :uid")
     fun getTokenByUid(uid: Long): Token?
     @Delete

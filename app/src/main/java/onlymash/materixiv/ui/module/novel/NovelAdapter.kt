@@ -49,6 +49,19 @@ class NovelAdapter : PagingDataAdapter<Novel, NovelAdapter.NovelViewHolder>(NOVE
 
         private var novel: Novel? = null
 
+        init {
+            itemView.setOnClickListener {
+                novel?.apply {
+                    NovelReaderActivity.startActivity(
+                        context = itemView.context,
+                        novelId = id,
+                        title = title,
+                        author = user.name
+                    )
+                }
+            }
+        }
+
         fun bind(novel: Novel?) {
             this.novel = novel ?: return
             GlideApp.with(itemView.context)

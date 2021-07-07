@@ -131,4 +131,7 @@
     <string name="dialog_no">No</string>
 
     <string name="novel_reader_font_size">Font size</string>
+    <string name="novel_reader_previous">Previous</string>
+    <string name="novel_reader_next">Next</string>
+    <string name="novel_reader_author">Author</string>
 </resources>

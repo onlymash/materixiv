@@ -56,7 +56,8 @@ class NovelAdapter : PagingDataAdapter<Novel, NovelAdapter.NovelViewHolder>(NOVE
                         context = itemView.context,
                         novelId = id,
                         title = title,
-                        author = user.name
+                        author = user.name,
+                        authorId = user.id
                     )
                 }
             }

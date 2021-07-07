@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import onlymash.materixiv.R
 import onlymash.materixiv.app.Settings
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
+import onlymash.materixiv.data.model.NovelDetailResponse
 import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.isFailed
 import onlymash.materixiv.data.repository.isRunning
@@ -23,6 +25,7 @@ import onlymash.materixiv.data.repository.novel.NovelDetailRepositoryImpl
 import onlymash.materixiv.databinding.ActivityNovelReaderBinding
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.TokenActivity
+import onlymash.materixiv.ui.module.user.UserDetailActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
 import org.kodein.di.instance
 
@@ -32,11 +35,18 @@ class NovelReaderActivity : TokenActivity() {
         private const val NOVEL_ID_KEY = "novel_id"
         private const val NOVEL_TITLE_KEY = "novel_title"
         private const val NOVEL_AUTHOR_KEY = "novel_author"
-        fun startActivity(context: Context, novelId: Long, title: String, author: String) {
+        private const val NOVEL_AUTHOR_ID_KEY = "novel_author_id"
+        fun startActivity(
+            context: Context,
+            novelId: Long,
+            title: String,
+            author: String,
+            authorId: Long) {
             context.startActivity(Intent(context, NovelReaderActivity::class.java).apply {
                 putExtra(NOVEL_ID_KEY, novelId)
                 putExtra(NOVEL_TITLE_KEY, title)
                 putExtra(NOVEL_AUTHOR_KEY, author)
+                putExtra(NOVEL_AUTHOR_ID_KEY, authorId)
             })
         }
     }
@@ -70,7 +80,7 @@ class NovelReaderActivity : TokenActivity() {
         lifecycleScope.launchWhenCreated {
             novelReaderViewModel.novel.collectLatest { novel ->
                 if (novel != null) {
-                    binding.novelText.text = novel.novelText
+                    handleNovel(novel)
                 }
             }
         }
@@ -80,6 +90,43 @@ class NovelReaderActivity : TokenActivity() {
         novelReaderViewModel.fontSize.observe(this, { size ->
             binding.novelText.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
         })
+        binding.prevPage.setOnClickListener {
+            jumpToNewNovel(novelReaderViewModel.novel.value?.seriesPrev)
+        }
+        binding.nextPage.setOnClickListener {
+            jumpToNewNovel(novelReaderViewModel.novel.value?.seriesNext)
+        }
+    }
+
+    private fun handleNovel(novel: NovelDetailResponse) {
+        binding.novelText.text = novel.novelText
+        if (novel.seriesPrev.id < 0 && novel.seriesNext.id < 0) {
+            binding.bottomContainer.visibility = View.INVISIBLE
+        } else {
+            binding.bottomContainer.visibility = View.VISIBLE
+            if (novel.seriesPrev.id < 0) {
+                binding.prevPage.visibility = View.INVISIBLE
+            } else {
+                binding.prevPage.visibility = View.VISIBLE
+            }
+            if (novel.seriesNext.id < 0) {
+                binding.nextPage.visibility = View.INVISIBLE
+            } else {
+                binding.nextPage.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun jumpToNewNovel(novel: NovelDetailResponse.NovelPreview?) {
+        if (novel != null && novel.id > 0) {
+            intent?.apply {
+                putExtra(NOVEL_ID_KEY, novel.id)
+                putExtra(NOVEL_TITLE_KEY, novel.title)
+            }
+            supportActionBar?.title = novel.title
+            binding.novelText.text = null
+            novelReaderViewModel.novelId = novel.id
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -94,6 +141,12 @@ class NovelReaderActivity : TokenActivity() {
                 return true
             }
             R.id.action_font_size -> adjustFontSize()
+            R.id.action_author -> {
+                val authorId = intent?.getLongExtra(NOVEL_AUTHOR_ID_KEY, -1L) ?: -1L
+                if (authorId > 0) {
+                    UserDetailActivity.start(this, authorId.toString())
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }

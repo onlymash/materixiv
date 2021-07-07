@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_format_size_outline_24dp"
         android:title="@string/novel_reader_font_size"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_author"
+        android:icon="@drawable/ic_baseline_account_circle_24dp"
+        android:title="@string/novel_reader_author"
+        app:showAsAction="ifRoom"/>
 </menu>

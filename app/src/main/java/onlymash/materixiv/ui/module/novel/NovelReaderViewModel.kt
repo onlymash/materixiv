@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
+import onlymash.materixiv.app.Settings
 import onlymash.materixiv.data.model.NovelDetailResponse
 import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.novel.NovelDetailRepository
@@ -54,7 +55,7 @@ class NovelReaderViewModel(private val repo: NovelDetailRepository) : ScopeViewM
         _index.value++
     }
 
-    private val _fontSize = MutableLiveData(16.0f)
+    private val _fontSize = MutableLiveData(Settings.fontSize)
 
     val fontSize: LiveData<Float> = _fontSize
 

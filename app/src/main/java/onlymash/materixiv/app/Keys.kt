@@ -25,5 +25,7 @@ object Keys {
     const val NETWORK_DOH = "network_doh"
     const val NETWORK_DOH_PROVIDER = "network_doh_provider"
 
+    const val READER_FONT_SIZE = "reader_font_size"
+
     const val LOGIN_URL = "login_url"
 }

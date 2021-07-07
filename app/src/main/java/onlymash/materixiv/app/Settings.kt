@@ -53,4 +53,8 @@ object Settings {
         }
 
     val fuckGFW get() = sp.getValue(Keys.NETWORK_FUCK_GFW, false)
+
+    var fontSize: Float
+        get() = sp.getValue(Keys.READER_FONT_SIZE, 16.0f)
+        set(value) { sp.setValue(Keys.READER_FONT_SIZE, value) }
 }

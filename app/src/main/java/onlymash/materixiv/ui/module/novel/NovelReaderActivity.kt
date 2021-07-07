@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.flow.collectLatest
 import onlymash.materixiv.R
+import onlymash.materixiv.app.Settings
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.NetworkState
@@ -92,22 +93,7 @@ class NovelReaderActivity : TokenActivity() {
                 onBackPressed()
                 return true
             }
-            R.id.action_font_size -> {
-                val dialog = BottomSheetDialog(this, R.style.BottomSheetDialogTheme_Fixed).apply {
-                    setContentView(R.layout.dialog_font_size)
-                }
-                val slider: Slider? = dialog.findViewById(R.id.font_size_slider)
-                val title: TextView? = dialog.findViewById(R.id.title)
-                slider?.apply {
-                    value = novelReaderViewModel.currentFontSize
-                    title?.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
-                    addOnChangeListener { _, value, _ ->
-                        novelReaderViewModel.updateFontSize(value)
-                        title?.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
-                    }
-                }
-                dialog.show()
-            }
+            R.id.action_font_size -> adjustFontSize()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -122,5 +108,23 @@ class NovelReaderActivity : TokenActivity() {
 
     override fun onRefreshStateChange(state: NetworkState?) {
 
+    }
+
+    private fun adjustFontSize() {
+        val dialog = BottomSheetDialog(this, R.style.BottomSheetDialogTheme_Fixed).apply {
+            setContentView(R.layout.dialog_font_size)
+        }
+        val slider: Slider? = dialog.findViewById(R.id.font_size_slider)
+        val title: TextView? = dialog.findViewById(R.id.title)
+        slider?.apply {
+            value = novelReaderViewModel.currentFontSize
+            title?.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
+            addOnChangeListener { _, value, _ ->
+                novelReaderViewModel.updateFontSize(value)
+                title?.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
+                Settings.fontSize = value
+            }
+        }
+        dialog.show()
     }
 }

@@ -102,14 +102,10 @@ class CommentDialog : TokenBottomSheetDialog<DialogCommentBinding>() {
     }
 
     private fun handleException(error: Throwable) {
-        val token = token ?: return
         if (error is HttpException && error.code() == 400) {
             binding.retryButton.isVisible = false
             binding.progressBar.isVisible = false
-            refreshToken(
-                uid = token.uid,
-                refreshToken = token.data.refreshToken
-            )
+            refreshToken()
         } else {
             binding.commentList.isVisible = false
             binding.progressBar.isVisible = false

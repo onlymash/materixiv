@@ -142,12 +142,8 @@ class UserFragment : SharedViewModelFragment() {
     }
 
     private fun handleException(error: Throwable) {
-        val token = sharedViewModel.token.value ?: return
         if (error is HttpException && error.code() == 400) {
-            refreshToken(
-                uid = token.uid,
-                refreshToken = token.data.refreshToken
-            )
+            refreshToken()
         }
     }
 

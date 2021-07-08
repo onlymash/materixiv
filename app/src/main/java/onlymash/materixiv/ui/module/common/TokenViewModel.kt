@@ -19,6 +19,15 @@ class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
 
     val tokens: LiveData<List<Token>> = repo.getAllTokens().asLiveData()
 
+    private val currentToken: Token?
+        get() {
+            val data = tokens.value
+            if (data.isNullOrEmpty()) {
+                return null
+            }
+            return data[0]
+        }
+
     fun fetchToken(code: String, codeVerifier: String) {
         loginState.postValue(NetworkState.LOADING)
         viewModelScope.launch {
@@ -33,10 +42,15 @@ class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
         }
     }
 
-    fun refresh(uid: Long, refreshToken: String) {
+    fun refresh() {
+        val token = currentToken ?: return
+        refresh(token)
+    }
+
+    fun refresh(token: Token) {
         refreshState.postValue(NetworkState.LOADING)
         viewModelScope.launch {
-            when (val result = repo.refresh(uid, refreshToken)) {
+            when (val result = repo.refresh(token.uid, token.data.refreshToken)) {
                 is NetResult.Success -> {
                     refreshState.postValue(NetworkState.LOADED)
                 }

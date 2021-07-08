@@ -18,6 +18,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.base.KodeinActivity
 import onlymash.materixiv.ui.module.download.DownloadsActivity
+import onlymash.materixiv.ui.module.novel.NovelBookmarksActivity
 import onlymash.materixiv.ui.module.settings.SettingsActivity
 import onlymash.materixiv.ui.module.user.UserDetailActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
@@ -43,6 +44,7 @@ class MainActivity : KodeinActivity() {
         bottomNavView.setupWithNavController(navController)
         leftNavView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.nav_bookmarks -> startActivity(Intent(this, NovelBookmarksActivity::class.java))
                 R.id.nav_downloads -> startActivity(Intent(this, DownloadsActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
             }

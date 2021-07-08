@@ -6,6 +6,11 @@
         android:checkableBehavior="none">
 
         <item
+            android:id="@+id/nav_bookmarks"
+            android:icon="@drawable/ic_baseline_bookmark_border_24dp"
+            android:title="@string/title_bookmarks"/>
+
+        <item
             android:id="@+id/nav_downloads"
             android:icon="@drawable/ic_get_app_outline_24dp"
             android:title="@string/title_downloads" />

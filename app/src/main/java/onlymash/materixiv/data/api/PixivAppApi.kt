@@ -191,4 +191,10 @@ interface PixivAppApi {
         @Header(AUTHORIZATION) auth: String,
         @Field("novel_id") novelId: Long
     ): Response<ResponseBody>
+
+    @GET
+    suspend fun getMarkedNovel(
+        @Header(AUTHORIZATION) auth: String,
+        @Url url: HttpUrl
+    ): NovelMarkerResponse
 }

@@ -37,7 +37,7 @@ abstract class TokenFragment<T: ViewBinding> : ViewModelFragment<T>() {
             } else {
                 val token = tokens[0]
                 if (token.isExpired) {
-                    refreshToken(token.uid, token.data.refreshToken)
+                    tokenViewModel.refresh(token)
                 } else {
                     onTokenLoaded(token)
                 }
@@ -72,7 +72,7 @@ abstract class TokenFragment<T: ViewBinding> : ViewModelFragment<T>() {
         tokenViewModel.fetchToken(code, codeVerifier)
     }
 
-    protected fun refreshToken(uid: Long, refreshToken: String) {
-        tokenViewModel.refresh(uid, refreshToken)
+    protected fun refreshToken() {
+        tokenViewModel.refresh()
     }
 }

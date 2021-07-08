@@ -186,10 +186,7 @@ class IllustFragment : SharedViewModelFragment() {
 
     private fun handleException(error: Throwable) {
         if (error is HttpException && error.code() == 400) {
-            refreshToken(
-                uid = action.token.uid,
-                refreshToken = action.token.data.refreshToken
-            )
+            refreshToken()
         }
     }
 

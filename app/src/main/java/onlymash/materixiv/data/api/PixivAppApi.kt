@@ -186,7 +186,7 @@ interface PixivAppApi {
     ): Response<ResponseBody>
 
     @FormUrlEncoded
-    @POST("v2/novel/bookmark/delete")
+    @POST("v1/novel/bookmark/delete")
     suspend fun deleteBookmarkNovel(
         @Header(AUTHORIZATION) auth: String,
         @Field("novel_id") novelId: Long

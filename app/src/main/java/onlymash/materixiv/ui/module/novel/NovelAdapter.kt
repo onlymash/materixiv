@@ -57,7 +57,8 @@ class NovelAdapter : PagingDataAdapter<Novel, NovelAdapter.NovelViewHolder>(NOVE
                         novelId = id,
                         title = title,
                         author = user.name,
-                        authorId = user.id
+                        authorId = user.id,
+                        isBookmarked = isBookmarked
                     )
                 }
             }

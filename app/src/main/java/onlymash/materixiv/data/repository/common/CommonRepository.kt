@@ -15,4 +15,12 @@ interface CommonRepository {
     suspend fun deleteBookmarkIllust(illust: IllustCache, auth: String): Boolean
 
     suspend fun getUgoiraMetadata(auth: String, illustId: Long): UgoiraMetadata?
+
+    suspend fun addMarkerNovel(auth: String, novelId: Long): Boolean
+
+    suspend fun deleteMarkerNovel(auth: String, novelId: Long): Boolean
+
+    suspend fun addBookmarkNovel(auth: String, novelId: Long, restrict: Restrict): Boolean
+
+    suspend fun deleteBookmarkNovel(auth: String, novelId: Long): Boolean
 }

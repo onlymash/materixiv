@@ -69,4 +69,52 @@ class CommonRepositoryImpl(
             }
         }
     }
+
+    override suspend fun addBookmarkNovel(
+        auth: String,
+        novelId: Long,
+        restrict: Restrict
+    ): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.addBookmarkNovel(auth = auth, novelId = novelId, restrict = restrict.value)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+    }
+
+    override suspend fun deleteBookmarkNovel(auth: String, novelId: Long): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.deleteBookmarkNovel(auth = auth, novelId = novelId)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+    }
+
+    override suspend fun addMarkerNovel(auth: String, novelId: Long): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.addMarkerNovel(auth = auth, novelId = novelId)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+    }
+
+    override suspend fun deleteMarkerNovel(auth: String, novelId: Long): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                pixivAppApi.deleteMarkerNovel(auth = auth, novelId = novelId)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+    }
 }

@@ -3,17 +3,17 @@ package onlymash.materixiv.data.repository.novel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import onlymash.materixiv.data.api.PixivAppApi
-import onlymash.materixiv.data.model.NovelDetailResponse
+import onlymash.materixiv.data.model.NovelTextResponse
 
-class NovelDetailRepositoryImpl(
-    private val api: PixivAppApi) : NovelDetailRepository {
+class NovelTextRepositoryImpl(
+    private val api: PixivAppApi) : NovelTextRepository {
 
-    override suspend fun getNovelDetail(
+    override suspend fun getNovelText(
         auth: String,
         novelId: Long
-    ): NovelDetailResponse? {
+    ): NovelTextResponse? {
         return withContext(Dispatchers.IO) {
-            api.getNovelDetail(auth, novelId).body()
+            api.getNovelText(auth, novelId).body()
         }
     }
 }

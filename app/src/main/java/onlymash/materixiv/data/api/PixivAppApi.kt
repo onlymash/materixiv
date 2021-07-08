@@ -150,8 +150,45 @@ interface PixivAppApi {
 
 
     @GET("v1/novel/text")
+    suspend fun getNovelText(
+        @Header(AUTHORIZATION) auth: String,
+        @Query("novel_id") novelId: Long
+    ): Response<NovelTextResponse>
+
+    @GET("v2/novel/detail")
     suspend fun getNovelDetail(
         @Header(AUTHORIZATION) auth: String,
         @Query("novel_id") novelId: Long
     ): Response<NovelDetailResponse>
+
+    @FormUrlEncoded
+    @POST("v1/novel/marker/add")
+    suspend fun addMarkerNovel(
+        @Header(AUTHORIZATION) auth: String,
+        @Field("novel_id") novelId: Long,
+        @Field("page") page: Int = 1
+    ): Response<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("v1/novel/marker/delete")
+    suspend fun deleteMarkerNovel(
+        @Header(AUTHORIZATION) auth: String,
+        @Field("novel_id") novelId: Long,
+        @Field("page") page: Int = 1
+    ): Response<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("v2/novel/bookmark/add")
+    suspend fun addBookmarkNovel(
+        @Header(AUTHORIZATION) auth: String,
+        @Field("novel_id") novelId: Long,
+        @Field("restrict") restrict: String
+    ): Response<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("v2/novel/bookmark/delete")
+    suspend fun deleteBookmarkNovel(
+        @Header(AUTHORIZATION) auth: String,
+        @Field("novel_id") novelId: Long
+    ): Response<ResponseBody>
 }

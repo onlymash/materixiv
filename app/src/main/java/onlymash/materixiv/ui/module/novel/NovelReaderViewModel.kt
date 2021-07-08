@@ -5,12 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import onlymash.materixiv.app.Settings
-import onlymash.materixiv.data.model.NovelDetailResponse
+import onlymash.materixiv.data.model.NovelTextResponse
 import onlymash.materixiv.data.repository.NetworkState
-import onlymash.materixiv.data.repository.novel.NovelDetailRepository
+import onlymash.materixiv.data.repository.novel.NovelTextRepository
 import onlymash.materixiv.ui.base.ScopeViewModel
 
-class NovelReaderViewModel(private val repo: NovelDetailRepository) : ScopeViewModel() {
+class NovelReaderViewModel(private val repo: NovelTextRepository) : ScopeViewModel() {
+
+    private val _isBookmarked = MutableStateFlow(false)
+
+    val isBookmarked = _isBookmarked.asStateFlow()
+
+    fun updateBookmark(isMarked: Boolean) {
+        _isBookmarked.value = isMarked
+    }
 
     private val _index = MutableStateFlow(0)
 
@@ -22,6 +30,8 @@ class NovelReaderViewModel(private val repo: NovelDetailRepository) : ScopeViewM
         }
 
     private val _auth = MutableStateFlow("")
+
+    val auth get() = _auth.value
 
     fun updateAuth(auth: String) {
         _auth.value = auth
@@ -38,11 +48,11 @@ class NovelReaderViewModel(private val repo: NovelDetailRepository) : ScopeViewM
             initialValue = null
         )
 
-    private suspend fun fetch(id: Long, auth: String): NovelDetailResponse? {
+    private suspend fun fetch(id: Long, auth: String): NovelTextResponse? {
         if (auth.isBlank()) return null
         return try {
             loadState.value = NetworkState.LOADING
-            val data = repo.getNovelDetail(auth, id)
+            val data = repo.getNovelText(auth, id)
             loadState.value = NetworkState.LOADED
             data
         } catch (e: Exception) {

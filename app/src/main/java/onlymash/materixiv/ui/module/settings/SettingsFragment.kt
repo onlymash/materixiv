@@ -81,7 +81,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         when (key) {
             Keys.STORAGE_FOLDER -> storageFolderPreference?.summary = folderSummary
             Keys.NETWORK_DOH, Keys.NETWORK_DOH_PROVIDER -> setupDohPreferenceVisible(true)
-            Keys.NETWORK_FUCK_GFW -> findPreference<SwitchPreference>(Keys.NETWORK_FUCK_GFW)?.summary = getString(R.string.settings_summary_restart)
         }
     }
 

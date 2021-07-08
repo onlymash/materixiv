@@ -10,6 +10,16 @@ import java.net.UnknownHostException
 
 object DoHProviders {
 
+    val aliDns: DnsOverHttps
+        get() {
+            val bootsrapHostsV4 = getByIPv4("223.5.5.5", "223.6.6.6")
+            return DnsOverHttps.Builder()
+                .url("https://dns.alidns.com/dns-query".toHttpUrl())
+                .bootstrapDnsHosts(bootsrapHostsV4)
+                .client(OkHttpClient())
+                .build()
+        }
+
     val cloudflareDns: DnsOverHttps
         get() {
             val bootsrapHostsV4 = getByIPv4("104.16.248.249", "104.16.249.249")

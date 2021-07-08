@@ -48,11 +48,10 @@ object Settings {
         get() {
             return when (dohProviderString) {
                 "google" -> DoHProviders.googleDns
+                "alidns" -> DoHProviders.aliDns
                 else -> DoHProviders.cloudflareDns
             }
         }
-
-    val fuckGFW get() = sp.getValue(Keys.NETWORK_FUCK_GFW, false)
 
     var fontSize: Float
         get() = sp.getValue(Keys.READER_FONT_SIZE, 16.0f)

@@ -56,9 +56,6 @@ val pixivClientBuilder: OkHttpClient.Builder
         if (Settings.dohEnabled) {
             builder.dns(Settings.dohProvider)
         }
-        if (Settings.fuckGFW) {
-            builder.sslSocketFactory(PixivSSLSocketFactory(), PixivX509TrustManager())
-        }
         return builder
     }
 

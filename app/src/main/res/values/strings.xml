@@ -99,6 +99,7 @@
     <string name="settings_category_network_doh_provider">DNS Provider</string>
     <string name="settings_category_network_doh_google">Google</string>
     <string name="settings_category_network_doh_cloudflare">Cloudflare</string>
+    <string name="settings_category_network_doh_alidns">AliDNS</string>
     <string name="settings_category_network_fuck_gfw">Fuck GFW</string>
     <string name="settings_category_network_fuck_gfw_summary">Prevent blocked by GFW</string>
 

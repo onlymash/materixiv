@@ -38,11 +38,13 @@
     </string-array>
 
     <string-array name="doh_providers">
+        <item>@string/settings_category_network_doh_alidns</item>
         <item>@string/settings_category_network_doh_cloudflare</item>
         <item>@string/settings_category_network_doh_google</item>
     </string-array>
 
     <string-array name="doh_providers_value">
+        <item>alidns</item>
         <item>cloudflare</item>
         <item>google</item>
     </string-array>

@@ -24,12 +24,6 @@
             app:defaultValue="cloudflare"
             app:useSimpleSummaryProvider="true"/>
 
-        <SwitchPreference
-            app:key="network_fuck_gfw"
-            app:title="@string/settings_category_network_fuck_gfw"
-            app:icon="@drawable/ic_grid_off_outline_24dp"
-            android:defaultValue="false"
-            app:summary="@string/settings_category_network_fuck_gfw_summary"/>
     </PreferenceCategory>
     <PreferenceCategory
         app:key="category_storage"

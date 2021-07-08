@@ -21,7 +21,6 @@ object Keys {
     const val ILLUST_ID = "illust_id"
 
     const val STORAGE_FOLDER = "storage_folder"
-    const val NETWORK_FUCK_GFW = "network_fuck_gfw"
     const val NETWORK_DOH = "network_doh"
     const val NETWORK_DOH_PROVIDER = "network_doh_provider"
 

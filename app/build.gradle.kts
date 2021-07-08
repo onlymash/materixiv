@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.dsl.BuildType
 import com.android.build.gradle.internal.dsl.SigningConfig
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.NamedDomainObjectContainer
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.konan.properties.Properties
@@ -45,11 +46,17 @@ android {
         applicationId = "onlymash.materixiv"
         minSdkVersion(21)
         targetSdkVersion(30)
-        versionCode = 3
-        versionName = "0.0.1_alpha03"
+        versionCode = 4
+        versionName = "0.0.2_beta01"
         renderscriptTargetApi = 21
         renderscriptSupportModeEnabled = false
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    applicationVariants.all {
+        outputs.map { it as BaseVariantOutputImpl }
+            .forEach { output ->
+                output.outputFileName = "materixiv_${defaultConfig.versionName}.apk"
+            }
     }
     buildTypes {
         getByName("release") {

@@ -4,11 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import androidx.appcompat.widget.ActionMenuView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
@@ -33,10 +40,14 @@ import org.kodein.di.instance
 class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
 
     companion object {
-        fun create(userId: String): UserDetailFragment {
+        const val TARGET_PAGE_KEY = "target_page"
+        const val TARGET_PAGE_ILLUST = 0
+        const val TARGET_PAGE_NOVEL = 1
+        fun create(userId: String, targetPage: Int): UserDetailFragment {
             return UserDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(Keys.USER_ID, userId)
+                    putInt(TARGET_PAGE_KEY, targetPage)
                 }
             }
         }
@@ -48,15 +59,28 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
     private lateinit var userDetailViewModel: UserDetailViewModel
     private lateinit var commonViewModel: CommonViewModel
 
+    private lateinit var retryUserButton: MaterialButton
+    private lateinit var progressBar: ProgressBar
+    private lateinit var toolbar: MaterialToolbar
+    private lateinit var toolbarTitleContent: LinearLayoutCompat
+    private lateinit var userInfoContent: LinearLayoutCompat
+    private lateinit var tabs: TabLayout
+    private lateinit var viewPager: ViewPager2
+    private lateinit var follow: MaterialButton
+    private lateinit var followToolbar: MaterialButton
+    private lateinit var restrictMenu: ActionMenuView
+
     private var auth = ""
     private var myId = ""
     private var userId = ""
     private var userDetail: UserDetailResponse? = null
+    private var targetPage = TARGET_PAGE_ILLUST
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.apply {
             userId = getString(Keys.USER_ID, "")
+            targetPage = getInt(TARGET_PAGE_KEY, TARGET_PAGE_ILLUST)
         }
     }
 
@@ -75,54 +99,66 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
+        retryUserButton = binding.layoutUserInfo.retryButton
+        progressBar = binding.layoutUserInfo.progressBar
+        binding.layoutUserInfo.webPage.apply {
+            movementMethod = BetterLinkMovementMethod.getInstance()
+            transformationMethod = LinkTransformationMethod()
+        }
+        toolbar = binding.toolbar
+        toolbarTitleContent = binding.toolbarTitleContent
+        userInfoContent = binding.layoutUserInfo.userInfoContent
+        tabs = binding.tabs
+        viewPager = binding.viewPager
+        follow = binding.layoutUserInfo.follow
+        followToolbar = binding.toolbarFollow
+        restrictMenu = binding.restrictMenu
+
         userDetailViewModel.userDetail.observe(viewLifecycleOwner, {
             bindData(it)
         })
         userDetailViewModel.isFailed.observe(viewLifecycleOwner, { failed ->
             if (failed) {
-                binding.layoutUserInfo.progressBar.isVisible = false
-                binding.layoutUserInfo.retryButton.isVisible = true
+                progressBar.isVisible = false
+                retryUserButton.isVisible = true
             }
         })
-        binding.layoutUserInfo.retryButton.setOnClickListener {
-            binding.layoutUserInfo.retryButton.isVisible = false
-            binding.layoutUserInfo.progressBar.isVisible = true
+        retryUserButton.setOnClickListener {
+            retryUserButton.isVisible = false
+            progressBar.isVisible = true
             userDetailViewModel.fetchUserDetail(auth, userId)
         }
-        binding.layoutUserInfo.webPage.apply {
-            movementMethod = BetterLinkMovementMethod.getInstance()
-            transformationMethod = LinkTransformationMethod()
-        }
         binding.appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val visible = appBarLayout.height - binding.toolbar.height - binding.tabs.height + verticalOffset != 0
-            binding.layoutUserInfo.userInfoContent.isInvisible = !visible
-            binding.toolbarTitleContent.isInvisible = visible
+            val visible = appBarLayout.height - toolbar.height - tabs.height + verticalOffset != 0
+            userInfoContent.isInvisible = !visible
+            toolbarTitleContent.isInvisible = visible
         })
         activity?.menuInflater?.inflate(R.menu.action_user_detail, binding.restrictMenu.menu)
         binding.restrictMenu.setOnMenuItemClickListener { menuItem ->
             handleMenuClick(menuItem.itemId)
             true
         }
-        binding.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         val clickListener = View.OnClickListener { handleFollow(it, Restrict.PUBLIC) }
+        follow.setOnClickListener(clickListener)
+        followToolbar.setOnClickListener(clickListener)
         val longClickListener = View.OnLongClickListener {
             handleFollow(it, Restrict.PRIVATE)
             true
         }
-        binding.toolbarFollow.setOnClickListener(clickListener)
-        binding.layoutUserInfo.follow.setOnClickListener(clickListener)
-        binding.toolbarFollow.setOnLongClickListener(longClickListener)
-        binding.layoutUserInfo.follow.setOnLongClickListener(longClickListener)
-        binding.viewPager.adapter = UserDetailPagerAdapter(userId, this)
+        follow.setOnLongClickListener(longClickListener)
+        followToolbar.setOnLongClickListener(longClickListener)
+
+        viewPager.adapter = UserDetailPagerAdapter(userId, this)
         val tabTitles = resources.getStringArray(R.array.user_detail_type_entries)
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
         binding.layoutUserInfo.followingCount.setOnClickListener {
-            binding.viewPager.setCurrentItem(4, false)
+            viewPager.setCurrentItem(4, false)
         }
         binding.layoutUserInfo.friendsCount.setOnClickListener {
-            binding.viewPager.setCurrentItem(5, false)
+            viewPager.setCurrentItem(5, false)
         }
     }
 
@@ -155,8 +191,8 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
 
     private fun bindData(userDetail: UserDetailResponse?) {
         this.userDetail = userDetail ?: return
+        progressBar.isVisible = false
         val userInfoBinding = binding.layoutUserInfo
-        userInfoBinding.progressBar.isVisible = false
         val context = context ?: return
         updateFollowState(userDetail.user.isFollowed)
         binding.toolbarTitle.text = userDetail.user.name
@@ -179,13 +215,13 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
 
     private fun updateFollowState(isFollowed: Boolean) {
         val textRes = if (isFollowed) R.string.user_following else R.string.user_follow
-        binding.toolbarFollow.apply {
+        followToolbar.apply {
             post {
                 isChecked = isFollowed
                 setText(textRes)
             }
         }
-        binding.layoutUserInfo.follow.apply {
+        follow.apply {
             isChecked = isFollowed
             setText(textRes)
         }
@@ -193,12 +229,17 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
 
     override fun onTokenLoaded(token: Token) {
         val isMe = userId == token.userId
-        if (auth.isEmpty() && !isMe) {
-            binding.viewPager.setCurrentItem(1, false)
+        if (auth.isEmpty()) {
+            val item = when {
+                targetPage == TARGET_PAGE_ILLUST && !isMe -> 1
+                targetPage == TARGET_PAGE_NOVEL -> if (isMe) 2 else 3
+                else -> 0
+            }
+            viewPager.setCurrentItem(item, false)
         }
-        binding.toolbarFollow.isInvisible = isMe
-        binding.layoutUserInfo.follow.isInvisible = isMe
-        binding.restrictMenu.isVisible = isMe
+        followToolbar.isInvisible = isMe
+        follow.isInvisible = isMe
+        restrictMenu.isVisible = isMe
         auth = token.auth
         myId = token.userId
         if (userDetail == null) {

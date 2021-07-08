@@ -30,6 +30,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.TokenActivity
 import onlymash.materixiv.ui.module.user.UserDetailActivity
+import onlymash.materixiv.ui.module.user.UserDetailFragment
 import onlymash.materixiv.ui.viewbinding.viewBinding
 import org.kodein.di.instance
 
@@ -190,7 +191,7 @@ class NovelReaderActivity : TokenActivity() {
             R.id.action_author -> {
                 val authorId = intent?.getLongExtra(NOVEL_AUTHOR_ID_KEY, -1L) ?: -1L
                 if (authorId > 0) {
-                    UserDetailActivity.start(this, authorId.toString())
+                    UserDetailActivity.start(this, authorId.toString(), UserDetailFragment.TARGET_PAGE_NOVEL)
                 }
             }
         }

@@ -98,7 +98,7 @@ android {
 dependencies {
     val lifecycleVersion = "2.4.0-alpha02"
     val navVersion = "2.4.0-alpha04"
-    val coroutinesVersion = "1.5.0"
+    val coroutinesVersion = "1.5.1"
     val kodeinVersion = "7.6.0"
     val okhttpVersion = "5.0.0-alpha.2"
     val retrofitVersion = "2.9.0"
@@ -108,16 +108,16 @@ dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     implementation("org.kodein.di:kodein-di-framework-android-core:$kodeinVersion")
     implementation("org.kodein.di:kodein-di-framework-android-x:$kodeinVersion")
 
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.material:material:1.5.0-alpha01")
     implementation("androidx.annotation:annotation:1.3.0-alpha01")
     implementation("androidx.appcompat:appcompat:1.4.0-alpha03")
-    implementation("androidx.activity:activity-ktx:1.3.0-rc01")
+    implementation("androidx.activity:activity-ktx:1.3.0-rc02")
     implementation("androidx.fragment:fragment-ktx:1.4.0-alpha04")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.core:core-ktx:1.7.0-alpha01")
@@ -143,7 +143,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
     implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:$okhttpVersion")
-    implementation("com.squareup.okio:okio:3.0.0-alpha.6")
+    implementation("com.squareup.okio:okio:3.0.0-alpha.8")
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 

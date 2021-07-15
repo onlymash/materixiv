@@ -55,8 +55,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:background="@color/colorLine"
+    <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 
@@ -72,21 +71,38 @@
             android:layout_height="wrap_content"
             android:textAppearance="?textAppearanceBody2"
             android:textColor="?android:attr/textColorSecondary"
-            android:paddingHorizontal="@dimen/spacing_5dp"/>
+            android:paddingHorizontal="@dimen/spacing_5dp"
+            android:layout_gravity="center_vertical"/>
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/views_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?textAppearanceBody2"
             android:textColor="?android:attr/textColorSecondary"
-            android:paddingHorizontal="@dimen/spacing_5dp"/>
+            android:paddingStart="@dimen/spacing_5dp"
+            android:paddingEnd="0dp"
+            android:layout_gravity="center_vertical"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/spacing_5dp"
+            app:srcCompat="@drawable/ic_baseline_remove_red_eye_24dp"/>
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/bookmarks_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?textAppearanceBody2"
             android:textColor="?android:attr/textColorSecondary"
-            android:paddingHorizontal="@dimen/spacing_5dp"/>
+            android:paddingStart="@dimen/spacing_10dp"
+            android:paddingEnd="0dp"
+            android:layout_gravity="center_vertical"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/spacing_5dp"
+            app:srcCompat="@drawable/ic_baseline_favorite_24dp"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.textview.MaterialTextView
@@ -99,31 +115,56 @@
         android:paddingVertical="@dimen/spacing_3dp"
         android:paddingHorizontal="@dimen/spacing_20dp"/>
 
-    <View
-        android:background="@color/colorLine"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/spacing_20dp">
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_related"
-            android:text="@string/illust_detail_related"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_comments"
-            android:text="@string/illust_detail_comments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.chip.ChipGroup>
-
-    <View
-        android:background="@color/colorLine"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="46dp"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/spacing_20dp"
+        android:layout_marginVertical="@dimen/spacing_10dp"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        style="@style/MaterialCardViewStyle"
+        app:strokeWidth="1dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/colorLine">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/related"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="center"
+                android:contentDescription="@string/illust_detail_related"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_baseline_photo_filter_24dp" />
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/comments"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="center"
+                android:contentDescription="@string/illust_detail_comments"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_outline_comment_24dp"/>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="1dp"
+                android:layout_height="match_parent"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/download"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="center"
+                android:contentDescription="@string/common_download"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/ic_get_app_outline_24dp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/tags_group"

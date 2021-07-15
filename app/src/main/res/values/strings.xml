@@ -26,8 +26,6 @@
     <string name="illust_following">Following</string>
     <string name="illust_recommended">Recommended</string>
     <string name="illust_ranking">Ranking</string>
-    <string name="illust_detail_views_format">%d views</string>
-    <string name="illust_detail_likes_format">%d likes</string>
     <string name="illust_detail_related">Related</string>
     <string name="illust_detail_comments">Comments</string>
 

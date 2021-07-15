@@ -7,6 +7,7 @@ import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -41,6 +42,7 @@ import onlymash.materixiv.databinding.FragmentIllustDetailBinding
 import onlymash.materixiv.extensions.getDownloads
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.getWindowHeight
+import onlymash.materixiv.extensions.setupTooltipText
 import onlymash.materixiv.glide.BlurTransformation
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.base.ViewModelFragment
@@ -82,7 +84,6 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
     private var illustId: Long = 0
     private var illust: Illust? = null
     private var query = ""
-    private var ugoira: UgoiraMetadata? = null
     private var toDownloadUgoira = false
 
     private lateinit var adapter: IllustDetailAdapter
@@ -127,15 +128,13 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbarLayout.layoutParams.height = requireActivity().getWindowHeight() * 3 / 5
         binding.toolbar.apply {
+            inflateMenu(R.menu.toolbar_illust_detail)
             setNavigationOnClickListener {
                 activity?.onBackPressed()
             }
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_share -> shareLink()
-                    R.id.action_download -> download()
-                    R.id.action_download_all -> downloadAll()
-                    R.id.action_download_ugoira -> downloadUgoira()
                 }
                 true
             }
@@ -182,24 +181,56 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
             }
         })
         commonViewModel.ugoira.observe(viewLifecycleOwner, { ugoiraMetadata ->
-            ugoira = ugoiraMetadata
             if (toDownloadUgoira) {
-                downloadUgoira()
+                downloadUgoira(ugoiraMetadata)
             }
         })
-        binding.detailContent.chipRelated.setOnClickListener {
-            context?.let { context ->
-                SearchActivity.startSearch(
-                    context = context,
-                    type = Values.SEARCH_TYPE_ILLUST,
-                    word = "Related: $illustId",
-                    illustId = illustId
-                )
+        binding.detailContent.related.apply {
+            setOnClickListener {
+                context?.let { context ->
+                    SearchActivity.startSearch(
+                        context = context,
+                        type = Values.SEARCH_TYPE_ILLUST,
+                        word = "Related: $illustId",
+                        illustId = illustId
+                    )
+                }
             }
+            setupTooltipText()
         }
-        binding.detailContent.chipComments.setOnClickListener {
-            CommentDialog.create(illustId).show(childFragmentManager, "comment")
+        binding.detailContent.comments.apply {
+            setOnClickListener {
+                CommentDialog.create(illustId).show(childFragmentManager, "comment")
+            }
+            setupTooltipText()
         }
+        binding.detailContent.download.apply {
+            setOnClickListener { download(this) }
+            setupTooltipText()
+        }
+    }
+
+    private fun download(view: View) {
+        val illust = illust ?: return
+        when {
+            illust.isUgoira -> showDownloadPopMenu(illust, view, R.menu.popup_illust_detail_download_ugoira)
+            illust.metaPages.size > 1 -> showDownloadPopMenu(illust, view, R.menu.popup_illust_detail_download)
+            else -> download(illust)
+        }
+    }
+
+    private fun showDownloadPopMenu(illust: Illust, view: View, menuResId: Int) {
+        val popupMenu = PopupMenu(view.context, view)
+        popupMenu.menuInflater.inflate(menuResId, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_download -> download(illust)
+                R.id.action_download_all -> downloadAll(illust)
+                R.id.action_download_ugoira -> downloadUgoira(commonViewModel.ugoira.value)
+            }
+            true
+        }
+        popupMenu.show()
     }
 
     private fun shareLink() {
@@ -216,9 +247,8 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         ))
     }
 
-    private fun downloadUgoira() {
+    private fun downloadUgoira(ugoira: UgoiraMetadata?) {
         val illust = illust ?: return
-        val ugoira = ugoira
         if (ugoira == null) {
             toDownloadUgoira = true
             commonViewModel.fetchUgoiraMetadata(auth, illustId)
@@ -249,8 +279,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
     }
 
-    private fun download() {
-        val illust = illust ?: return
+    private fun download(illust: Illust) {
         val context = context
         val urls = illust.originUrls
         val previews = illust.previewUrls
@@ -278,8 +307,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
     }
 
-    private fun downloadAll() {
-        val illust = illust ?: return
+    private fun downloadAll(illust: Illust) {
         val context = context
         val urls = illust.originUrls
         val previews = illust.previewUrls
@@ -323,20 +351,9 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(binding.imageViewBlur)
         adapter.illust = illust
-        val context = context ?: return
-        val pageCount = illust.metaPages.size
-        val menuResId = when {
-            illust.isUgoira -> R.menu.toolbar_illust_detail_ugoira
-            pageCount > 1 -> {
-                binding.toolbar.subtitle = "1/${pageCount}P"
-                R.menu.toolbar_illust_detail
-            }
-            else -> R.menu.toolbar_illust_detail_single
-        }
-        binding.toolbar.apply {
-            title = illust.id.toString()
-            menu.clear()
-            inflateMenu(menuResId)
+        binding.toolbar.title = illust.id.toString()
+        if (illust.metaPages.size > 1) {
+            binding.toolbar.subtitle = "1/${illust.metaPages.size}P"
         }
         binding.fabBookmark.isActivated = illust.isBookmarked
         binding.fabBookmark.setOnClickListener {
@@ -351,13 +368,14 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         val detailBinding = binding.detailContent
         detailBinding.title.text = illust.title
         detailBinding.username.text = illust.user.name
+        val context = context ?: return
         GlideApp.with(context)
             .load(illust.user.profileImageUrls.medium)
             .placeholder(ContextCompat.getDrawable(context, R.drawable.placeholder_avatar))
             .into(detailBinding.avatar)
         detailBinding.date.text = DateUtil.formatDate(context, illust.createDate)
-        detailBinding.viewsCount.text = getString(R.string.illust_detail_views_format, illust.totalView)
-        detailBinding.bookmarksCount.text = getString(R.string.illust_detail_likes_format, illust.totalBookmarks)
+        detailBinding.viewsCount.text = illust.totalView.toString()
+        detailBinding.bookmarksCount.text = illust.totalBookmarks.toString()
         if (illust.caption.isNotBlank()) {
             detailBinding.caption.isVisible = true
             detailBinding.caption.apply {

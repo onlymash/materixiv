@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NovelMarker(
     @SerialName("page")
-    val page: Int = -1
+    var page: Int = -1
 )

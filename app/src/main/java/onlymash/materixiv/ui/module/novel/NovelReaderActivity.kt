@@ -115,7 +115,10 @@ class NovelReaderActivity : TokenActivity() {
             commonViewModel.isBookmarkNovel.collectLatest { binding.bookmark.isActivated = it }
         }
         lifecycleScope.launchWhenCreated {
-            commonViewModel.isMarkerNovel.collectLatest { binding.marker.isActivated = it }
+            commonViewModel.isMarkerNovel.collectLatest { isMarked ->
+                binding.marker.isActivated = isMarked
+                novelReaderViewModel.novel.value?.novelMarker?.page = if (isMarked) 1 else -1
+            }
         }
         binding.bookmark.setOnClickListener {
             val auth = novelReaderViewModel.auth

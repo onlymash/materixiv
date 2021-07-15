@@ -27,4 +27,8 @@ abstract class RefreshableListFragment : TokenFragment<FragmentRefreshableListBi
         progressBarHorizontal = binding.progressHorizontal.progressBarHorizontal
         swipeRefreshLayout = binding.refreshableList.swipeRefreshLayout
     }
+
+    fun jumpToListTop() {
+        list.scrollToPosition(0)
+    }
 }

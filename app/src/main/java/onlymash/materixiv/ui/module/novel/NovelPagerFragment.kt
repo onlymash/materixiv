@@ -12,10 +12,12 @@ import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.RankingMode
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.ui.module.common.SearchBarPagerFragment
+import onlymash.materixiv.ui.module.home.MainActivity
 import onlymash.materixiv.ui.module.search.SearchDialog
 import java.util.*
 
-class NovelPagerFragment : SearchBarPagerFragment<NovelPagerAdapter>() {
+class NovelPagerFragment : SearchBarPagerFragment<NovelPagerAdapter>(),
+    MainActivity.BottomNavItemReselectedListener {
 
     override fun getTabNames(): Array<String> {
         return resources.getStringArray(R.array.novel_type_entries)
@@ -47,6 +49,7 @@ class NovelPagerFragment : SearchBarPagerFragment<NovelPagerAdapter>() {
             handleMenuClick(menuItem.itemId)
             true
         }
+        (activity as? MainActivity)?.addBottomNavItemReselectedListener(this)
     }
 
     private fun handleMenuClick(itemId: Int) {
@@ -102,5 +105,18 @@ class NovelPagerFragment : SearchBarPagerFragment<NovelPagerAdapter>() {
             sharedViewModel.selectedTime = time
         }
         dialog.showNow(childFragmentManager, "date_picker")
+    }
+
+    override fun onDestroyView() {
+        (activity as? MainActivity)?.removeBottomNavItemReselectedListener(this)
+        super.onDestroyView()
+    }
+
+    override fun onReselectedItem(itemId: Int) {
+        if (itemId != R.id.navigation_novel) {
+            return
+        }
+        val fragment = childFragmentManager.findFragmentByTag("f${viewPager.currentItem}") as? NovelFragment
+        fragment?.jumpToListTop()
     }
 }

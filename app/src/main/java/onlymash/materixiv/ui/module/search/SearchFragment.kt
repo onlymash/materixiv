@@ -25,6 +25,7 @@ import onlymash.materixiv.databinding.FragmentSearchBinding
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.base.ViewModelFragment
+import onlymash.materixiv.ui.module.common.RefreshableListFragment
 import onlymash.materixiv.ui.module.common.SharedViewModel
 import onlymash.materixiv.ui.module.illust.IllustFragment
 import onlymash.materixiv.ui.module.novel.NovelFragment
@@ -133,6 +134,10 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
             childFragmentManager.beginTransaction()
                 .replace(R.id.child_fragment_container, fragment)
                 .commitNow()
+        }
+        binding.fab.setOnClickListener {
+            val fragment = childFragmentManager.findFragmentById(R.id.child_fragment_container) as? RefreshableListFragment
+            fragment?.jumpToListTop()
         }
     }
 

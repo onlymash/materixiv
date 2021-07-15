@@ -22,4 +22,16 @@
             layout="@layout/layout_searchbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/spacing_25dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_baseline_vertical_align_top_24dp"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        app:elevation="@dimen/elevation_size"
+        style="@style/Widget.MaterialComponents.FloatingActionButton" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

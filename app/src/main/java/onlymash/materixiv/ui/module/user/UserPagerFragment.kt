@@ -8,9 +8,11 @@ import onlymash.materixiv.R
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.ui.module.common.SearchBarPagerFragment
+import onlymash.materixiv.ui.module.home.MainActivity
 import onlymash.materixiv.ui.module.search.SearchDialog
 
-class UserPagerFragment : SearchBarPagerFragment<UserPagerAdapter>() {
+class UserPagerFragment : SearchBarPagerFragment<UserPagerAdapter>(),
+    MainActivity.BottomNavItemReselectedListener {
 
     override fun getTabNames(): Array<String> {
         return resources.getStringArray(R.array.user_type_entries)
@@ -41,6 +43,7 @@ class UserPagerFragment : SearchBarPagerFragment<UserPagerAdapter>() {
             handleMenuClick(menuItem.itemId)
             true
         }
+        (activity as? MainActivity)?.addBottomNavItemReselectedListener(this)
     }
 
     private fun handleMenuClick(itemId: Int) {
@@ -48,5 +51,18 @@ class UserPagerFragment : SearchBarPagerFragment<UserPagerAdapter>() {
             R.id.action_restrict_public -> sharedViewModel.updateRestrict(Restrict.PUBLIC)
             R.id.action_restrict_private -> sharedViewModel.updateRestrict(Restrict.PRIVATE)
         }
+    }
+
+    override fun onDestroyView() {
+        (activity as? MainActivity)?.removeBottomNavItemReselectedListener(this)
+        super.onDestroyView()
+    }
+
+    override fun onReselectedItem(itemId: Int) {
+        if (itemId != R.id.navigation_user) {
+            return
+        }
+        val fragment = childFragmentManager.findFragmentByTag("f${viewPager.currentItem}") as? UserFragment
+        fragment?.jumpToListTop()
     }
 }

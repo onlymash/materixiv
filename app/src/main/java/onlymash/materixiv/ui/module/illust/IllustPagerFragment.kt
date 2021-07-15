@@ -12,11 +12,13 @@ import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.RankingMode
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.ui.module.common.SearchBarPagerFragment
+import onlymash.materixiv.ui.module.home.MainActivity
 import onlymash.materixiv.ui.module.search.SearchDialog
 import java.util.*
 
 
-class IllustPagerFragment : SearchBarPagerFragment<IllustPagerAdapter>() {
+class IllustPagerFragment : SearchBarPagerFragment<IllustPagerAdapter>(),
+    MainActivity.BottomNavItemReselectedListener{
 
     override fun getTabNames(): Array<String> {
         return resources.getStringArray(R.array.illust_type_entries)
@@ -47,7 +49,8 @@ class IllustPagerFragment : SearchBarPagerFragment<IllustPagerAdapter>() {
             handleMenuClick(menuItem.itemId)
             true
         }
-        binding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
+        viewPager.registerOnPageChangeCallback(pageChangeCallback)
+        (activity as? MainActivity)?.addBottomNavItemReselectedListener(this)
     }
     private fun handleMenuClick(itemId: Int) {
         when (itemId) {
@@ -106,5 +109,18 @@ class IllustPagerFragment : SearchBarPagerFragment<IllustPagerAdapter>() {
             sharedViewModel.selectedTime = time
         }
         dialog.showNow(childFragmentManager, "date_picker")
+    }
+
+    override fun onDestroyView() {
+        (activity as? MainActivity)?.removeBottomNavItemReselectedListener(this)
+        super.onDestroyView()
+    }
+
+    override fun onReselectedItem(itemId: Int) {
+        if (itemId != R.id.navigation_illust) {
+            return
+        }
+        val fragment = childFragmentManager.findFragmentByTag("f${viewPager.currentItem}") as? IllustFragment
+        fragment?.jumpToListTop()
     }
 }

@@ -29,11 +29,19 @@ class MainActivity : TokenActivity() {
     private val leftNavView get() = binding.leftNavView
     private lateinit var headerView: View
     private var userId: String? = null
+    private val bottomNavItemReselectListeners: MutableList<BottomNavItemReselectedListener> = mutableListOf()
 
     override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
         val navController = findNavController(R.id.nav_host_fragment)
-        bottomNavView.setupWithNavController(navController)
+        bottomNavView.apply {
+            setupWithNavController(navController)
+            setOnItemReselectedListener { menuItem ->
+                bottomNavItemReselectListeners.forEach { listener ->
+                    listener.onReselectedItem(menuItem.itemId)
+                }
+            }
+        }
         leftNavView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_bookmarks -> startActivity(Intent(this, NovelBookmarksActivity::class.java))
@@ -95,5 +103,17 @@ class MainActivity : TokenActivity() {
             return
         }
         super.onBackPressed()
+    }
+
+    interface BottomNavItemReselectedListener {
+        fun onReselectedItem(itemId: Int)
+    }
+
+    fun addBottomNavItemReselectedListener(listener: BottomNavItemReselectedListener) {
+        bottomNavItemReselectListeners.add(listener)
+    }
+
+    fun removeBottomNavItemReselectedListener(listener: BottomNavItemReselectedListener) {
+        bottomNavItemReselectListeners.remove(listener)
     }
 }

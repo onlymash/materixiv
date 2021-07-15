@@ -68,7 +68,7 @@
         android:layout_marginHorizontal="@dimen/spacing_25dp"
         android:layout_marginTop="@dimen/spacing_5dp"
         android:layout_marginBottom="@dimen/spacing_10dp"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         style="@style/MaterialCardViewStyle">
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

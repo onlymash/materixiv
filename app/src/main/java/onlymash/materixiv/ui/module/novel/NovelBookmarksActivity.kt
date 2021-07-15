@@ -84,8 +84,4 @@ class NovelBookmarksActivity : TokenActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    override fun onLoginStateChange(state: NetworkState?) = Unit
-
-    override fun onRefreshStateChange(state: NetworkState?) = Unit
 }

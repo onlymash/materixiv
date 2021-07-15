@@ -17,4 +17,6 @@ interface TokenRepository {
         uid: Long,
         refreshToken: String
     ): NetResult<Token>
+
+    suspend fun deleteAll()
 }

@@ -2,15 +2,15 @@ package onlymash.materixiv.ui.module.search
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.databinding.ActivitySearchBinding
+import onlymash.materixiv.ui.module.common.TokenActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : TokenActivity() {
 
     companion object {
         fun startSearch(
@@ -29,8 +29,7 @@ class SearchActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivitySearchBinding::inflate)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
         var type = Values.SEARCH_TYPE_ILLUST
         var word = ""

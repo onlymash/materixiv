@@ -21,19 +21,10 @@ abstract class TokenActivity : KodeinActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        onLoadTokenBefore(savedInstanceState)
         tokenViewModel = getViewModel(TokenViewModel(TokenRepositoryImpl(pixivOauthApi, tokenDao)))
+        onLoadTokenBefore(savedInstanceState)
         tokenViewModel.tokens.observe(this, { tokens ->
-            if (tokens.isNullOrEmpty()) {
-                toLoginPage()
-            } else {
-                val token = tokens[0]
-                if (token.isExpired) {
-                    tokenViewModel.refresh(token)
-                } else {
-                    onTokenLoaded(token)
-                }
-            }
+            handleTokens(tokens)
         })
         tokenViewModel.loginState.observe(this, {
             onLoginStateChange(it)
@@ -45,16 +36,32 @@ abstract class TokenActivity : KodeinActivity() {
 
     abstract fun onLoadTokenBefore(savedInstanceState: Bundle?)
 
+    private fun handleTokens(tokens: List<Token>?) {
+        if (tokens.isNullOrEmpty()) {
+            toLoginPage()
+        } else {
+            val token = tokens[0]
+            if (token.isExpired) {
+                tokenViewModel.refresh(token)
+            } else {
+                onTokenLoaded(token)
+            }
+        }
+    }
+
+    open val isLoginActivity = false
+
     private fun toLoginPage() {
+        if (isLoginActivity) return
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 
-    abstract fun onTokenLoaded(token: Token)
+    open fun onTokenLoaded(token: Token) = Unit
 
-    abstract fun onLoginStateChange(state: NetworkState?)
+    open fun onLoginStateChange(state: NetworkState?) = Unit
 
-    abstract fun onRefreshStateChange(state: NetworkState?)
+    open fun onRefreshStateChange(state: NetworkState?) = Unit
 
     protected fun fetchToken(code: String, codeVerifier: String) {
         tokenViewModel.fetchToken(code, codeVerifier)
@@ -62,5 +69,9 @@ abstract class TokenActivity : KodeinActivity() {
 
     protected fun refreshToken() {
         tokenViewModel.refresh()
+    }
+
+    protected fun deleteAllTokens() {
+        tokenViewModel.deleteAllTokens()
     }
 }

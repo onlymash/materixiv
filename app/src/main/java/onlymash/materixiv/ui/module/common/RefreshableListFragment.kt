@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.databinding.FragmentRefreshableListBinding
 
 abstract class RefreshableListFragment : TokenFragment<FragmentRefreshableListBinding>() {
@@ -27,13 +26,5 @@ abstract class RefreshableListFragment : TokenFragment<FragmentRefreshableListBi
         list = binding.refreshableList.list
         progressBarHorizontal = binding.progressHorizontal.progressBarHorizontal
         swipeRefreshLayout = binding.refreshableList.swipeRefreshLayout
-    }
-
-    override fun onLoginStateChange(state: NetworkState?) {
-
-    }
-
-    override fun onRefreshStateChange(state: NetworkState?) {
-
     }
 }

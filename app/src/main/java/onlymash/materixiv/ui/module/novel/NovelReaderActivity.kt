@@ -20,7 +20,6 @@ import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.model.NovelTextResponse
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
 import onlymash.materixiv.data.repository.isFailed
 import onlymash.materixiv.data.repository.isRunning
@@ -203,14 +202,6 @@ class NovelReaderActivity : TokenActivity() {
 
     override fun onTokenLoaded(token: Token) {
         novelReaderViewModel.updateAuth(token.auth)
-    }
-
-    override fun onLoginStateChange(state: NetworkState?) {
-
-    }
-
-    override fun onRefreshStateChange(state: NetworkState?) {
-
     }
 
     private fun adjustFontSize() {

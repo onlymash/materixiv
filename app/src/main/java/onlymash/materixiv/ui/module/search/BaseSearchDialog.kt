@@ -6,7 +6,6 @@ import androidx.viewbinding.ViewBinding
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.model.common.Tag
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.autocomplete.AutocompleteRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.TokenDialog
@@ -53,8 +52,4 @@ abstract class BaseSearchDialog<T: ViewBinding> : TokenDialog<T>() {
     abstract fun onTagsUpdated(tags: List<Tag>)
 
     abstract fun onNamesUpdated(names: List<String>)
-
-    override fun onLoginStateChange(state: NetworkState?) {}
-
-    override fun onRefreshStateChange(state: NetworkState?) {}
 }

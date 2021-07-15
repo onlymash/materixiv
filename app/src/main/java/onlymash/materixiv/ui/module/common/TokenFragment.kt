@@ -12,7 +12,6 @@ import onlymash.materixiv.data.repository.token.TokenRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.base.ViewModelFragment
 import onlymash.materixiv.ui.module.login.LoginActivity
-import onlymash.materixiv.ui.module.login.LoginFragment
 import org.kodein.di.instance
 
 abstract class TokenFragment<T: ViewBinding> : ViewModelFragment<T>() {
@@ -23,24 +22,15 @@ abstract class TokenFragment<T: ViewBinding> : ViewModelFragment<T>() {
     private lateinit var tokenViewModel: TokenViewModel
 
     override fun onCreateViewModel() {
-        tokenViewModel = getViewModel(TokenViewModel(TokenRepositoryImpl(pixivOauthApi, tokenDao)))
+        tokenViewModel = requireActivity().getViewModel(TokenViewModel(TokenRepositoryImpl(pixivOauthApi, tokenDao)))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onBaseViewCreated(view, savedInstanceState)
         tokenViewModel.tokens.observe(viewLifecycleOwner, { tokens ->
-            if (tokens.isNullOrEmpty()) {
-                if (this !is LoginFragment) {
-                    toLoginPage()
-                }
-            } else {
-                val token = tokens[0]
-                if (token.isExpired) {
-                    tokenViewModel.refresh(token)
-                } else {
-                    onTokenLoaded(token)
-                }
+            if (!tokens.isNullOrEmpty()) {
+                onTokenLoaded(tokens[0])
             }
         })
         tokenViewModel.loginState.observe(viewLifecycleOwner, {
@@ -64,9 +54,9 @@ abstract class TokenFragment<T: ViewBinding> : ViewModelFragment<T>() {
 
     abstract fun onTokenLoaded(token: Token)
 
-    abstract fun onLoginStateChange(state: NetworkState?)
+    open fun onLoginStateChange(state: NetworkState?) = Unit
 
-    abstract fun onRefreshStateChange(state: NetworkState?)
+    open fun onRefreshStateChange(state: NetworkState?) = Unit
 
     protected fun fetchToken(code: String, codeVerifier: String) {
         tokenViewModel.fetchToken(code, codeVerifier)

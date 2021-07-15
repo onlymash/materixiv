@@ -25,7 +25,6 @@ import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.model.UserDetailResponse
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
 import onlymash.materixiv.data.repository.detail.UserDetailRepositoryImpl
 import onlymash.materixiv.databinding.FragmentUserDetailBinding
@@ -245,13 +244,5 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
         if (userDetail == null) {
             userDetailViewModel.fetchUserDetail(auth, userId)
         }
-    }
-
-    override fun onLoginStateChange(state: NetworkState?) {
-
-    }
-
-    override fun onRefreshStateChange(state: NetworkState?) {
-
     }
 }

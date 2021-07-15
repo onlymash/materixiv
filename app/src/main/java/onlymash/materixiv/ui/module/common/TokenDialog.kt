@@ -1,6 +1,5 @@
 package onlymash.materixiv.ui.module.common
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.viewbinding.ViewBinding
@@ -11,7 +10,6 @@ import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.token.TokenRepositoryImpl
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.base.ViewModelDialog
-import onlymash.materixiv.ui.module.login.LoginActivity
 import org.kodein.di.instance
 
 abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
@@ -22,26 +20,15 @@ abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
     private lateinit var tokenViewModel: TokenViewModel
 
     override fun onCreateViewModel() {
-        tokenViewModel = getViewModel(
-            TokenViewModel(
-                TokenRepositoryImpl(pixivOauthApi, tokenDao)
-            )
-        )
+        tokenViewModel = requireActivity().getViewModel(TokenViewModel(TokenRepositoryImpl(pixivOauthApi, tokenDao)))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onBaseViewCreated(view, savedInstanceState)
         tokenViewModel.tokens.observe(viewLifecycleOwner, { tokens ->
-            if (tokens.isNullOrEmpty()) {
-                toLoginPage()
-            } else {
-                val token = tokens[0]
-                if (token.isExpired) {
-                    tokenViewModel.refresh(token)
-                } else {
-                    onTokenLoaded(token)
-                }
+            if (!tokens.isNullOrEmpty()) {
+                onTokenLoaded(tokens[0])
             }
         })
         tokenViewModel.loginState.observe(viewLifecycleOwner, {
@@ -54,17 +41,11 @@ abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
 
     abstract fun onBaseViewCreated(view: View, savedInstanceState: Bundle?)
 
-    private fun toLoginPage() {
-        val activity = activity ?: return
-        startActivity(Intent(activity, LoginActivity::class.java))
-        activity.finish()
-    }
-
     abstract fun onTokenLoaded(token: Token)
 
-    abstract fun onLoginStateChange(state: NetworkState?)
+    open fun onLoginStateChange(state: NetworkState?) = Unit
 
-    abstract fun onRefreshStateChange(state: NetworkState?)
+    open fun onRefreshStateChange(state: NetworkState?) = Unit
 
     protected fun fetchToken(code: String, codeVerifier: String) {
         tokenViewModel.fetchToken(code, codeVerifier)

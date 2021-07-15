@@ -10,36 +10,28 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 import onlymash.materixiv.R
-import onlymash.materixiv.data.db.dao.TokenDao
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.databinding.ActivityMainBinding
 import onlymash.materixiv.extensions.findNavController
-import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.glide.GlideApp
-import onlymash.materixiv.ui.base.KodeinActivity
+import onlymash.materixiv.ui.module.common.TokenActivity
 import onlymash.materixiv.ui.module.download.DownloadsActivity
 import onlymash.materixiv.ui.module.novel.NovelBookmarksActivity
 import onlymash.materixiv.ui.module.settings.SettingsActivity
 import onlymash.materixiv.ui.module.user.UserDetailActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
-import org.kodein.di.instance
 
-class MainActivity : KodeinActivity() {
-
-    private val tokenDao by instance<TokenDao>()
+class MainActivity : TokenActivity() {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val bottomNavView get() = binding.bottomNavView
     private val drawerLayout get() = binding.drawerLayout
     private val leftNavView get() = binding.leftNavView
     private lateinit var headerView: View
-    private lateinit var homeViewModel: HomeViewModel
     private var userId: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
-        homeViewModel = getViewModel(HomeViewModel(tokenDao))
         val navController = findNavController(R.id.nav_host_fragment)
         bottomNavView.setupWithNavController(navController)
         leftNavView.setNavigationItemSelectedListener { menuItem ->
@@ -59,11 +51,10 @@ class MainActivity : KodeinActivity() {
         headerView.findViewById<View>(R.id.logout).setOnClickListener {
             showLogoutDialog()
         }
-        homeViewModel.tokens.observe(this, { tokens ->
-            if (!tokens.isNullOrEmpty()) {
-                bindDrawerHeader(tokens[0])
-            }
-        })
+    }
+
+    override fun onTokenLoaded(token: Token) {
+        bindDrawerHeader(token)
     }
 
     private fun bindDrawerHeader(token: Token) {
@@ -87,7 +78,7 @@ class MainActivity : KodeinActivity() {
             .setTitle(R.string.home_logout)
             .setMessage(R.string.home_logout_tip)
             .setPositiveButton(R.string.dialog_yes) { _, _  ->
-                homeViewModel.deleteAllTokens()
+                deleteAllTokens()
             }
             .setNegativeButton(R.string.dialog_no, null)
             .create()

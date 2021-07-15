@@ -122,8 +122,4 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
         }
         trendViewModel.refresh(auth, type)
     }
-
-    override fun onLoginStateChange(state: NetworkState?) { }
-
-    override fun onRefreshStateChange(state: NetworkState?) { }
 }

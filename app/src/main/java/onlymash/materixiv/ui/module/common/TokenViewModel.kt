@@ -60,4 +60,10 @@ class TokenViewModel(private val repo: TokenRepository) : ScopeViewModel() {
             }
         }
     }
+
+    fun deleteAllTokens() {
+        viewModelScope.launch {
+            repo.deleteAll()
+        }
+    }
 }

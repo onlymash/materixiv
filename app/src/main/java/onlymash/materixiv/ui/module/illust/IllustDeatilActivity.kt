@@ -14,7 +14,6 @@ import onlymash.materixiv.data.action.ActionDetail
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.dao.IllustCacheDao
 import onlymash.materixiv.data.db.entity.Token
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.detail.IllustDeatilRepositoryImpl
 import onlymash.materixiv.databinding.ActivityIllustDeatilBinding
 import onlymash.materixiv.extensions.getViewModel
@@ -152,13 +151,5 @@ class IllustDeatilActivity : TokenActivity() {
 
     private fun fetchIllustFromNet() {
         pagerViewModel.fetch(illustId = illustId)
-    }
-
-    override fun onLoginStateChange(state: NetworkState?) {
-
-    }
-
-    override fun onRefreshStateChange(state: NetworkState?) {
-
     }
 }

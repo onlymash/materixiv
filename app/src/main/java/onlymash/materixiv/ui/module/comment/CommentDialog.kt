@@ -16,7 +16,6 @@ import onlymash.materixiv.app.Keys
 import onlymash.materixiv.data.action.ActionComment
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.comment.CommentRepositoryImpl
 import onlymash.materixiv.databinding.DialogCommentBinding
 import onlymash.materixiv.extensions.asMergedLoadStates
@@ -116,13 +115,5 @@ class CommentDialog : TokenBottomSheetDialog<DialogCommentBinding>() {
     override fun onTokenLoaded(token: Token) {
         this.token = token
         commentViewModel.show(ActionComment(token.auth, illustId))
-    }
-
-    override fun onLoginStateChange(state: NetworkState?) {
-
-    }
-
-    override fun onRefreshStateChange(state: NetworkState?) {
-
     }
 }

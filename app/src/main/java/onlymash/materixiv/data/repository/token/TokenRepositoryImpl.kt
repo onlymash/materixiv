@@ -52,4 +52,10 @@ class TokenRepositoryImpl(private val api: PixivOauthApi,
             }
         }
     }
+
+    override suspend fun deleteAll() {
+        withContext(Dispatchers.IO) {
+            dao.deleteAll()
+        }
+    }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.filter
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.ActionNovel
+import onlymash.materixiv.data.action.Duration
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
@@ -93,7 +95,7 @@ class NovelFragment : SharedViewModelFragment() {
         swipeRefreshLayout.setOnRefreshListener { novelAdapter.refresh() }
         when (type) {
             Values.PAGE_TYPE_FOLLOWING -> {
-                sharedViewModel.restrict.observe(viewLifecycleOwner, {
+                sharedViewModel.restrict.observe(viewLifecycleOwner, Observer {
                     if (_action != null) {
                         action.restrict = it
                         refresh()
@@ -101,18 +103,48 @@ class NovelFragment : SharedViewModelFragment() {
                 })
             }
             Values.PAGE_TYPE_RANKING -> {
-                sharedViewModel.rankingMode.observe(viewLifecycleOwner, {
+                sharedViewModel.rankingMode.observe(viewLifecycleOwner, Observer {
                     if (_action != null) {
                         action.modeRanking = it
                         refresh()
                     }
                 })
-                sharedViewModel.date.observe(viewLifecycleOwner, {
+                sharedViewModel.date.observe(viewLifecycleOwner, Observer {
                     if (_action != null) {
                         action.date = it
                         refresh()
                     }
                 })
+            }
+            Values.PAGE_TYPE_SEARCH -> {
+                sharedViewModel.apply {
+                    sort.observe(viewLifecycleOwner, Observer {
+                        if (_action != null && action.sort != it) {
+                            action.sort = it
+                            refresh()
+                        }
+                    })
+                    searchTarget.observe(viewLifecycleOwner, Observer {
+                        if (_action != null && action.searchTarget != it) {
+                            action.searchTarget = it
+                            refresh()
+                        }
+                    })
+                    duration.observe(viewLifecycleOwner, Observer { duration ->
+                        if (_action != null && duration != null && action.duration != duration) {
+                            action.duration = duration
+                            refresh()
+                        }
+                    })
+                    selectedTimeRangeString.observe(viewLifecycleOwner, Observer { dateRange ->
+                        if (_action != null) {
+                            action.dateRange = dateRange
+                            if (action.duration == Duration.CUSTOM) {
+                                refresh()
+                            }
+                        }
+                    })
+                }
             }
         }
     }
@@ -148,16 +180,14 @@ class NovelFragment : SharedViewModelFragment() {
         if (_action == null) {
             _action = ActionNovel(
                 type = type,
-                auth = token.auth,
-                myUserId = token.userId,
+                token = token,
                 word = word,
                 date = sharedViewModel.date.value,
                 modeRanking = sharedViewModel.rankingModeValue,
                 destUserId = destUserId
             )
         } else {
-            action.auth = token.auth
-            action.myUserId = token.userId
+            action.token = token
         }
         novelViewModel.show(action)
     }

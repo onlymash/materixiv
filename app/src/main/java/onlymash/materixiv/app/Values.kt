@@ -21,6 +21,7 @@ object Values {
     const val GRANT_TYPE_AUTH_CODE = "authorization_code"
 
     const val DATE_FORMAT_NSISO8601 = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+    const val DATE_FORMAT = "yyyy-MM-dd"
 
     const val PAGE_TYPE_FOLLOWING = 0
     const val PAGE_TYPE_RECOMMENDED = 1

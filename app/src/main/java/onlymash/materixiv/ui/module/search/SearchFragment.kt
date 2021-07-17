@@ -11,8 +11,12 @@ import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
+import androidx.core.util.Pair
 import androidx.fragment.app.FragmentContainerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
 import onlymash.materixiv.R
@@ -112,11 +116,14 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
         rightIcon.setOnClickListener {
 
         }
-        if (type == Values.SEARCH_TYPE_ILLUST && illustId < 0) {
-            activity?.menuInflater?.inflate(R.menu.searchbar_illust_search, menuView.menu)
-            val menu = menuView.menu
-            if (menu is MenuBuilder) {
-                menu.setOptionalIconsVisible(true)
+        when  {
+            type == Values.SEARCH_TYPE_ILLUST && illustId < 0 -> {
+                activity?.menuInflater?.inflate(R.menu.searchbar_illust_search, menuView.menu)
+                (menuView.menu as? MenuBuilder)?.setOptionalIconsVisible(true)
+            }
+            type == Values.SEARCH_TYPE_NOVEL -> {
+                activity?.menuInflater?.inflate(R.menu.searchbar_novel_search, menuView.menu)
+                (menuView.menu as? MenuBuilder)?.setOptionalIconsVisible(true)
             }
         }
         if (savedInstanceState == null) {
@@ -149,12 +156,34 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
             R.id.action_search_target_partial_match_for_tags -> sharedViewModel.updateSearchTarget(SearchTarget.PARTIAL_MATCH)
             R.id.action_search_target_exact_match_for_tags -> sharedViewModel.updateSearchTarget(SearchTarget.EXACT_MATCH)
             R.id.action_search_target_title_and_caption -> sharedViewModel.updateSearchTarget(SearchTarget.TITLE_CAPTION)
+            R.id.action_search_target_text -> sharedViewModel.updateSearchTarget(SearchTarget.TEXT)
+            R.id.action_search_target_keyword -> sharedViewModel.updateSearchTarget(SearchTarget.KEYWORD)
             R.id.action_duration_within_last_day -> sharedViewModel.updateDuration(Duration.LAST_DAY)
             R.id.action_duration_within_last_week -> sharedViewModel.updateDuration(Duration.LAST_WEEK)
             R.id.action_duration_within_last_month -> sharedViewModel.updateDuration(Duration.LAST_MONTH)
             R.id.action_duration_within_last_half_year -> sharedViewModel.updateDuration(Duration.HALF_YEAR)
             R.id.action_duration_within_last_year -> sharedViewModel.updateDuration(Duration.YEAR)
             R.id.action_duration_within_all -> sharedViewModel.updateDuration(Duration.ALL)
+            R.id.action_duration_within_custom -> selectCustomDate()
         }
+    }
+
+    private fun selectCustomDate() {
+        val selection = sharedViewModel.selectedTimeRange
+        val calendarConstraints = CalendarConstraints.Builder()
+            .setOpenAt(selection.second)
+            .setValidator(DateValidatorPointBackward.now())
+            .build()
+        val picker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTheme(R.style.ThemeOverlay_MaterialComponents_MaterialCalendar)
+            .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+            .setCalendarConstraints(calendarConstraints)
+            .setSelection(selection)
+            .build()
+        picker.addOnPositiveButtonClickListener { times ->
+            sharedViewModel.selectedTimeRange = times
+            sharedViewModel.updateDuration(Duration.CUSTOM)
+        }
+        picker.show(childFragmentManager, "date_range_picker")
     }
 }

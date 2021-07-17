@@ -15,7 +15,7 @@ class NovelPagingSource(
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Novel> {
         val url = params.key?.toHttpUrl() ?: action.url
         return try {
-            val response = api.getNovels(action.auth, url)
+            val response = api.getNovels(action.token.auth, url)
             LoadResult.Page(
                 data = response.novels,
                 prevKey = null,

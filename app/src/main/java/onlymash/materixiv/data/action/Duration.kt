@@ -6,5 +6,6 @@ enum class Duration(val value: String) {
     LAST_MONTH("within_last_month"),
     HALF_YEAR("within_half_year"),
     YEAR("within_year"),
-    ALL("")
+    ALL("all"),
+    CUSTOM("custom")
 }

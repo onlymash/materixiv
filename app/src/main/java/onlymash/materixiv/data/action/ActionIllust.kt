@@ -1,8 +1,10 @@
 package onlymash.materixiv.data.action
 
+import androidx.core.util.Pair
 import okhttp3.HttpUrl
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.db.entity.Token
+import onlymash.materixiv.ui.module.common.SharedViewModel
 
 data class ActionIllust(
     var type: Int = Values.PAGE_TYPE_FOLLOWING,
@@ -18,8 +20,7 @@ data class ActionIllust(
     //search
     var query: String = "",
     var sort: Sort = Sort.DATE_DESC,
-    var startDate: String? = null,
-    var endDate: String? = null,
+    var dateRange: Pair<String, String>? = null,
     var bookmarkNum: Int? = null,
     var searchTarget: SearchTarget = SearchTarget.PARTIAL_MATCH,
     var duration: Duration = Duration.ALL,
@@ -93,21 +94,25 @@ data class ActionIllust(
             } else {
                 baseUrlBuilder.addPathSegments("v1/search/illust")
             }
-                .addQueryParameter("word", query)
+            builder.addQueryParameter("word", query)
                 .addQueryParameter("sort", sort.value)
                 .addQueryParameter("search_target", searchTarget.value)
                 .addQueryParameter("merge_plain_keyword_results", "true")
-            if (startDate != null) {
-                builder.addQueryParameter("start_date", startDate)
-            }
-            if (endDate != null) {
-                builder.addQueryParameter("end_date", endDate)
-            }
             if (bookmarkNum != null) {
                 builder.addQueryParameter("bookmark_num", bookmarkNum.toString())
             }
-            if (duration != Duration.ALL) {
-                builder.addQueryParameter("duration", duration.value)
+            val range = when (duration) {
+                Duration.CUSTOM -> dateRange
+                Duration.LAST_DAY -> SharedViewModel.lastDayRange
+                Duration.LAST_WEEK -> SharedViewModel.lastWeekRange
+                Duration.LAST_MONTH -> SharedViewModel.lastMonthRange
+                Duration.HALF_YEAR -> SharedViewModel.lastHalfYearRange
+                Duration.YEAR -> SharedViewModel.lastYearRange
+                Duration.ALL -> null
+            }
+            if (range != null) {
+                builder.addQueryParameter("start_date", range.first)
+                    .addQueryParameter("end_date", range.second)
             }
             return builder
         }

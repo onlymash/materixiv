@@ -35,8 +35,11 @@
                 android:id="@+id/action_search_target_exact_match_for_tags"
                 android:title="@string/search_target_exact_match_for_tags"/>
             <item
-                android:id="@+id/action_search_target_title_and_caption"
-                android:title="@string/search_target_title_and_caption"/>
+                android:id="@+id/action_search_target_text"
+                android:title="@string/search_target_text"/>
+            <item
+                android:id="@+id/action_search_target_keyword"
+                android:title="@string/search_target_keyword"/>
         </menu>
     </item>
 

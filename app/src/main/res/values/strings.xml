@@ -59,6 +59,8 @@
     <string name="search_target_partial_match_for_tags">Match tags partially</string>
     <string name="search_target_exact_match_for_tags">Match tags exactly</string>
     <string name="search_target_title_and_caption">Match title and caption</string>
+    <string name="search_target_text">Novel, text</string>
+    <string name="search_target_keyword">Keyword</string>
 
     <string name="duration">Duration</string>
     <string name="duration_within_all">All</string>
@@ -67,6 +69,7 @@
     <string name="duration_within_last_month">Last month</string>
     <string name="duration_within_half_year">Half year</string>
     <string name="duration_within_year">Last year</string>
+    <string name="duration_within_custom">Custom</string>
 
     <string name="restrict">Restrict</string>
     <string name="restrict_all">All</string>

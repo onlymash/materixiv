@@ -17,6 +17,7 @@ import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.ActionIllust
+import onlymash.materixiv.data.action.Duration
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.MyDatabase
@@ -153,10 +154,18 @@ class IllustFragment : SharedViewModelFragment() {
                             refresh()
                         }
                     })
-                    duration.observe(viewLifecycleOwner, Observer { d ->
-                        if (_action != null && d != null && action.duration != d) {
-                            action.duration = d
+                    duration.observe(viewLifecycleOwner, Observer { duration ->
+                        if (_action != null && duration != null && action.duration != duration) {
+                            action.duration = duration
                             refresh()
+                        }
+                    })
+                    selectedTimeRangeString.observe(viewLifecycleOwner, Observer { dateRange ->
+                        if (_action != null) {
+                            action.dateRange = dateRange
+                            if (action.duration == Duration.CUSTOM) {
+                                refresh()
+                            }
                         }
                     })
                 }

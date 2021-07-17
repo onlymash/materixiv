@@ -65,6 +65,9 @@
             <item
                 android:id="@+id/action_duration_within_last_year"
                 android:title="@string/duration_within_year"/>
+            <item
+                android:id="@+id/action_duration_within_custom"
+                android:title="@string/duration_within_custom"/>
         </menu>
     </item>
 </menu>

@@ -5,10 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
+import androidx.appcompat.widget.ActionMenuView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textview.MaterialTextView
 import onlymash.materixiv.R
 import onlymash.materixiv.databinding.FragmentSearchbarPagerBinding
 import onlymash.materixiv.extensions.getViewModel
@@ -19,12 +24,11 @@ import onlymash.materixiv.ui.module.user.UserDetailActivity
 
 abstract class SearchBarPagerFragment<T: FragmentStateAdapter> : ViewModelFragment<FragmentSearchbarPagerBinding>() {
 
-    private val searchBarBinding get() = binding.layoutSearchbar
-    protected val title get() = searchBarBinding.title
-    protected val leftButton get() = searchBarBinding.leftButton
-    protected val rightIcon get() = searchBarBinding.rightIcon
-    protected val menuView get() = searchBarBinding.menuView
-    protected val viewPager get() = binding.viewPager
+    protected lateinit var title: MaterialTextView
+    protected lateinit var leftButton: AppCompatImageButton
+    protected lateinit var rightIcon: ShapeableImageView
+    protected lateinit var menuView: ActionMenuView
+    protected lateinit var viewPager: ViewPager2
 
     protected lateinit var sharedViewModel: SharedViewModel
 
@@ -45,6 +49,11 @@ abstract class SearchBarPagerFragment<T: FragmentStateAdapter> : ViewModelFragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        title = binding.layoutSearchbar.title
+        leftButton = binding.layoutSearchbar.leftButton
+        rightIcon = binding.layoutSearchbar.rightIcon
+        menuView = binding.layoutSearchbar.menuView
+        viewPager = binding.viewPager
         leftButton.setImageDrawable(DrawerArrowDrawable(context))
         leftButton.setOnClickListener {
             val activity = activity

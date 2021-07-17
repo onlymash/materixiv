@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.textfield.TextInputEditText
 import onlymash.materixiv.databinding.DialogSearchBinding
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
@@ -20,17 +21,21 @@ import onlymash.materixiv.data.model.common.Tag
 class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
 
     companion object {
-        fun create(type: Int): SearchDialog {
+        fun create(type: Int, word: String? = null): SearchDialog {
             return SearchDialog().apply {
                 arguments = Bundle().apply {
                     putInt(Keys.SEARCH_TYPE, type)
+                    if (word != null) {
+                        putString(Keys.SEARCH_WORD, word)
+                    }
                 }
             }
         }
     }
     private var type = Values.SEARCH_TYPE_ILLUST
+    private var word: String? = null
     private lateinit var autocompleteAdapter: AutocompleteAdapter
-    private val textInputEdit get() =  binding.textInputEdit
+    private lateinit var textInputEdit: TextInputEditText
     private val inputMethodManager by lazy {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -42,7 +47,10 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.DialogThemeFullScreen)
-        type = arguments?.getInt(Keys.SEARCH_TYPE) ?: Values.SEARCH_TYPE_ILLUST
+        arguments?.apply {
+            type = getInt(Keys.SEARCH_TYPE)
+            word = getString(Keys.SEARCH_WORD)
+        }
     }
 
     override fun onCreateBinding(
@@ -60,12 +68,16 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onBaseViewCreated(view, savedInstanceState)
+        textInputEdit = binding.textInputEdit
         textInputEdit.setHint(when (type) {
             Values.SEARCH_TYPE_ILLUST -> R.string.search_hint_illust
             Values.SEARCH_TYPE_NOVEL -> R.string.search_hint_novel
             Values.SEARCH_TYPE_USER -> R.string.search_hint_user
             else -> R.string.search_hint
         })
+        if (word != null) {
+            setQuery(word)
+        }
         textInputEdit.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_NULL) {
                 search(textInputEdit.text?.trim().toString())
@@ -80,23 +92,65 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
                 textInputEdit.text = null
             }
         }
-        autocompleteAdapter = AutocompleteAdapter(type) { word -> search(word) }
+        autocompleteAdapter = AutocompleteAdapter(type) { word -> handleWord(word) }
         binding.list.adapter = autocompleteAdapter
         textInputEdit.addTextChangedListener { text: Editable? ->
             if (type == Values.SEARCH_TYPE_USER) {
-                fetchNames(text?.trim()?.toString())
+                val query = text?.trim()
+                if (!query.isNullOrEmpty()) {
+                    fetchNames(query.toString())
+                }
             } else {
-                fetchTags(text?.trim()?.toString())
+                val query = text?.toString()
+                if (query != null) {
+                    val queryList = query.replace(" +".toRegex(), " ").split(" ")
+                    if (queryList.isNotEmpty()) {
+                        val word = queryList.last()
+                        if (word.isNotEmpty()) {
+                            fetchTags(word)
+                        }
+                    }
+                }
             }
         }
     }
 
     private fun search(word: String) {
-        if (word.isNotEmpty()) {
-            context?.let { context ->
-                SearchActivity.startSearch(context, type, word)
-                dismiss()
+        context?.let { context ->
+            SearchActivity.startSearch(context, type, word)
+            dismiss()
+        }
+    }
+
+    private fun handleWord(word: String) {
+        if (type == Values.SEARCH_TYPE_USER) {
+            search(word)
+        } else {
+            val queryList = (textInputEdit.text?.trim() ?: "").toString()
+                .replace(" +".toRegex(), " ")
+                .split(" ")
+                .toMutableList()
+            if (queryList.isEmpty()) {
+                setQuery("$word ")
+                return
             }
+            if (tag == queryList.last()) {
+                return
+            }
+            queryList.removeLast()
+            queryList.add(word)
+            var query = ""
+            queryList.forEach {
+                query = "$query $it"
+            }
+            setQuery("$query ")
+        }
+    }
+
+    private fun setQuery(query: String?) {
+        textInputEdit.setText(query)
+        if (query != null) {
+            textInputEdit.setSelection(query.length)
         }
     }
 
@@ -132,5 +186,10 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
             }
         }
         super.onDismiss(dialog)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        arguments?.putString(Keys.SEARCH_WORD, word)
+        super.onSaveInstanceState(outState)
     }
 }

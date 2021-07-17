@@ -101,7 +101,13 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
         title.text = word
         leftButton.setImageDrawable(DrawerArrowDrawable(context).apply { progress = 1.0f })
         leftButton.setOnClickListener { activity?.onBackPressed() }
-        title.setOnClickListener { SearchDialog.create(type).show(childFragmentManager, "search") }
+        title.setOnClickListener {
+            if (illustId > 0) {
+                SearchDialog.create(type).show(childFragmentManager, "search")
+            } else {
+                SearchDialog.create(type, word).show(childFragmentManager, "search")
+            }
+        }
         sharedViewModel.token.observe(viewLifecycleOwner, {
             GlideApp.with(rightIcon)
                 .load(it.data.user.profileImageUrls.px170x170)

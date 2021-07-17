@@ -46,8 +46,8 @@ android {
         applicationId = "onlymash.materixiv"
         minSdkVersion(21)
         targetSdkVersion(30)
-        versionCode = 5
-        versionName = "0.0.2_beta02"
+        versionCode = 6
+        versionName = "0.0.2_beta03"
         renderscriptTargetApi = 21
         renderscriptSupportModeEnabled = false
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -27,6 +27,7 @@
             android:layout_marginVertical="8dp"
             android:gravity="center_vertical"
             android:textAppearance="?textAppearanceBody2"
+            android:textColor="?android:textColorSecondary"
             android:maxLines="1"
             app:layout_constraintStart_toEndOf="@+id/cover"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,8 +40,8 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginVertical="8dp"
             android:gravity="center_vertical"
-            android:textAppearance="?textAppearanceBody1"
-            android:maxLines="1"
+            android:textAppearance="?textAppearanceBody2"
+            android:maxLines="2"
             app:layout_constraintStart_toEndOf="@+id/cover"
             app:layout_constraintTop_toBottomOf="@+id/series_title"
             app:layout_constraintEnd_toEndOf="parent"/>

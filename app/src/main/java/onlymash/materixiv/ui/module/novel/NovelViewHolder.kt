@@ -10,6 +10,7 @@ import onlymash.materixiv.data.model.common.Novel
 import onlymash.materixiv.databinding.ItemNovelBinding
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.viewbinding.viewBinding
+import onlymash.materixiv.utils.DateUtil
 
 class NovelViewHolder(binding: ItemNovelBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -20,6 +21,7 @@ class NovelViewHolder(binding: ItemNovelBinding) : RecyclerView.ViewHolder(bindi
     private val seriesTitle = binding.seriesTitle
     private val author = binding.author
     private val tags = binding.tags
+    private val date = binding.date
 
     private var novel: Novel? = null
 
@@ -55,5 +57,6 @@ class NovelViewHolder(binding: ItemNovelBinding) : RecyclerView.ViewHolder(bindi
         }
         tagsString = tagsString.trim()
         tags.text = tagsString
+        date.text = DateUtil.formatDate(itemView.context, novel.createDate)
     }
 }

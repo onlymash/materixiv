@@ -62,7 +62,7 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         return dialog
     }
 
@@ -126,7 +126,7 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
         if (type == Values.SEARCH_TYPE_USER) {
             search(word)
         } else {
-            val queryList = (textInputEdit.text?.trim() ?: "").toString()
+            val queryList = (textInputEdit.text ?: "").toString()
                 .replace(" +".toRegex(), " ")
                 .split(" ")
                 .toMutableList()
@@ -171,7 +171,7 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
         textInputEdit.postDelayed({
             textInputEdit.requestFocus()
             inputMethodManager?.showSoftInput(textInputEdit, InputMethodManager.SHOW_IMPLICIT)
-        }, 500L)
+        }, 300L)
     }
 
     override fun onStart() {

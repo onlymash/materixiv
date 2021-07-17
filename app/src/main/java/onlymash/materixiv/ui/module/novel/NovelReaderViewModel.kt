@@ -39,7 +39,7 @@ class NovelReaderViewModel(private val repo: NovelTextRepository) : ScopeViewMod
 
     val loadState = MutableStateFlow(NetworkState.LOADING)
 
-    val novel = combine(_novelId, _auth, _index) { id, auth, index ->
+    val novel = combine(_novelId, _auth, _index) { id, auth, _ ->
         fetch(id, auth)
     }
         .stateIn(

@@ -114,10 +114,10 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
 
     override fun onResume() {
         super.onResume()
-        textInputEdit.post {
+        textInputEdit.postDelayed({
             textInputEdit.requestFocus()
             inputMethodManager?.showSoftInput(textInputEdit, InputMethodManager.SHOW_IMPLICIT)
-        }
+        }, 500L)
     }
 
     override fun onStart() {

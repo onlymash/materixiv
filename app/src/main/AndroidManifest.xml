@@ -17,7 +17,19 @@
         <activity android:name=".ui.module.novel.NovelBookmarksActivity"/>
         <activity
             android:name=".ui.module.novel.NovelReaderActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="www.pixiv.net"
+                    android:path="/novel/show.php"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.module.download.DownloadsActivity" />
         <activity
             android:name=".ui.module.settings.SettingsActivity"

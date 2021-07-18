@@ -6,19 +6,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import onlymash.materixiv.app.Settings
 import onlymash.materixiv.data.model.NovelTextResponse
+import onlymash.materixiv.data.model.common.Novel
 import onlymash.materixiv.data.repository.NetworkState
-import onlymash.materixiv.data.repository.novel.NovelTextRepository
+import onlymash.materixiv.data.repository.novel.NovelReaderRepository
 import onlymash.materixiv.ui.base.ScopeViewModel
 
-class NovelReaderViewModel(private val repo: NovelTextRepository) : ScopeViewModel() {
-
-    private val _isBookmarked = MutableStateFlow(false)
-
-    val isBookmarked = _isBookmarked.asStateFlow()
-
-    fun updateBookmark(isMarked: Boolean) {
-        _isBookmarked.value = isMarked
-    }
+class NovelReaderViewModel(private val repo: NovelReaderRepository) : ScopeViewModel() {
 
     private val _index = MutableStateFlow(0)
 
@@ -39,8 +32,8 @@ class NovelReaderViewModel(private val repo: NovelTextRepository) : ScopeViewMod
 
     val loadState = MutableStateFlow(NetworkState.LOADING)
 
-    val novel = combine(_novelId, _auth, _index) { id, auth, _ ->
-        fetch(id, auth)
+    private val _novelText = combine(_novelId, _auth, _index) { id, auth, _ ->
+        fetchText(id, auth)
     }
         .stateIn(
             scope = viewModelScope,
@@ -48,7 +41,32 @@ class NovelReaderViewModel(private val repo: NovelTextRepository) : ScopeViewMod
             initialValue = null
         )
 
-    private suspend fun fetch(id: Long, auth: String): NovelTextResponse? {
+    val novelText: Flow<NovelTextResponse?> = _novelText
+
+    private val _novelDetail = combine(_novelId, _auth, _index) { id, auth, _ ->
+        fetchDetail(id, auth)
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = null
+        )
+
+    val novelDetail: Flow<Novel?> = _novelDetail
+
+    fun updateBookmark(isBookmarked: Boolean) {
+        _novelDetail.value?.isBookmarked = isBookmarked
+    }
+
+    fun updateMarker(isMarked: Boolean) {
+        _novelText.value?.novelMarker?.page = if (isMarked) 1 else 0
+    }
+
+    fun clearText() {
+        _novelText.value?.novelText = ""
+    }
+
+    private suspend fun fetchText(id: Long, auth: String): NovelTextResponse? {
         if (auth.isBlank()) return null
         return try {
             loadState.value = NetworkState.LOADING
@@ -57,6 +75,15 @@ class NovelReaderViewModel(private val repo: NovelTextRepository) : ScopeViewMod
             data
         } catch (e: Exception) {
             loadState.value = NetworkState.error(e.message)
+            null
+        }
+    }
+
+    private suspend fun fetchDetail(id: Long, auth: String): Novel? {
+        if (auth.isBlank()) return null
+        return try {
+            repo.getNovelDetail(auth, id)
+        } catch (_: Exception) {
             null
         }
     }
@@ -75,4 +102,8 @@ class NovelReaderViewModel(private val repo: NovelTextRepository) : ScopeViewMod
     fun updateFontSize(size: Float) {
         _fontSize.postValue(size)
     }
+
+    val authorId get() = _novelDetail.value?.user?.id ?: -1L
+    val prevNovelId get() = _novelText.value?.seriesPrev?.id ?: -1L
+    val nextNovelId get() = _novelText.value?.seriesNext?.id ?: -1L
 }

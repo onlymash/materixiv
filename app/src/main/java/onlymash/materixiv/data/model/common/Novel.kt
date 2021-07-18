@@ -14,7 +14,7 @@ data class Novel(
     @SerialName("image_urls")
     val imageUrls: ImageUrls,
     @SerialName("is_bookmarked")
-    val isBookmarked: Boolean,
+    var isBookmarked: Boolean,
     @SerialName("is_muted")
     val isMuted: Boolean,
     @SerialName("page_count")

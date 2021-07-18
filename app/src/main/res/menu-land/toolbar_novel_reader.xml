@@ -15,5 +15,5 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_outline_24dp"
         android:title="@string/novel_reader_share"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 </menu>

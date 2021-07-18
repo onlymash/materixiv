@@ -28,14 +28,7 @@ class NovelViewHolder(binding: ItemNovelBinding) : RecyclerView.ViewHolder(bindi
     init {
         itemView.setOnClickListener {
             novel?.apply {
-                NovelReaderActivity.startActivity(
-                    context = itemView.context,
-                    novelId = id,
-                    title = title,
-                    author = user.name,
-                    authorId = user.id,
-                    isBookmarked = isBookmarked
-                )
+                NovelReaderActivity.startActivity(context = itemView.context, novelId = id)
             }
         }
     }

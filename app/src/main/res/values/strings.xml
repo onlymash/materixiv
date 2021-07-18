@@ -137,4 +137,5 @@
     <string name="novel_reader_previous">Previous</string>
     <string name="novel_reader_next">Next</string>
     <string name="novel_reader_author">Author</string>
+    <string name="novel_reader_share">Share</string>
 </resources>

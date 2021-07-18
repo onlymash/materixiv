@@ -3,7 +3,6 @@ package onlymash.materixiv.ui.module.novel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -14,16 +13,19 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Settings
+import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.model.NovelTextResponse
+import onlymash.materixiv.data.model.common.Novel
 import onlymash.materixiv.data.repository.common.CommonRepositoryImpl
 import onlymash.materixiv.data.repository.isFailed
 import onlymash.materixiv.data.repository.isRunning
-import onlymash.materixiv.data.repository.novel.NovelTextRepositoryImpl
+import onlymash.materixiv.data.repository.novel.NovelReaderRepositoryImpl
 import onlymash.materixiv.databinding.ActivityNovelReaderBinding
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.CommonViewModel
@@ -32,29 +34,18 @@ import onlymash.materixiv.ui.module.user.UserDetailActivity
 import onlymash.materixiv.ui.module.user.UserDetailFragment
 import onlymash.materixiv.ui.viewbinding.viewBinding
 import org.kodein.di.instance
+import java.lang.Exception
 
 class NovelReaderActivity : TokenActivity() {
 
     companion object {
         private const val NOVEL_ID_KEY = "novel_id"
-        private const val NOVEL_TITLE_KEY = "novel_title"
-        private const val NOVEL_AUTHOR_KEY = "novel_author"
-        private const val NOVEL_AUTHOR_ID_KEY = "novel_author_id"
-        private const val NOVEL_BOOKMARKED_KEY = "novel_bookmarked"
         fun startActivity(
             context: Context,
-            novelId: Long,
-            title: String,
-            author: String,
-            authorId: Long,
-            isBookmarked: Boolean
+            novelId: Long
         ) {
             context.startActivity(Intent(context, NovelReaderActivity::class.java).apply {
                 putExtra(NOVEL_ID_KEY, novelId)
-                putExtra(NOVEL_TITLE_KEY, title)
-                putExtra(NOVEL_AUTHOR_KEY, author)
-                putExtra(NOVEL_AUTHOR_ID_KEY, authorId)
-                putExtra(NOVEL_BOOKMARKED_KEY, isBookmarked)
             })
         }
     }
@@ -67,22 +58,21 @@ class NovelReaderActivity : TokenActivity() {
     override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            title = intent?.extras?.getString(NOVEL_TITLE_KEY)
-            subtitle = intent?.extras?.getString(NOVEL_AUTHOR_KEY)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         commonViewModel = getViewModel(CommonViewModel(CommonRepositoryImpl(pixivAppApi)))
-        novelReaderViewModel = getViewModel(NovelReaderViewModel(NovelTextRepositoryImpl(pixivAppApi)))
-        if (savedInstanceState == null) {
-            val id = intent?.getLongExtra(NOVEL_ID_KEY, -1L)
-            if (id != null && id > -1L) {
-                novelReaderViewModel.novelId = id
+        novelReaderViewModel = getViewModel(NovelReaderViewModel(NovelReaderRepositoryImpl(pixivAppApi)))
+        if (savedInstanceState == null && intent != null) {
+            var id = intent.getLongExtra(NOVEL_ID_KEY, -1L)
+            if (id < 0) {
+                intent.data?.let { uri ->
+                    id = try {
+                        uri.getQueryParameter("id")?.toLong() ?: -1L
+                    } catch (_: Exception) {
+                        -1L
+                    }
+                }
             }
-            val isBookmarked = intent?.getBooleanExtra(NOVEL_BOOKMARKED_KEY, false)
-            if (isBookmarked != null) {
-                commonViewModel.updateBookmarkNovel(isBookmarked)
-            }
+            novelReaderViewModel.novelId = id
         }
         lifecycleScope.launchWhenCreated {
             novelReaderViewModel.loadState.collectLatest { state ->
@@ -92,9 +82,16 @@ class NovelReaderActivity : TokenActivity() {
             }
         }
         lifecycleScope.launchWhenCreated {
-            novelReaderViewModel.novel.collectLatest { novel ->
+            novelReaderViewModel.novelText.collectLatest { novel ->
                 if (novel != null) {
                     handleNovel(novel)
+                }
+            }
+        }
+        lifecycleScope.launchWhenCreated {
+            novelReaderViewModel.novelDetail.collectLatest { novel ->
+                if (novel != null) {
+                    handleNovelDetail(novel)
                 }
             }
         }
@@ -105,51 +102,53 @@ class NovelReaderActivity : TokenActivity() {
             binding.novelText.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
         })
         binding.prevPage.setOnClickListener {
-            jumpToNewNovel(novelReaderViewModel.novel.value?.seriesPrev)
+            jumpToNewNovel(novelReaderViewModel.prevNovelId)
         }
         binding.nextPage.setOnClickListener {
-            jumpToNewNovel(novelReaderViewModel.novel.value?.seriesNext)
-        }
-        lifecycleScope.launchWhenCreated {
-            commonViewModel.isBookmarkNovel.collectLatest { binding.bookmark.isActivated = it }
-        }
-        lifecycleScope.launchWhenCreated {
-            commonViewModel.isMarkerNovel.collectLatest { isMarked ->
-                binding.marker.isActivated = isMarked
-                novelReaderViewModel.novel.value?.novelMarker?.page = if (isMarked) 1 else -1
-            }
+            jumpToNewNovel(novelReaderViewModel.nextNovelId)
         }
         binding.bookmark.setOnClickListener {
             val auth = novelReaderViewModel.auth
             val novelId = novelReaderViewModel.novelId
-            Log.w("bookmark", "$novelId : $auth")
-            if (binding.bookmark.isActivated) {
-                commonViewModel.deleteBookmarkNovel(auth, novelId)
-            } else {
-                commonViewModel.addBookmarkNovel(auth, novelId, Restrict.PUBLIC)
+            lifecycleScope.launch {
+                val isBookmarked = if (binding.bookmark.isActivated) {
+                    !commonViewModel.deleteBookmarkNovel(auth, novelId)
+                } else {
+                    commonViewModel.addBookmarkNovel(auth, novelId, Restrict.PUBLIC)
+                }
+                novelReaderViewModel.updateBookmark(isBookmarked)
+                binding.bookmark.isActivated = isBookmarked
             }
         }
         binding.bookmark.setOnLongClickListener {
             if (!binding.bookmark.isActivated) {
                 val auth = novelReaderViewModel.auth
                 val novelId = novelReaderViewModel.novelId
-                commonViewModel.addBookmarkNovel(auth, novelId, Restrict.PRIVATE)
+                lifecycleScope.launch {
+                    val isBookmarked = commonViewModel.addBookmarkNovel(auth, novelId, Restrict.PRIVATE)
+                    novelReaderViewModel.updateBookmark(isBookmarked)
+                    binding.bookmark.isActivated = isBookmarked
+                }
             }
             true
         }
         binding.marker.setOnClickListener {
             val auth = novelReaderViewModel.auth
             val novelId = novelReaderViewModel.novelId
-            if (binding.marker.isActivated) {
-                commonViewModel.deleteMarkerNovel(auth, novelId)
-            } else {
-                commonViewModel.addMarkerNovel(auth, novelId)
+            lifecycleScope.launch {
+                val isMarked = if (binding.marker.isActivated) {
+                    !commonViewModel.deleteMarkerNovel(auth, novelId)
+                } else {
+                    commonViewModel.addMarkerNovel(auth, novelId)
+                }
+                novelReaderViewModel.updateMarker(isMarked)
+                binding.marker.isActivated = isMarked
             }
         }
     }
 
     private fun handleNovel(novel: NovelTextResponse) {
-        commonViewModel.updateMarkerNovel(novel.novelMarker.page > 0)
+        binding.marker.isActivated = novel.novelMarker.page > 0
         if (novel.seriesPrev.id < 0) {
             binding.prevPage.visibility = View.INVISIBLE
         } else {
@@ -163,19 +162,24 @@ class NovelReaderActivity : TokenActivity() {
         binding.novelText.text = novel.novelText
     }
 
-    private fun jumpToNewNovel(novel: NovelTextResponse.NovelPreview?) {
-        if (novel != null && novel.id > 0) {
-            intent?.apply {
-                putExtra(NOVEL_ID_KEY, novel.id)
-                putExtra(NOVEL_TITLE_KEY, novel.title)
-                putExtra(NOVEL_BOOKMARKED_KEY, novel.isBookmarked)
-            }
-            supportActionBar?.title = novel.title
-            binding.novelText.text = null
-            commonViewModel.updateBookmarkNovel(novel.isBookmarked)
-            commonViewModel.updateMarkerNovel(false)
-            novelReaderViewModel.novelId = novel.id
+    private fun handleNovelDetail(novel: Novel) {
+        supportActionBar?.apply {
+            title = novel.title
+            subtitle = novel.user.name
         }
+        binding.bookmark.isActivated = novel.isBookmarked
+    }
+
+    private fun jumpToNewNovel(novelId: Long) {
+        if (novelId < 0) return
+        intent?.putExtra(NOVEL_ID_KEY, novelId)
+        binding.novelText.text = null
+        binding.bookmark.isActivated = false
+        binding.marker.isActivated = false
+        novelReaderViewModel.clearText()
+        novelReaderViewModel.updateBookmark(false)
+        novelReaderViewModel.updateMarker(false)
+        novelReaderViewModel.novelId = novelId
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -191,10 +195,21 @@ class NovelReaderActivity : TokenActivity() {
             }
             R.id.action_font_size -> adjustFontSize()
             R.id.action_author -> {
-                val authorId = intent?.getLongExtra(NOVEL_AUTHOR_ID_KEY, -1L) ?: -1L
+                val authorId = novelReaderViewModel.authorId
                 if (authorId > 0) {
                     UserDetailActivity.start(this, authorId.toString(), UserDetailFragment.TARGET_PAGE_NOVEL)
                 }
+            }
+            R.id.action_share -> {
+                val webUrl = "${Values.BASE_URL}/novel/show.php?id=${novelReaderViewModel.novelId}"
+                startActivity(Intent.createChooser(
+                    Intent().apply {
+                        action = Intent.ACTION_SEND
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, webUrl)
+                    },
+                    getString(R.string.common_share_via)
+                ))
             }
         }
         return super.onOptionsItemSelected(item)

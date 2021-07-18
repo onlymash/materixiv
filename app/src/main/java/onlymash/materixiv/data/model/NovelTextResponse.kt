@@ -9,7 +9,7 @@ data class NovelTextResponse(
     @SerialName("novel_marker")
     val novelMarker: NovelMarker = NovelMarker(),
     @SerialName("novel_text")
-    val novelText: String,
+    var novelText: String,
     @SerialName("series_prev")
     val seriesPrev: NovelPreview,
     @SerialName("series_next")

@@ -1,5 +1,6 @@
 package onlymash.materixiv.ui.module.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
+import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
@@ -137,7 +139,15 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
             handleMenuClick(menuItem.itemId)
             true
         }
-        toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        toolbar.apply {
+            setNavigationOnClickListener { activity?.onBackPressed() }
+            setOnMenuItemClickListener { menuItem ->
+                if (menuItem.itemId == R.id.action_share) {
+                    shareLink()
+                }
+                true
+            }
+        }
         val clickListener = View.OnClickListener { handleFollow(it, Restrict.PUBLIC) }
         follow.setOnClickListener(clickListener)
         followToolbar.setOnClickListener(clickListener)
@@ -159,6 +169,20 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
         binding.layoutUserInfo.friendsCount.setOnClickListener {
             viewPager.setCurrentItem(5, false)
         }
+    }
+
+    private fun shareLink() {
+        val context = context ?: return
+        val webUrl = "${Values.BASE_URL}/users/${userId}"
+        context.startActivity(
+            Intent.createChooser(
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, webUrl)
+            },
+            getString(R.string.common_share_via)
+        ))
     }
 
     private fun handleFollow(v: View, restrict: Restrict) {

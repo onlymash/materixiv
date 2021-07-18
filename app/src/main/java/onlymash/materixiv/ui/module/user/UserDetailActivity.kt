@@ -2,14 +2,14 @@ package onlymash.materixiv.ui.module.user
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.databinding.ActivityUserDetailBinding
+import onlymash.materixiv.ui.module.common.TokenActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
-class UserDetailActivity : AppCompatActivity() {
+class UserDetailActivity : TokenActivity() {
 
     companion object {
         fun start(
@@ -26,11 +26,14 @@ class UserDetailActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivityUserDetailBinding::inflate)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
         if (savedInstanceState == null) {
-            val id = intent?.getStringExtra(Keys.USER_ID) ?: "-1"
+            var id = "-1"
+            intent?.apply {
+                id = getStringExtra(Keys.USER_ID) ?:
+                data?.path?.replace("/users/", "")?.substringBefore("/") ?: "-1"
+            }
             val targetPage = intent?.getIntExtra(UserDetailFragment.TARGET_PAGE_KEY, UserDetailFragment.TARGET_PAGE_ILLUST) ?: UserDetailFragment.TARGET_PAGE_ILLUST
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, UserDetailFragment.create(id, targetPage))

@@ -59,7 +59,7 @@ class IllustDeatilActivity : TokenActivity() {
     }
 
     private fun Uri.getIllustId(): Long {
-        return path?.replace("/artworks/", "")?.toLong() ?: 0
+        return path?.replace("/artworks/", "")?.substringBefore("/")?.toLong() ?: 0L
     }
 
     private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {

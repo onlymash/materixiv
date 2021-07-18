@@ -27,13 +27,13 @@
                 android:layout_height="?attr/actionBarSize"
                 app:navigationIcon="?android:attr/homeAsUpIndicator"
                 app:contentInsetStartWithNavigation="0dp"
+                app:menu="@menu/toolbar_user_detail"
                 app:layout_collapseMode="pin">
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/toolbar_title_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:layout_marginEnd="@dimen/spacing_18dp"
                     android:visibility="invisible">
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/toolbar_avatar"

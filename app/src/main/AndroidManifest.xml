@@ -36,7 +36,19 @@
             android:label="@string/title_settings" />
         <activity
             android:name=".ui.module.user.UserDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.pixiv.net"
+                    android:pathPattern="/users/.*"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.module.illust.IllustDeatilActivity"
             android:theme="@style/AppTheme.NoActionBar.Detail">

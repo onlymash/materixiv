@@ -9,6 +9,10 @@ import android.text.Editable
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
@@ -61,13 +65,24 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-        return dialog
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.let {
+                WindowCompat.setDecorFitsSystemWindows(it, false)
+            }
+        }
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onBaseViewCreated(view, savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(
+                left = systemBarsInsets.left,
+                right = systemBarsInsets.right,
+                top = systemBarsInsets.top,
+                bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom)
+            insets
+        }
         textInputEdit = binding.textInputEdit
         textInputEdit.setHint(when (type) {
             Values.SEARCH_TYPE_ILLUST -> R.string.search_hint_illust

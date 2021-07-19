@@ -80,7 +80,8 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
         }
         textInputEdit.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_NULL) {
-                search(textInputEdit.text?.trim().toString())
+                val keyword = textInputEdit.text ?: ""
+                search(keyword.toString())
             }
             true
         }
@@ -116,8 +117,12 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
     }
 
     private fun search(word: String) {
+        val keyword = word.trim()
+        if (keyword.isEmpty()) {
+            return
+        }
         context?.let { context ->
-            SearchActivity.startSearch(context, type, word)
+            SearchActivity.startSearch(context, type, keyword)
             dismiss()
         }
     }
@@ -143,6 +148,7 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
             queryList.forEach {
                 query = "$query $it"
             }
+            query = query.trim()
             setQuery("$query ")
         }
     }

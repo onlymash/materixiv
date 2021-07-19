@@ -41,6 +41,8 @@
                         android:layout_height="28dp"
                         android:layout_gravity="center_vertical"
                         app:srcCompat="@drawable/placeholder_avatar"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/colorLine"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayCircle"/>
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/toolbar_title"

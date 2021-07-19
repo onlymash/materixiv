@@ -14,6 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            app:title="@string/title_novel"
             app:layout_scrollFlags="scroll|enterAlways"
             style="?actionBarStyle"/>
     </com.google.android.material.appbar.AppBarLayout>

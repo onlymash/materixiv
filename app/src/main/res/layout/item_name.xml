@@ -27,7 +27,7 @@
         android:paddingVertical="@dimen/spacing_5dp"
         android:maxLines="1"
         android:minHeight="?attr/listPreferredItemHeightSmall"
-        app:layout_constraintStart_toEndOf="@+id/icon_search"
+        app:layout_constraintStart_toEndOf="@id/icon_search"
         app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

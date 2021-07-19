@@ -9,6 +9,7 @@ import onlymash.materixiv.R
 import onlymash.materixiv.data.model.common.Comment
 import onlymash.materixiv.databinding.ItemCommentBinding
 import onlymash.materixiv.glide.GlideApp
+import onlymash.materixiv.ui.module.user.UserDetailActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
 import onlymash.materixiv.utils.DateUtil
 
@@ -42,6 +43,21 @@ class CommentAdapter : PagingDataAdapter<Comment, CommentAdapter.CommentViewHold
         private val reply = binding.reply
 
         private var data: Comment? = null
+
+        init {
+            avatar.setOnClickListener {
+                openUser()
+            }
+            username.setOnClickListener {
+                openUser()
+            }
+        }
+
+        private fun openUser() {
+            data?.let {
+                UserDetailActivity.start(itemView.context, userId = it.user.id.toString())
+            }
+        }
 
         fun bind(data: Comment?) {
             this.data = data ?: return

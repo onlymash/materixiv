@@ -15,7 +15,7 @@ class CommentPagingSource(
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Comment> {
         val url = params.key?.toHttpUrl() ?: action.url
         return try {
-            val response = api.getIllustComments(action.auth, url)
+            val response = api.getComments(action.auth, url)
             LoadResult.Page(
                 data = response.comments,
                 prevKey = null,

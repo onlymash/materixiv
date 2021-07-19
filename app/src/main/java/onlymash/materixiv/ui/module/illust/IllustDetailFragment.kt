@@ -31,6 +31,7 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
+import onlymash.materixiv.data.action.ActionComment
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.dao.DownloadDao
@@ -49,7 +50,7 @@ import onlymash.materixiv.extensions.setupTooltipText
 import onlymash.materixiv.glide.BlurTransformation
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.base.ViewModelFragment
-import onlymash.materixiv.ui.module.comment.CommentDialog
+import onlymash.materixiv.ui.module.comment.CommentActivity
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.StorageFolderLifecycleObserver
 import onlymash.materixiv.ui.module.search.SearchActivity
@@ -209,7 +210,9 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
         binding.detailContent.comments.apply {
             setOnClickListener {
-                CommentDialog.create(illustId).show(childFragmentManager, "comment")
+                context?.let { context ->
+                    CommentActivity.start(context, illustId, ActionComment.TYPE_ILLUST)
+                }
             }
             setupTooltipText()
         }

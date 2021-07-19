@@ -15,6 +15,8 @@
         android:layout_marginTop="@dimen/spacing_35dp"
         android:layout_marginHorizontal="@dimen/spacing_18dp"
         app:srcCompat="@drawable/placeholder_avatar"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/colorLine"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayCircle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

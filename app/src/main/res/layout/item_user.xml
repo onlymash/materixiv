@@ -3,75 +3,80 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/spacing_20dp"
     android:layout_marginVertical="@dimen/spacing_10dp"
     style="?materialCardViewStyle">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/previews"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:minHeight="40dp">
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/preview_0"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="130dp"
                 android:layout_weight="1"
                 android:scaleType="centerCrop"/>
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/preview_1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="130dp"
                 android:layout_weight="1"
                 android:scaleType="centerCrop"/>
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/preview_2"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="130dp"
                 android:layout_weight="1"
                 android:scaleType="centerCrop"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/avatar"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_margin="8dp"
-            app:srcCompat="@drawable/placeholder_avatar"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayCircle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/name"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="20dp"
-            android:gravity="center_vertical"
-            android:textAppearance="?textAppearanceListItemSecondary"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/previews"
-            app:layout_constraintEnd_toStartOf="@+id/follow"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/follow"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:gravity="center_vertical"
-            android:layout_marginHorizontal="8dp"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:layout_marginVertical="2dp"
-            android:checkable="true"
-            style="?materialButtonOutlinedStyle"
-            app:layout_constraintTop_toBottomOf="@id/previews"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_marginStart="76dp"
+                android:maxLines="2"
+                android:textAppearance="?textAppearanceListItemSecondary"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/follow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginHorizontal="8dp"
+                android:checkable="true"
+                style="?materialButtonOutlinedStyle"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="start|bottom"
+        android:layout_margin="8dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/colorLine"
+        app:srcCompat="@drawable/placeholder_avatar"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayCircle"/>
 </com.google.android.material.card.MaterialCardView>

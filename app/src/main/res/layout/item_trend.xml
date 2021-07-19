@@ -20,8 +20,8 @@
         android:background="@color/colorTrendItemForeground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="@+id/preview"
-        app:layout_constraintBottom_toBottomOf="@+id/preview"/>
+        app:layout_constraintTop_toTopOf="@id/preview"
+        app:layout_constraintBottom_toBottomOf="@id/preview"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name_jp"
@@ -32,7 +32,7 @@
         android:textStyle="bold|normal"
         android:textColor="@color/white"
         android:maxLines="1"
-        app:layout_constraintBottom_toTopOf="@+id/name_translation"/>
+        app:layout_constraintBottom_toTopOf="@id/name_translation"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name_translation"

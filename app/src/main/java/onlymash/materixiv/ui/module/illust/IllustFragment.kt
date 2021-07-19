@@ -30,6 +30,7 @@ import onlymash.materixiv.extensions.getWindowWidth
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.NetworkLoadStateAdapter
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
+import onlymash.materixiv.ui.paging.withLoadStateFooterSafe
 import org.kodein.di.instance
 import retrofit2.HttpException
 import kotlin.math.roundToInt

@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import onlymash.materixiv.R
 import onlymash.materixiv.app.Settings
 import onlymash.materixiv.app.Values
+import onlymash.materixiv.data.action.ActionComment
 import onlymash.materixiv.data.action.Restrict
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
@@ -28,6 +29,7 @@ import onlymash.materixiv.data.repository.isRunning
 import onlymash.materixiv.data.repository.novel.NovelReaderRepositoryImpl
 import onlymash.materixiv.databinding.ActivityNovelReaderBinding
 import onlymash.materixiv.extensions.getViewModel
+import onlymash.materixiv.ui.module.comment.CommentActivity
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.TokenActivity
 import onlymash.materixiv.ui.module.user.UserDetailActivity
@@ -210,6 +212,9 @@ class NovelReaderActivity : TokenActivity() {
                     },
                     getString(R.string.common_share_via)
                 ))
+            }
+            R.id.action_comments -> {
+                CommentActivity.start(this, novelReaderViewModel.novelId, ActionComment.TYPE_NOVEL)
             }
         }
         return super.onOptionsItemSelected(item)

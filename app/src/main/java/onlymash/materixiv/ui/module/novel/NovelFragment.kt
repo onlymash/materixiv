@@ -27,6 +27,7 @@ import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.ui.module.common.CommonViewModel
 import onlymash.materixiv.ui.module.common.NetworkLoadStateAdapter
 import onlymash.materixiv.ui.module.common.SharedViewModelFragment
+import onlymash.materixiv.ui.paging.withLoadStateFooterSafe
 import org.kodein.di.instance
 import retrofit2.HttpException
 
@@ -77,7 +78,7 @@ class NovelFragment : SharedViewModelFragment() {
         list.apply {
             updatePadding(left = 0, right = 0)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = novelAdapter.withLoadStateFooter(NetworkLoadStateAdapter(novelAdapter))
+            adapter = novelAdapter.withLoadStateFooterSafe(NetworkLoadStateAdapter(novelAdapter))
         }
         novelAdapter.addLoadStateListener { handleNetworkState(it) }
         lifecycleScope.launchWhenCreated {

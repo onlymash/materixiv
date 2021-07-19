@@ -77,7 +77,7 @@ interface PixivAppApi {
     ): IllustDetailResponse
 
     @GET
-    suspend fun getIllustComments(
+    suspend fun getComments(
         @Header(AUTHORIZATION) auth: String,
         @Url url: HttpUrl
     ): CommentResponse

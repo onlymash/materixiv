@@ -13,6 +13,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         app:srcCompat="@drawable/placeholder_avatar"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/colorLine"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayCircle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -24,7 +26,7 @@
         android:layout_marginStart="@dimen/spacing_20dp"
         android:textAppearance="?textAppearanceBody2"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/avatar"
+        app:layout_constraintStart_toEndOf="@id/avatar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -34,8 +36,9 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/spacing_10dp"
         android:textAppearance="?textAppearanceBody1"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        app:layout_constraintStart_toStartOf="@+id/username"
+        android:textIsSelectable="true"
+        app:layout_constraintTop_toBottomOf="@id/username"
+        app:layout_constraintStart_toStartOf="@id/username"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.textview.MaterialTextView
@@ -44,10 +47,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?textAppearanceBody2"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintStart_toStartOf="@+id/comment"
-        app:layout_constraintTop_toTopOf="@+id/reply"
-        app:layout_constraintBottom_toBottomOf="@+id/reply"
-        app:layout_constraintEnd_toStartOf="@+id/reply"/>
+        app:layout_constraintStart_toStartOf="@id/comment"
+        app:layout_constraintTop_toTopOf="@id/reply"
+        app:layout_constraintBottom_toBottomOf="@id/reply"
+        app:layout_constraintEnd_toStartOf="@id/reply"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/reply"
@@ -59,4 +62,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/comment"
         style="@style/ClickableItemStyle"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/line"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reply"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

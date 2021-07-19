@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_share_outline_24dp"
         android:title="@string/common_share"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_comments"
+        android:icon="@drawable/ic_outline_comment_24dp"
+        android:title="@string/illust_detail_comments"
+        app:showAsAction="never"/>
 </menu>

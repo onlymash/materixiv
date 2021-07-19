@@ -22,6 +22,8 @@
             android:layout_marginHorizontal="@dimen/spacing_16dp"
             android:padding="@dimen/spacing_5dp"
             app:srcCompat="@drawable/placeholder_avatar"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/colorLine"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayCircle"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,10 +38,10 @@
             android:textStyle="bold|normal"
             android:maxLines="1"
             android:layout_marginHorizontal="@dimen/spacing_16dp"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/username"/>
+            app:layout_constraintBottom_toTopOf="@id/username"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/username"
@@ -49,7 +51,7 @@
             android:textAppearance="?textAppearanceBody1"
             android:textColor="?android:attr/textColorSecondary"
             android:maxLines="1"
-            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

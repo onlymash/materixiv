@@ -2,10 +2,8 @@ package onlymash.materixiv.ui.module.user
 
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.paging.LoadState
-import androidx.paging.LoadStateAdapter
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -32,22 +30,6 @@ class UserAdapter(
                 newItem: UserCache
             ): Boolean = oldItem.id == newItem.id
         }
-    }
-
-    fun withLoadStateFooterSafe(
-        footer: LoadStateAdapter<*>
-    ): ConcatAdapter {
-        val containerAdapter = ConcatAdapter(this)
-        addLoadStateListener { loadStates ->
-            footer.loadState = loadStates.append
-            if (loadStates.append is LoadState.Error && !containerAdapter.adapters.contains(footer)) {
-                containerAdapter.addAdapter(footer)
-                footer.loadState = loadStates.append
-            } else if (containerAdapter.adapters.contains(footer)){
-                containerAdapter.removeAdapter(footer)
-            }
-        }
-        return containerAdapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -143,12 +125,25 @@ class UserAdapter(
                         1 -> preview1
                         else -> preview2
                     }
+                    view.isVisible = true
                     GlideApp.with(context)
                         .load(illust.imageUrls.medium)
                         .placeholder(ContextCompat.getDrawable(context, R.drawable.placeholder_background))
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(view)
                 }
+            }
+            when (preview.illusts.size){
+                0 -> {
+                    preview0.isVisible = false
+                    preview1.isVisible = false
+                    preview2.isVisible = false
+                }
+                1 -> {
+                    preview1.isVisible = false
+                    preview2.isVisible = false
+                }
+                2 -> preview2.isVisible = false
             }
         }
     }

@@ -50,6 +50,8 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 app:srcCompat="@drawable/placeholder_avatar"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/colorLine"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayCircle"/>
             <Space
                 android:layout_width="0dp"

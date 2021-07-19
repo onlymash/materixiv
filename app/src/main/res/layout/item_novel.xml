@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/spacing_20dp"
     android:layout_marginVertical="@dimen/spacing_10dp"
     style="?materialCardViewStyle">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cover"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:minHeight="150dp"/>
+            android:layout_width="90dp"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/container_info"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"
@@ -24,7 +27,11 @@
             android:layout_weight="1"
             android:paddingVertical="8dp"
             android:orientation="vertical"
-            android:minHeight="150dp">
+            android:minHeight="150dp"
+            android:id="@+id/container_info"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cover"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/series_title"
@@ -76,5 +83,5 @@
                 android:maxLines="4" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -12,5 +12,5 @@ data class CommentResponse(
     @SerialName("next_url")
     val nextUrl: String?,
     @SerialName("total_comments")
-    val totalComments: Int
+    val totalComments: Int = 0
 )

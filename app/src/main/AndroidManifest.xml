@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.module.novel.NovelBookmarksActivity"/>
+        <activity android:name=".ui.module.comment.CommentActivity"/>
         <activity
             android:name=".ui.module.novel.NovelReaderActivity"
             android:theme="@style/AppTheme.NoActionBar" >

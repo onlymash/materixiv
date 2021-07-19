@@ -37,7 +37,7 @@
             android:layout_marginHorizontal="@dimen/spacing_8dp"
             android:maxLines="1"
             android:textAppearance="?textAppearanceListItem"
-            app:layout_constraintTop_toBottomOf="@+id/preview"
+            app:layout_constraintTop_toBottomOf="@id/preview"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/file_size"/>
 
@@ -49,7 +49,7 @@
             android:maxLines="1"
             android:textAppearance="?textAppearanceCaption"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintBottom_toTopOf="@id/progress_bar"/>
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -60,7 +60,7 @@
             android:indeterminate="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/action_button"
+            app:layout_constraintEnd_toStartOf="@id/action_button"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/action_button"
@@ -70,7 +70,7 @@
             android:layout_margin="@dimen/spacing_8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/preview"
+            app:layout_constraintTop_toBottomOf="@id/preview"
             style="?materialButtonOutlinedStyle"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

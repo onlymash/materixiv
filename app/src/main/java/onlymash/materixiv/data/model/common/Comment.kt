@@ -12,7 +12,7 @@ data class Comment(
     @SerialName("id")
     val id: Int,
     @SerialName("parent_comment")
-    val parentComment: ParentComment,
+    val parentComment: ParentComment? = null,
     @SerialName("user")
     val user: User,
     @SerialName("has_replies")

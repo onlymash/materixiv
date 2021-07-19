@@ -7,7 +7,7 @@ data class ActionComment(
     var auth: String,
     //illust or novel id
     var id: Long,
-    var type: Int = TYPE_ILLUST
+    var type: Int
 ) {
 
     val url: HttpUrl

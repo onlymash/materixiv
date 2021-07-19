@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.collectLatest
 import onlymash.materixiv.R
-import onlymash.materixiv.app.Keys
 import onlymash.materixiv.data.action.ActionComment
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
@@ -29,10 +28,12 @@ import retrofit2.HttpException
 class CommentActivity : TokenActivity() {
 
     companion object {
+        private const val ID_KEY = "request_id"
+        private const val TYPE_KEY = "request_type"
         fun start(context: Context, id: Long, type: Int = ActionComment.TYPE_ILLUST) {
             context.startActivity(Intent(context, CommentActivity::class.java).apply {
-                putExtra(Keys.ILLUST_ID, id)
-                putExtra(Keys.PAGE_TYPE, type)
+                putExtra(ID_KEY, id)
+                putExtra(TYPE_KEY, type)
             })
         }
     }
@@ -49,8 +50,8 @@ class CommentActivity : TokenActivity() {
 
     override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
-        id = intent.getLongExtra(Keys.ILLUST_ID, -1L)
-        type = intent.getIntExtra(Keys.PAGE_TYPE, ActionComment.TYPE_ILLUST)
+        id = intent.getLongExtra(ID_KEY, -1L)
+        type = intent.getIntExtra(TYPE_KEY, ActionComment.TYPE_ILLUST)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setTitle(R.string.title_comments)
@@ -73,7 +74,7 @@ class CommentActivity : TokenActivity() {
     }
 
     override fun onTokenLoaded(token: Token) {
-        val action = action?.apply { auth = token.auth } ?: ActionComment(token.auth, id)
+        val action = action?.apply { auth = token.auth } ?: ActionComment(token.auth, id, type)
         commentViewModel.show(action)
     }
 

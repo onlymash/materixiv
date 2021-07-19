@@ -3,6 +3,7 @@ package onlymash.materixiv.ui.module.novel
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import onlymash.materixiv.data.action.ActionNovel
@@ -18,6 +19,11 @@ class NovelViewModel(private val repo: NovelRepository) : ScopeViewModel() {
         _clearListCh.receiveAsFlow().map { PagingData.empty() },
         _action.asFlow()
             .flatMapLatest { repo.getNovels(it) }
+            .mapLatest { pagingData ->
+                pagingData.filter { novel ->
+                    !novel.isMuted
+                }
+            }
             .cachedIn(viewModelScope)
     )
         .flattenMerge(2)

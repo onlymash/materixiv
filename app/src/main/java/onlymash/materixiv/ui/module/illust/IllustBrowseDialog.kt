@@ -110,9 +110,11 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.window?.isFullscreen = false
-        return dialog
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.let {
+                WindowCompat.setDecorFitsSystemWindows(it, false)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -122,18 +124,19 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
         val styledAttributes = requireContext().theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
         val actionBarHeight = styledAttributes.getDimension(0, 0f).toInt()
         styledAttributes.recycle()
-        view.setOnApplyWindowInsetsListener { _, insets ->
-            binding.appBar.minimumHeight = actionBarHeight + insets.systemWindowInsetTop
+        ViewCompat.setOnApplyWindowInsetsListener(view) {_, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.appBar.minimumHeight = actionBarHeight
             binding.appBar.updatePadding(
-                top = insets.systemWindowInsetTop,
-                left = insets.systemWindowInsetLeft,
-                right = insets.systemWindowInsetRight
+                top = systemBarsInsets.top,
+                left = systemBarsInsets.left,
+                right = systemBarsInsets.right
             )
             binding.bottomShortcut.updateLayoutParams<FrameLayout.LayoutParams> {
                 updateMargins(
-                    bottom = insets.systemWindowInsetBottom,
-                    left = insets.systemWindowInsetLeft,
-                    right = insets.systemWindowInsetRight
+                    bottom = systemBarsInsets.bottom,
+                    left = systemBarsInsets.left,
+                    right = systemBarsInsets.right
                 )
             }
             insets
@@ -156,14 +159,15 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
             }
         }
         binding.viewPager.adapter = IllustBrowseAdapter(urls, this) {
-            val window = dialog?.window
-            if (window != null) {
-                val visible = !binding.appBar.isVisible
-                window.isFullscreen = !visible
-                binding.appBar.isVisible = visible
-                binding.bottomShortcut.isVisible = visible
-                binding.shadow.isVisible = visible
+            val visible = !binding.appBar.isVisible
+            if (visible) {
+                dialog?.window?.showSystemBars()
+            } else {
+                dialog?.window?.hideSystemBars()
             }
+            binding.appBar.isVisible = visible
+            binding.bottomShortcut.isVisible = visible
+            binding.shadow.isVisible = visible
         }
         binding.viewPager.setCurrentItem(position, false)
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

@@ -11,11 +11,14 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import io.noties.markwon.Markwon
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
@@ -86,6 +89,8 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
     private var query = ""
     private var toDownloadUgoira = false
 
+    private lateinit var toolbar: MaterialToolbar
+    private lateinit var scrollView: NestedScrollView
     private lateinit var adapter: IllustDetailAdapter
     private lateinit var illustDeatilViewModel: IllustDetailViewModel
     private lateinit var commonViewModel: CommonViewModel
@@ -126,8 +131,10 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbar = binding.toolbar
+        scrollView = binding.scrollView
         binding.toolbarLayout.layoutParams.height = requireActivity().getWindowHeight() * 3 / 5
-        binding.toolbar.apply {
+        toolbar.apply {
             inflateMenu(R.menu.toolbar_illust_detail)
             setNavigationOnClickListener {
                 activity?.onBackPressed()
@@ -158,18 +165,20 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
             }
         }
         adapter = IllustDetailAdapter(listener)
-        sharedViewModel.topWindowSize.observe(viewLifecycleOwner, { systemWindowInsetTop ->
-            binding.toolbar.updateLayoutParams<CollapsingToolbarLayout.LayoutParams> {
-                topMargin = systemWindowInsetTop
-                adapter.imageMarginTop = systemWindowInsetTop + binding.toolbar.minimumHeight
+        sharedViewModel.insets.observe(viewLifecycleOwner, { insets ->
+            view.updatePadding(left = insets.left, right = insets.right)
+            toolbar.updateLayoutParams<CollapsingToolbarLayout.LayoutParams> {
+                topMargin = insets.top
+                adapter.imageMarginTop = insets.top + toolbar.minimumHeight
             }
+            scrollView.updatePadding(bottom = insets.bottom)
         })
         binding.detailList.adapter = adapter
         val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 val pageCount = adapter.itemCount
                 if (pageCount > 1) {
-                    binding.toolbar.subtitle = "${position + 1}/${pageCount}P"
+                    toolbar.subtitle = "${position + 1}/${pageCount}P"
                 }
             }
         }
@@ -351,9 +360,9 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(binding.imageViewBlur)
         adapter.illust = illust
-        binding.toolbar.title = illust.id.toString()
+        toolbar.title = illust.id.toString()
         if (illust.metaPages.size > 1) {
-            binding.toolbar.subtitle = "1/${illust.metaPages.size}P"
+            toolbar.subtitle = "1/${illust.metaPages.size}P"
         }
         binding.fabBookmark.isActivated = illust.isBookmarked
         binding.fabBookmark.setOnClickListener {

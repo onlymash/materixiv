@@ -3,9 +3,9 @@ package onlymash.materixiv.ui.module.illust
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.viewpager2.widget.ViewPager2
@@ -16,6 +16,7 @@ import onlymash.materixiv.data.db.dao.IllustCacheDao
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.data.repository.detail.IllustDeatilRepositoryImpl
 import onlymash.materixiv.databinding.ActivityIllustDeatilBinding
+import onlymash.materixiv.extensions.drawSystemBar
 import onlymash.materixiv.extensions.getViewModel
 import onlymash.materixiv.extensions.isNightTheme
 import onlymash.materixiv.ui.module.common.TokenActivity
@@ -70,18 +71,10 @@ class IllustDeatilActivity : TokenActivity() {
 
     override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
-        var flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        if (!resources.configuration.isNightTheme() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                flags = flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            }
-        }
-        window.decorView.systemUiVisibility = flags
+        window.drawSystemBar(!resources.configuration.isNightTheme())
         sharedViewModel = getViewModel()
-        binding.root.setOnApplyWindowInsetsListener { _, insets ->
-            sharedViewModel.updateTopSize(insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            sharedViewModel.updateInsets(insets.getInsets(WindowInsetsCompat.Type.systemBars()))
             insets
         }
         adapter = IllustDetailPagerAdapter(supportFragmentManager, lifecycle)

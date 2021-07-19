@@ -24,5 +24,10 @@
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_applications_outline_24dp"
             android:title="@string/title_settings" />
+
+        <item
+            android:id="@+id/nav_link"
+            android:icon="@drawable/ic_baseline_link_24dp"
+            android:title="@string/title_link" />
     </group>
 </menu>

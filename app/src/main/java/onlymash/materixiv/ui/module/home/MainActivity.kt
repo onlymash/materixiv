@@ -13,6 +13,7 @@ import onlymash.materixiv.R
 import onlymash.materixiv.data.db.entity.Token
 import onlymash.materixiv.databinding.ActivityMainBinding
 import onlymash.materixiv.extensions.findNavController
+import onlymash.materixiv.extensions.launchUrl
 import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.module.common.TokenActivity
 import onlymash.materixiv.ui.module.download.DownloadsActivity
@@ -47,6 +48,7 @@ class MainActivity : TokenActivity() {
                 R.id.nav_bookmarks -> startActivity(Intent(this, NovelBookmarksActivity::class.java))
                 R.id.nav_downloads -> startActivity(Intent(this, DownloadsActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+                R.id.nav_link -> launchUrl("https://t.me/materixiv")
             }
             true
         }

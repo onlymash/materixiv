@@ -69,7 +69,7 @@ class DownloadsActivity : KodeinActivity() {
         viewModel.loadAll()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.actionbar_downloads, menu)
         return super.onCreateOptionsMenu(menu)
     }

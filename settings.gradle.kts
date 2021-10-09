@@ -1,2 +1,2 @@
 rootProject.name = "Materixiv"
-include(":app")
+include(":app", ":renderscript-toolkit")

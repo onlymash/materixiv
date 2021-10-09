@@ -1,7 +1,7 @@
 
 plugins {
     id("com.github.ben-manes.versions") version("0.39.0")
-    kotlin("plugin.serialization") version("1.5.21")
+    kotlin("plugin.serialization") version("1.5.31")
 }
 
 buildscript {
@@ -9,8 +9,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", "1.5.21"))
-        classpath("com.android.tools.build:gradle:4.2.2")
+        classpath(kotlin("gradle-plugin", "1.5.31"))
+        classpath("com.android.tools.build:gradle:7.0.2")
     }
 }
 

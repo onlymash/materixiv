@@ -203,7 +203,9 @@ class SearchDialog : BaseSearchDialog<DialogSearchBinding>() {
     override fun onDismiss(dialog: DialogInterface) {
         inputMethodManager?.apply {
             if (isActive) {
-                toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+                view?.windowToken?.let { windowToken ->
+                    hideSoftInputFromWindow(windowToken, 0)
+                }
             }
         }
         super.onDismiss(dialog)

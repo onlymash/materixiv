@@ -184,7 +184,7 @@ class NovelReaderActivity : TokenActivity() {
         novelReaderViewModel.novelId = novelId
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_novel_reader, menu)
         return true
     }

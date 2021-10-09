@@ -14,11 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.module.novel.NovelBookmarksActivity"/>
-        <activity android:name=".ui.module.comment.CommentActivity"/>
+        <activity
+            android:name=".ui.module.novel.NovelBookmarksActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.module.comment.CommentActivity"
+            android:exported="false"/>
         <activity
             android:name=".ui.module.novel.NovelReaderActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -31,13 +36,17 @@
                     android:path="/novel/show.php"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.module.download.DownloadsActivity" />
+        <activity
+            android:name=".ui.module.download.DownloadsActivity"
+            android:exported="false"/>
         <activity
             android:name=".ui.module.settings.SettingsActivity"
-            android:label="@string/title_settings" />
+            android:label="@string/title_settings"
+            android:exported="false"/>
         <activity
             android:name=".ui.module.user.UserDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -52,7 +61,8 @@
         </activity>
         <activity
             android:name=".ui.module.illust.IllustDeatilActivity"
-            android:theme="@style/AppTheme.NoActionBar.Detail">
+            android:theme="@style/AppTheme.NoActionBar.Detail"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -67,11 +77,13 @@
         </activity>
         <activity
             android:name=".ui.module.search.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false"/>
         <activity
             android:name=".ui.module.login.LoginActivity"
             android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -87,7 +99,8 @@
             android:name=".ui.module.home.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -8,7 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/ActionBarStyle">
+        style="@style/AppBarLayoutStyle">
         <include
             android:id="@+id/layout_searchbar"
             layout="@layout/layout_searchbar" />

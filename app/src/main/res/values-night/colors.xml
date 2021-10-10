@@ -28,4 +28,5 @@
     <color name="colorNavigationBar">@color/color_dark_background</color>
     <color name="colorNavigationBarDivider">@color/grey_900</color>
     <color name="colorUserHeaderBackground">#44000000</color>
+    <color name="colorAppBarLayout">@color/transparent</color>
 </resources>

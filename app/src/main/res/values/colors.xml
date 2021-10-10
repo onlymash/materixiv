@@ -99,4 +99,5 @@
     <color name="color_dark_on_error">@color/black</color>
     <color name="color_dark_on_surface">@color/white</color>
     <color name="color_dark_scrim">@color/scrim</color>
+    <color name="colorAppBarLayout">@color/white</color>
 </resources>

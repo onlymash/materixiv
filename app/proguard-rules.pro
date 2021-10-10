@@ -25,12 +25,35 @@
 # Kotlin Serialization
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.SerializationKt
--keep,includedescriptorclasses class onlymash.materixiv.data.model.**$$serializer { *; }
--keepclassmembers class onlymash.materixiv.data.model.** {
+
+#-keep,includedescriptorclasses class onlymash.materixiv.data.model.**$$serializer { *; }
+#-keepclassmembers class onlymash.materixiv.data.model.** {
+#    *** Companion;
+#}
+#-keepclasseswithmembers class onlymash.materixiv.data.model.** {
+#    kotlinx.serialization.KSerializer serializer(...);
+#}
+
+-keepclassmembers class kotlinx.serialization.json.** {
     *** Companion;
 }
--keepclasseswithmembers class onlymash.materixiv.data.model.** {
+-keepclasseswithmembers class kotlinx.serialization.json.** {
     kotlinx.serialization.KSerializer serializer(...);
+}
+-keepclassmembers @kotlinx.serialization.Serializable class onlymash.materixiv.data.model.** {
+    # lookup for plugin generated serializable classes
+    *** Companion;
+    # lookup for serializable objects
+    *** INSTANCE;
+    kotlinx.serialization.KSerializer serializer(...);
+}
+# lookup for plugin generated serializable classes
+-if @kotlinx.serialization.Serializable class onlymash.materixiv.data.model.**
+-keepclassmembers class onlymash.materixiv.data.model.<1>$Companion {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep class onlymash.materixiv.data.model.SerializableClassWithNamedCompanion$$serializer {
+    *** INSTANCE;
 }
 
 # Glide
@@ -40,3 +63,10 @@
   **[] $VALUES;
   public *;
 }
+
+# Kodein
+-keep, allowobfuscation, allowoptimization class org.kodein.type.TypeReference
+-keep, allowobfuscation, allowoptimization class org.kodein.type.JVMAbstractTypeToken$Companion$WrappingTest
+
+-keep, allowobfuscation, allowoptimization class * extends org.kodein.type.TypeReference
+-keep, allowobfuscation, allowoptimization class * extends org.kodein.type.JVMAbstractTypeToken$Companion$WrappingTest

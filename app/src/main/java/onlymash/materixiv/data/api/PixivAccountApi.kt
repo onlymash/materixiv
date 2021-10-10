@@ -13,12 +13,12 @@ interface PixivAccountApi {
         @Header(Keys.AUTHORIZATION) auth: String,
         @Field("user_name") username: String,
         @Field("ref") ref: String
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @FormUrlEncoded
     @POST("api/account/edit")
     suspend fun updateInfo(
         @Header(Keys.AUTHORIZATION) auth: String,
         @FieldMap infoMap: Map<String, String>
-    ): Response<ResponseBody>
+    ): ResponseBody
 }

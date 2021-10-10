@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "280035960381",
+    "project_id": "materixiv",
+    "storage_bucket": "materixiv.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280035960381:android:b7fc1020895327d4fdac54",
+        "android_client_info": {
+          "package_name": "onlymash.materixiv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280035960381-c66rqlsiauhv4qq2c08gbtvvpdn55vsr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "onlymash.materixiv",
+            "certificate_hash": "625664d5ea13e1444fa46c471ce007807a876ed4"
+          }
+        },
+        {
+          "client_id": "280035960381-732g7nuk8dah077qcur54vln0cfsc88m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCS6PjehL6ZxMaZXZbq8kuGaQuA8Sl5rw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280035960381-732g7nuk8dah077qcur54vln0cfsc88m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

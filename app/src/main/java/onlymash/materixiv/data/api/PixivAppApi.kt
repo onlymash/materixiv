@@ -38,14 +38,14 @@ interface PixivAppApi {
         @Header(AUTHORIZATION) auth: String,
         @Field("user_id") userId: Long,
         @Field("restrict") restrict: String
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @FormUrlEncoded
     @POST("v1/user/follow/delete")
     suspend fun deleteFollowUser(
         @Header(AUTHORIZATION) auth: String,
         @Field("user_id") userId: Long
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @FormUrlEncoded
     @POST("v2/illust/bookmark/add")
@@ -54,14 +54,14 @@ interface PixivAppApi {
         @Field("illust_id") illustId: Long,
         @Field("restrict") restrict: String,
         @Field("tags[]") tags: List<String>? = null
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @FormUrlEncoded
     @POST("v1/illust/bookmark/delete")
     suspend fun deleteBookmarkIllust(
         @Header(AUTHORIZATION) auth: String,
         @Field("illust_id") illustId: Long
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @GET
     suspend fun getIllusts(
@@ -89,7 +89,7 @@ interface PixivAppApi {
         @Field("illust_id") illustId: Long,
         @Field("comment") comment: String,
         @Field("parent_comment_id") parentCommentId: Int? = null
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @GET("v1/trending-tags/illust")
     suspend fun getTrendTagsIllust(
@@ -126,14 +126,14 @@ interface PixivAppApi {
     suspend fun getPixivisionArticles(
         @Header(AUTHORIZATION) auth: String,
         @Query("category") category: String
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @Multipart
     @POST("v1/user/profile/edit")
     suspend fun editUserProfile(
         @Header(AUTHORIZATION) auth: String,
         @Part body: MultipartBody.Part
-    ): Response<ResponseBody>
+    ): ResponseBody
 
 
     @GET("v1/user/browsing-history/illusts")
@@ -153,13 +153,13 @@ interface PixivAppApi {
     suspend fun getNovelText(
         @Header(AUTHORIZATION) auth: String,
         @Query("novel_id") novelId: Long
-    ): Response<NovelTextResponse>
+    ): NovelTextResponse
 
     @GET("v2/novel/detail")
     suspend fun getNovelDetail(
         @Header(AUTHORIZATION) auth: String,
         @Query("novel_id") novelId: Long
-    ): Response<NovelDetailResponse>
+    ): NovelDetailResponse
 
     @FormUrlEncoded
     @POST("v1/novel/marker/add")
@@ -167,7 +167,7 @@ interface PixivAppApi {
         @Header(AUTHORIZATION) auth: String,
         @Field("novel_id") novelId: Long,
         @Field("page") page: Int = 1
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @FormUrlEncoded
     @POST("v1/novel/marker/delete")
@@ -175,7 +175,7 @@ interface PixivAppApi {
         @Header(AUTHORIZATION) auth: String,
         @Field("novel_id") novelId: Long,
         @Field("page") page: Int = 1
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @FormUrlEncoded
     @POST("v2/novel/bookmark/add")
@@ -183,14 +183,14 @@ interface PixivAppApi {
         @Header(AUTHORIZATION) auth: String,
         @Field("novel_id") novelId: Long,
         @Field("restrict") restrict: String
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @FormUrlEncoded
     @POST("v1/novel/bookmark/delete")
     suspend fun deleteBookmarkNovel(
         @Header(AUTHORIZATION) auth: String,
         @Field("novel_id") novelId: Long
-    ): Response<ResponseBody>
+    ): ResponseBody
 
     @GET
     suspend fun getMarkedNovel(

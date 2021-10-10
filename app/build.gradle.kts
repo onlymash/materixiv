@@ -1,13 +1,13 @@
 import com.android.build.api.dsl.ApplicationBuildType
-import com.android.build.OutputFile
 import com.android.build.gradle.internal.dsl.SigningConfig
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.NamedDomainObjectContainer
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
+//    id("com.google.gms.google-services")
+//    id("com.google.firebase.crashlytics")
     kotlin("android")
     kotlin("kapt")
     kotlin("plugin.serialization")
@@ -129,7 +129,7 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation("androidx.constraintlayout:constraintlayout:2.1.1")
     implementation("androidx.browser:browser:1.4.0-beta01")
-    implementation("androidx.documentfile:documentfile:1.0.1")
+    implementation("androidx.documentfile:documentfile:1.1.0-alpha01")
 
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
@@ -145,7 +145,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
     implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:$okhttpVersion")
-    implementation("com.squareup.okio:okio:3.0.0-alpha.10")
+    implementation("com.squareup.okio:okio:3.0.0-alpha.8")
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
@@ -164,6 +164,9 @@ dependencies {
     implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
     implementation("io.noties.markwon:linkify:$markwonVersion")
     implementation("me.saket:better-link-movement-method:2.2.0")
+
+//    implementation("com.google.firebase:firebase-analytics-ktx:19.0.2")
+//    implementation("com.google.firebase:firebase-crashlytics:18.2.3")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.6.1")

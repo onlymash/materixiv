@@ -49,7 +49,7 @@ class IllustDeatilRepositoryImpl(
     override suspend fun getIllustsFromDb(action: ActionDetail): Flow<PagingData<IllustCache>> {
         return Pager(
             config = PagingConfig(pageSize = 15),
-            initialKey = action.initialPosition
+            initialKey = if (action.initialPosition > 0) action.initialPosition - 1 else 0
         ) {
             illustCacheDao.getIllusts(action.token.uid, action.query)
         }.flow

@@ -1,5 +1,6 @@
 package onlymash.materixiv.ui.module.trend
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
@@ -17,6 +18,7 @@ import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.ui.module.search.SearchActivity
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
+@SuppressLint("NotifyDataSetChanged")
 class TrendAdapter(private val type: Int) : RecyclerView.Adapter<TrendAdapter.BaseTrendViewHolder>() {
 
     companion object {

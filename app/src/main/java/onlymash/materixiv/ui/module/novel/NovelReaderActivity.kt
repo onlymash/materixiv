@@ -100,9 +100,9 @@ class NovelReaderActivity : TokenActivity() {
         binding.retryButton.setOnClickListener {
             novelReaderViewModel.refresh()
         }
-        novelReaderViewModel.fontSize.observe(this, { size ->
+        novelReaderViewModel.fontSize.observe(this) { size ->
             binding.novelText.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
-        })
+        }
         binding.prevPage.setOnClickListener {
             jumpToNewNovel(novelReaderViewModel.prevNovelId)
         }

@@ -15,7 +15,7 @@ class BookmarksPagingSource(
         private const val DEFAULT_URL = "https://app-api.pixiv.net/v2/novel/markers"
     }
 
-    override fun getRefreshKey(state: PagingState<String, NovelMarkerResponse.MarkedNovel>): String? {
+    override fun getRefreshKey(state: PagingState<String, NovelMarkerResponse.MarkedNovel>): String {
         state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)
         }

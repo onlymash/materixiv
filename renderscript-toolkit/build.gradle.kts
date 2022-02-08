@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk = 31
-    buildToolsVersion = "31.0.0"
+    compileSdk = 32
+    buildToolsVersion = "32.1.0-rc1"
     defaultConfig {
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 32
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles.add(File("consumer-rules.pro"))
         externalNativeBuild {
@@ -36,14 +36,14 @@ android {
             path("src/main/cpp/CMakeLists.txt")
         }
     }
-    ndkVersion = "23.0.7599858"
+    ndkVersion = "23.1.7779620"
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
-    implementation("androidx.core:core-ktx:1.7.0-beta02")
-    implementation("androidx.appcompat:appcompat:1.4.0-beta01")
-    implementation("com.google.android.material:material:1.5.0-alpha04")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
+    implementation("androidx.core:core-ktx:1.8.0-alpha03")
+    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("com.google.android.material:material:1.6.0-alpha02")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")

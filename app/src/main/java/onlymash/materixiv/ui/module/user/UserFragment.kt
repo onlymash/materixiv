@@ -9,7 +9,6 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -113,12 +112,12 @@ class UserFragment : SharedViewModelFragment() {
         }
         swipeRefreshLayout.setOnRefreshListener { userAdapter.refresh() }
         if (type == Values.PAGE_TYPE_FOLLOWING) {
-            sharedViewModel.restrict.observe(viewLifecycleOwner, {
+            sharedViewModel.restrict.observe(viewLifecycleOwner) {
                 if (_action != null) {
                     action.restrict = it
                     refresh()
                 }
-            })
+            }
         }
     }
 

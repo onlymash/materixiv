@@ -26,17 +26,17 @@ abstract class TokenDialog<T: ViewBinding> : ViewModelDialog<T>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onBaseViewCreated(view, savedInstanceState)
-        tokenViewModel.tokens.observe(viewLifecycleOwner, { tokens ->
+        tokenViewModel.tokens.observe(viewLifecycleOwner) { tokens ->
             if (!tokens.isNullOrEmpty()) {
                 onTokenLoaded(tokens[0])
             }
-        })
-        tokenViewModel.loginState.observe(viewLifecycleOwner, {
+        }
+        tokenViewModel.loginState.observe(viewLifecycleOwner) {
             onLoginStateChange(it)
-        })
-        tokenViewModel.refreshState.observe(viewLifecycleOwner, {
+        }
+        tokenViewModel.refreshState.observe(viewLifecycleOwner) {
             onRefreshStateChange(it)
-        })
+        }
     }
 
     abstract fun onBaseViewCreated(view: View, savedInstanceState: Bundle?)

@@ -109,16 +109,16 @@ class IllustDeatilActivity : TokenActivity() {
                 fragmentPager.setCurrentItem(position, false)
             }
         }
-        pagerViewModel.illusts.observe(this, {
+        pagerViewModel.illusts.observe(this) {
             adapter.submitData(lifecycle, it)
-        })
+        }
         if (illustId > 0) {
-            pagerViewModel.isSuccess.observe(this, { success ->
+            pagerViewModel.isSuccess.observe(this) { success ->
                 if (!success) {
                     binding.progressBar.isVisible = false
                     binding.retryButton.isVisible = true
                 }
-            })
+            }
             binding.retryButton.setOnClickListener {
                 binding.retryButton.isVisible = false
                 binding.progressBar.isVisible = true

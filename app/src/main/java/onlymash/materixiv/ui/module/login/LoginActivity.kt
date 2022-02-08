@@ -31,11 +31,11 @@ class LoginActivity : TokenActivity() {
     override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
         loginViewModel = getViewModel()
-        loginViewModel.code.observe(this, { code ->
+        loginViewModel.code.observe(this) { code ->
             if (code != null) {
                 fetchToken(code, loginViewModel.codeVerifier)
             }
-        })
+        }
         signInButton.setOnClickListener {
             attemptSignIn()
         }

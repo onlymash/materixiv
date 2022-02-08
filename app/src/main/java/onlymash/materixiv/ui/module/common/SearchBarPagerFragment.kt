@@ -67,13 +67,18 @@ abstract class SearchBarPagerFragment<T: FragmentStateAdapter> : ViewModelFragme
         TabLayoutMediator(binding.tabs, viewPager) { tab, position ->
             tab.text = tabNames[position]
         }.attach()
-        sharedViewModel.token.observe(viewLifecycleOwner, {
+        sharedViewModel.token.observe(viewLifecycleOwner) {
             GlideApp.with(this)
                 .load(it.data.user.profileImageUrls.px50x50)
-                .placeholder(ContextCompat.getDrawable(rightIcon.context, R.drawable.placeholder_avatar))
+                .placeholder(
+                    ContextCompat.getDrawable(
+                        rightIcon.context,
+                        R.drawable.placeholder_avatar
+                    )
+                )
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(rightIcon)
-        })
+        }
         onBaseViewCreated(view, savedInstanceState)
     }
 

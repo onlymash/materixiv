@@ -10,7 +10,6 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -96,55 +95,55 @@ class NovelFragment : SharedViewModelFragment() {
         swipeRefreshLayout.setOnRefreshListener { novelAdapter.refresh() }
         when (type) {
             Values.PAGE_TYPE_FOLLOWING -> {
-                sharedViewModel.restrict.observe(viewLifecycleOwner, Observer {
+                sharedViewModel.restrict.observe(viewLifecycleOwner) {
                     if (_action != null) {
                         action.restrict = it
                         refresh()
                     }
-                })
+                }
             }
             Values.PAGE_TYPE_RANKING -> {
-                sharedViewModel.rankingMode.observe(viewLifecycleOwner, Observer {
+                sharedViewModel.rankingMode.observe(viewLifecycleOwner) {
                     if (_action != null) {
                         action.modeRanking = it
                         refresh()
                     }
-                })
-                sharedViewModel.date.observe(viewLifecycleOwner, Observer {
+                }
+                sharedViewModel.date.observe(viewLifecycleOwner) {
                     if (_action != null) {
                         action.date = it
                         refresh()
                     }
-                })
+                }
             }
             Values.PAGE_TYPE_SEARCH -> {
                 sharedViewModel.apply {
-                    sort.observe(viewLifecycleOwner, Observer {
+                    sort.observe(viewLifecycleOwner) {
                         if (_action != null && action.sort != it) {
                             action.sort = it
                             refresh()
                         }
-                    })
-                    searchTarget.observe(viewLifecycleOwner, Observer {
+                    }
+                    searchTarget.observe(viewLifecycleOwner) {
                         if (_action != null && action.searchTarget != it) {
                             action.searchTarget = it
                             refresh()
                         }
-                    })
-                    duration.observe(viewLifecycleOwner, Observer { duration ->
+                    }
+                    duration.observe(viewLifecycleOwner) { duration ->
                         if (_action != null && duration != null && action.duration != duration) {
                             action.duration = duration
                             refresh()
                         }
-                    })
-                    selectedTimeRangeString.observe(viewLifecycleOwner, Observer { dateRange ->
+                    }
+                    selectedTimeRangeString.observe(viewLifecycleOwner) { dateRange ->
                         if (_action != null) {
                             action.dateRange = dateRange
                             if (action.duration == Duration.CUSTOM) {
                                 refresh()
                             }
                         }
-                    })
+                    }
                 }
             }
         }

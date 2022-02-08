@@ -23,15 +23,15 @@ abstract class TokenActivity : KodeinActivity() {
         super.onCreate(savedInstanceState)
         tokenViewModel = getViewModel(TokenViewModel(TokenRepositoryImpl(pixivOauthApi, tokenDao)))
         onLoadTokenBefore(savedInstanceState)
-        tokenViewModel.tokens.observe(this, { tokens ->
+        tokenViewModel.tokens.observe(this) { tokens ->
             handleTokens(tokens)
-        })
-        tokenViewModel.loginState.observe(this, {
+        }
+        tokenViewModel.loginState.observe(this) {
             onLoginStateChange(it)
-        })
-        tokenViewModel.refreshState.observe(this, {
+        }
+        tokenViewModel.refreshState.observe(this) {
             onRefreshStateChange(it)
-        })
+        }
     }
 
     abstract fun onLoadTokenBefore(savedInstanceState: Bundle?)

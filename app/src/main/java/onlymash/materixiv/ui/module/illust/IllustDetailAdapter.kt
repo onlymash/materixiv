@@ -1,5 +1,6 @@
 package onlymash.materixiv.ui.module.illust
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import onlymash.materixiv.glide.GlideApp
 import onlymash.materixiv.glide.RoundedCornersTransformation
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
+@SuppressLint("NotifyDataSetChanged")
 class IllustDetailAdapter(
     private val listener: ClickItemListener
 ) : RecyclerView.Adapter<IllustDetailAdapter.IllustDetailViewHolder>() {

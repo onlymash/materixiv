@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import onlymash.materixiv.R
 import onlymash.materixiv.data.db.entity.Download
 import java.io.File
-import java.util.*
 
 fun Context.getUriForFile(file: File): Uri {
     return FileProvider.getUriForFile(

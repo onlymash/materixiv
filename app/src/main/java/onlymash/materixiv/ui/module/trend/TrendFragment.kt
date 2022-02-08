@@ -17,7 +17,6 @@ import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.db.entity.Token
-import onlymash.materixiv.data.repository.NetworkState
 import onlymash.materixiv.data.repository.trend.TrendRepositoryImpl
 import onlymash.materixiv.databinding.FragmentTrendBinding
 import onlymash.materixiv.extensions.getViewModel
@@ -88,7 +87,7 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
             layoutManager = StaggeredGridLayoutManager(spanCount, RecyclerView.VERTICAL)
             adapter = trendAdapter
         }
-        trendViewModel.trendTags.observe(viewLifecycleOwner, { trendTags ->
+        trendViewModel.trendTags.observe(viewLifecycleOwner) { trendTags ->
             if (trendTags == null) {
                 if (trendAdapter.trendTags.isEmpty()) {
                     retryButton.isVisible = true
@@ -97,14 +96,14 @@ class TrendFragment : TokenFragment<FragmentTrendBinding>() {
                 retryButton.isVisible = false
                 trendAdapter.trendTags = trendTags
             }
-        })
-        trendViewModel.loading.observe(viewLifecycleOwner, { isLoading ->
+        }
+        trendViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 retryButton.isVisible = false
             }
             swipeRefreshLayout.isRefreshing = isLoading && trendAdapter.itemCount != 0
             progressBarCircular.isVisible = isLoading && trendAdapter.itemCount == 0
-        })
+        }
         swipeRefreshLayout.setOnRefreshListener { refresh() }
         retryButton.setOnClickListener { refresh() }
     }

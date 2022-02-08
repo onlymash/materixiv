@@ -2,7 +2,6 @@ package onlymash.materixiv.data.api
 
 import okhttp3.ResponseBody
 import onlymash.materixiv.app.Keys
-import retrofit2.Response
 import retrofit2.http.*
 
 interface PixivAccountApi {

@@ -115,15 +115,15 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
         followToolbar = binding.toolbarFollow
         restrictMenu = binding.restrictMenu
 
-        userDetailViewModel.userDetail.observe(viewLifecycleOwner, {
+        userDetailViewModel.userDetail.observe(viewLifecycleOwner) {
             bindData(it)
-        })
-        userDetailViewModel.isFailed.observe(viewLifecycleOwner, { failed ->
+        }
+        userDetailViewModel.isFailed.observe(viewLifecycleOwner) { failed ->
             if (failed) {
                 progressBar.isVisible = false
                 retryUserButton.isVisible = true
             }
-        })
+        }
         retryUserButton.setOnClickListener {
             retryUserButton.isVisible = false
             progressBar.isVisible = true

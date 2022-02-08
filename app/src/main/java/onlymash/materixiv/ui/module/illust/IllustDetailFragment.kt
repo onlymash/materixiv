@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.util.Linkify
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -108,6 +109,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
         observer = StorageFolderLifecycleObserver(requireActivity().activityResultRegistry)
         lifecycle.addObserver(observer)
+        Log.w("illustId", illustId.toString())
     }
 
     override fun onCreateBinding(
@@ -166,14 +168,14 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
             }
         }
         adapter = IllustDetailAdapter(listener)
-        sharedViewModel.insets.observe(viewLifecycleOwner, { insets ->
+        sharedViewModel.insets.observe(viewLifecycleOwner) { insets ->
             view.updatePadding(left = insets.left, right = insets.right)
             toolbar.updateLayoutParams<CollapsingToolbarLayout.LayoutParams> {
                 topMargin = insets.top
                 adapter.imageMarginTop = insets.top + toolbar.minimumHeight
             }
             scrollView.updatePadding(bottom = insets.bottom)
-        })
+        }
         binding.detailList.adapter = adapter
         val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -185,16 +187,16 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
         binding.detailList.registerOnPageChangeCallback(pageChangeCallback)
         binding.detailList.offscreenPageLimit = 2
-        illustDeatilViewModel.illust.observe(viewLifecycleOwner, { illust ->
+        illustDeatilViewModel.illust.observe(viewLifecycleOwner) { illust ->
             if (illust != null) {
                 bindData(illust)
             }
-        })
-        commonViewModel.ugoira.observe(viewLifecycleOwner, { ugoiraMetadata ->
+        }
+        commonViewModel.ugoira.observe(viewLifecycleOwner) { ugoiraMetadata ->
             if (toDownloadUgoira) {
                 downloadUgoira(ugoiraMetadata)
             }
-        })
+        }
         binding.detailContent.related.apply {
             setOnClickListener {
                 context?.let { context ->

@@ -5,7 +5,6 @@ import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import onlymash.materixiv.app.Keys.AUTHORIZATION
 import onlymash.materixiv.data.model.*
-import retrofit2.Response
 import retrofit2.http.*
 
 interface PixivAppApi {

@@ -7,7 +7,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import onlymash.materixiv.data.action.ActionDetail
-import onlymash.materixiv.data.db.entity.IllustCache
 import onlymash.materixiv.data.repository.detail.IllustDeatilRepository
 import onlymash.materixiv.ui.base.ScopeViewModel
 

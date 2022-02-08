@@ -11,7 +11,6 @@ import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
-import androidx.core.util.Pair
 import androidx.fragment.app.FragmentContainerView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.datepicker.CalendarConstraints
@@ -108,13 +107,18 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
                 SearchDialog.create(type, word).show(childFragmentManager, "search")
             }
         }
-        sharedViewModel.token.observe(viewLifecycleOwner, {
+        sharedViewModel.token.observe(viewLifecycleOwner) {
             GlideApp.with(rightIcon)
                 .load(it.data.user.profileImageUrls.px170x170)
-                .placeholder(ContextCompat.getDrawable(rightIcon.context, R.drawable.placeholder_avatar))
+                .placeholder(
+                    ContextCompat.getDrawable(
+                        rightIcon.context,
+                        R.drawable.placeholder_avatar
+                    )
+                )
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(rightIcon)
-        })
+        }
         menuView.setOnMenuItemClickListener { menuItem ->
             handleMenuClick(menuItem.itemId)
             true

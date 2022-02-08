@@ -27,12 +27,12 @@ abstract class BaseSearchDialog<T: ViewBinding> : TokenDialog<T>() {
     }
 
     override fun onBaseViewCreated(view: View, savedInstanceState: Bundle?) {
-        autocompleteViewModel.tags.observe(viewLifecycleOwner, {
+        autocompleteViewModel.tags.observe(viewLifecycleOwner) {
             onTagsUpdated(it)
-        })
-        autocompleteViewModel.names.observe(viewLifecycleOwner, {
+        }
+        autocompleteViewModel.names.observe(viewLifecycleOwner) {
             onNamesUpdated(it)
-        })
+        }
     }
 
     override fun onTokenLoaded(token: Token) {

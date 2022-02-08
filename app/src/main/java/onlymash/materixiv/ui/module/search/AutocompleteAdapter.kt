@@ -1,5 +1,6 @@
 package onlymash.materixiv.ui.module.search
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import onlymash.materixiv.app.Values
@@ -8,6 +9,7 @@ import onlymash.materixiv.databinding.ItemNameBinding
 import onlymash.materixiv.databinding.ItemTagBinding
 import onlymash.materixiv.ui.viewbinding.viewBinding
 
+@SuppressLint("NotifyDataSetChanged")
 class AutocompleteAdapter(
     private val type: Int,
     private val clickItemCallback: (String) -> Unit

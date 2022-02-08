@@ -73,8 +73,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun pickDir() {
         val context = context ?: return
-        val sp = sp ?: return
-        observer.openDocumentTree(context, sp)
+        observer.openDocumentTree(context)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

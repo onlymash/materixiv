@@ -38,7 +38,7 @@ inline fun <reified T> SharedPreferences.setValue(key: String, value: T) {
 }
 
 object Settings {
-    private val sp by App.app.instance<SharedPreferences>()
+    private val sp by App.app.instance<SharedPreferences>("sp")
 
     val dohEnabled get() = sp.getValue(Keys.NETWORK_DOH, false)
 

@@ -140,7 +140,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
     implementation("androidx.paging:paging-runtime-ktx:3.1.0")
-    implementation("androidx.work:work-runtime-ktx:2.8.0-alpha01")
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
 
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")

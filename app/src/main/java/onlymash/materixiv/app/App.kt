@@ -1,6 +1,8 @@
 package onlymash.materixiv.app
 
 import android.app.Application
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import org.kodein.di.*
 
 class App : Application(), DIAware {
@@ -16,5 +18,6 @@ class App : Application(), DIAware {
     override fun onCreate() {
         super.onCreate()
         app = this
+        WorkManager.initialize(this, Configuration.Builder().build())
     }
 }

@@ -11,7 +11,7 @@ import org.kodein.di.*
 
 fun appModule(applicationContext: Context) = DI.Module("AppModule") {
     bind<Context>() with singleton { applicationContext }
-    bind<SharedPreferences>() with provider {
+    bind<SharedPreferences>("sp") with provider {
         instance<Context>().getSharedPreferences(Values.PREFERENCE_NAME_SETTINGS, Context.MODE_PRIVATE)
     }
     bind { singleton { MyDatabase(instance()) } }

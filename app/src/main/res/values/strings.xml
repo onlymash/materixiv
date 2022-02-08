@@ -117,6 +117,7 @@
     <string name="common_share">Share</string>
     <string name="common_share_via">Via</string>
     <string name="common_set_as">Set as</string>
+    <string name="common_cancel">Cancel</string>
 
     <string name="download_state_running">Running</string>
     <string name="download_state_blocked">Blocked</string>

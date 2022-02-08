@@ -12,9 +12,11 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import onlymash.materixiv.app.App
 import onlymash.materixiv.app.Keys
 import onlymash.materixiv.app.setValue
 import onlymash.materixiv.extensions.toDecodedString
+import org.kodein.di.instance
 
 private const val EXTERNAL_STORAGE_PRIMARY_EMULATED_ROOT_ID = "primary"
 private const val EXTERNAL_STORAGE_PROVIDER_AUTHORITY = "com.android.externalstorage.documents"
@@ -22,8 +24,7 @@ private const val EXTERNAL_STORAGE_PROVIDER_AUTHORITY = "com.android.externalsto
 class StorageFolderLifecycleObserver(
     private val registry: ActivityResultRegistry) : DefaultLifecycleObserver {
 
-    private var context: Context? = null
-    private var sp: SharedPreferences? = null
+    private val sp by App.app.instance<SharedPreferences>("sp")
     private lateinit var getDocumentTree : ActivityResultLauncher<Uri?>
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -36,13 +37,8 @@ class StorageFolderLifecycleObserver(
         if (uri == null) {
             return
         }
-        val sp = sp
-        val context = context
-        if (sp == null || context == null) {
-            return
-        }
         val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-        context.contentResolver.apply {
+        App.app.contentResolver.apply {
             persistedUriPermissions.forEach { permission ->
                 if (permission.isWritePermission && permission.uri != uri) {
                     releasePersistableUriPermission(permission.uri, flags)
@@ -53,9 +49,7 @@ class StorageFolderLifecycleObserver(
         sp.setValue(Keys.STORAGE_FOLDER, uri.toDecodedString())
     }
 
-    fun openDocumentTree(context: Context, sp: SharedPreferences) {
-        this.context = context
-        this.sp = sp
+    fun openDocumentTree(context: Context) {
         getDocumentTree.launch(context.getRootUri())
     }
 

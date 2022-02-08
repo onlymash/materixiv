@@ -74,7 +74,6 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
         }
     }
 
-    private val sp by instance<SharedPreferences>()
     private val downloadDao by instance<DownloadDao>()
 
     private val urls: ArrayList<String> = arrayListOf()
@@ -206,7 +205,7 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
                 urls = listOf(url),
                 previews = listOf(preview)
             ) {
-                observer.openDocumentTree(context, sp)
+                observer.openDocumentTree(context)
             }
             if (!downloads.isNullOrEmpty()) {
                 withContext(Dispatchers.IO) {
@@ -229,7 +228,7 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
                 urls = urls,
                 previews = previews
             ) {
-                observer.openDocumentTree(context, sp)
+                observer.openDocumentTree(context)
             }
             if (!downloads.isNullOrEmpty()) {
                 withContext(Dispatchers.IO) {

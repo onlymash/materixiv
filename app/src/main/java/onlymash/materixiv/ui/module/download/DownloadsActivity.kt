@@ -62,10 +62,10 @@ class DownloadsActivity : KodeinActivity() {
         ItemTouchHelper(ItemTouchHelperCallback(itemTouchCAllback))
             .attachToRecyclerView(binding.list)
         viewModel = getViewModel(DownloadViewModel(downloadDao))
-        viewModel.downloads.observe(this, {
+        viewModel.downloads.observe(this) {
             downloads = it
             updated = true
-        })
+        }
         viewModel.loadAll()
     }
 

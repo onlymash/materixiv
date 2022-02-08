@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.util.Linkify
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,7 +78,6 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
     }
 
-    private val sp by instance<SharedPreferences>()
     private val downloadDao by instance<DownloadDao>()
     private val illustDao by instance<IllustCacheDao>()
     private val pixivAppApi by instance<PixivAppApi>()
@@ -109,7 +107,6 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         }
         observer = StorageFolderLifecycleObserver(requireActivity().activityResultRegistry)
         lifecycle.addObserver(observer)
-        Log.w("illustId", illustId.toString())
     }
 
     override fun onCreateBinding(
@@ -283,7 +280,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
                 urls = urls,
                 previews = previews
             ) {
-                observer.openDocumentTree(context, sp)
+                observer.openDocumentTree(context)
             }
             if (!downloads.isNullOrEmpty()) {
                 withContext(Dispatchers.IO) {
@@ -311,7 +308,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
                 urls = listOf(url),
                 previews = listOf(preview)
             ) {
-                observer.openDocumentTree(context, sp)
+                observer.openDocumentTree(context)
             }
             if (!downloads.isNullOrEmpty()) {
                 withContext(Dispatchers.IO) {
@@ -336,7 +333,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
                 urls = urls,
                 previews = previews
             ) {
-                observer.openDocumentTree(context, sp)
+                observer.openDocumentTree(context)
             }
             if (!downloads.isNullOrEmpty()) {
                 withContext(Dispatchers.IO) {

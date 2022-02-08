@@ -1,5 +1,7 @@
 package onlymash.materixiv.worker
 
+import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -92,11 +94,6 @@ class DownloadWorker(
         val channelName = applicationContext.getString(R.string.common_download)
         val title = "${download.dirName} - ${download.fileName}"
         val notificationManager = getNotificationManager(channelId, channelName)
-        val downloadingBuilder = getDownloadingNotificationBuilder(
-            channelId = channelId,
-            title = title,
-            url = download.url
-        )
         var startTime = 0L
         var elapsedTime = NOTIFICATION_ELAPSED_TIME
         downloader.setDownloadListener(object : OkHttpDownloader.DownloadListener {
@@ -108,8 +105,13 @@ class DownloadWorker(
                     startTime = System.currentTimeMillis()
                     elapsedTime = 0L
                     val progress = (downloadedSize * 100 / totalSize).toInt()
-                    val notify = downloadingBuilder.setProgress(100, progress, false).build()
-                    notificationManager?.notify(download.uid.toInt(), notify)
+                    setForegroundAsync(createDownloadingInfo(
+                        title = title,
+                        url = download.url,
+                        channelId = channelId,
+                        notificationId = download.uid.toInt(),
+                        progress = progress
+                    ))
                 } else {
                     elapsedTime = System.currentTimeMillis()
                 }
@@ -127,11 +129,11 @@ class DownloadWorker(
             success = false
         }
         val notify = if (success) {
-            getDownloadedNotificationBuilder(title, channelId, download.fileUri).build()
+            getDownloadedNotification(title, channelId, download.fileUri)
         } else {
-            getDownloadErrorNotificationBuilder(title, channelId).build()
+            getDownloadErrorNotification(title, channelId)
         }
-        notificationManager?.notify(download.uid.toInt(), notify)
+        notificationManager?.notify(download.uid.toInt() + 100000000, notify)
         return if (success) Result.success() else Result.failure()
     }
 
@@ -148,8 +150,9 @@ class DownloadWorker(
         return notificationManager
     }
 
-    private fun getDownloadingNotificationBuilder(title: String, url: String, channelId: String): NotificationCompat.Builder {
-        return NotificationCompat.Builder(applicationContext, channelId)
+    private fun createDownloadingInfo(title: String, url: String, channelId: String, notificationId: Int, progress: Int): ForegroundInfo {
+        val cancelIntent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
+        val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
             .setContentTitle(title)
@@ -157,16 +160,29 @@ class DownloadWorker(
             .setOngoing(true)
             .setAutoCancel(false)
             .setShowWhen(false)
+            .addAction(android.R.drawable.ic_delete, applicationContext.getString(R.string.common_cancel), cancelIntent)
+            .setProgress(100, progress, false)
+            .build()
+        return ForegroundInfo(notificationId, notification)
     }
 
-    private fun getDownloadedNotificationBuilder(title: String, channelId: String, desUri: Uri): NotificationCompat.Builder {
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun getDownloadedNotification(title: String, channelId: String, desUri: Uri): Notification {
         val intent = Intent(applicationContext, DownloadNotificationClickReceiver::class.java)
         intent.data = desUri
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            System.currentTimeMillis().toInt(),
-            intent,
-            PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                System.currentTimeMillis().toInt(),
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE)
+        } else {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                System.currentTimeMillis().toInt(),
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT)
+        }
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .setContentTitle(title)
@@ -174,17 +190,26 @@ class DownloadWorker(
             .setOngoing(false)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
+            .build()
     }
 
-    private fun getDownloadErrorNotificationBuilder(title: String, channelId: String): NotificationCompat.Builder {
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun getDownloadErrorNotification(title: String, channelId: String): Notification {
         val intent = Intent(applicationContext, DownloadNotificationClickReceiver::class.java)
         intent.putExtra(INPUT_DATA_KEY, inputData.toByteArray())
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            System.currentTimeMillis().toInt(),
-            intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                System.currentTimeMillis().toInt(),
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE)
+        } else {
+            PendingIntent.getBroadcast(
+                applicationContext,
+                System.currentTimeMillis().toInt(),
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT)
+        }
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(android.R.drawable.stat_sys_warning)
             .setContentTitle(title)
@@ -196,5 +221,6 @@ class DownloadWorker(
                 applicationContext.getString(R.string.button_retry),
                 pendingIntent
             )
+            .build()
     }
 }

@@ -140,7 +140,7 @@ class UserDetailFragment : TokenFragment<FragmentUserDetailBinding>() {
             true
         }
         toolbar.apply {
-            setNavigationOnClickListener { activity?.onBackPressed() }
+            setNavigationOnClickListener { activity?.onBackPressedDispatcher?.onBackPressed() }
             setOnMenuItemClickListener { menuItem ->
                 if (menuItem.itemId == R.id.action_share) {
                     shareLink()

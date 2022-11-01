@@ -3,9 +3,11 @@ package onlymash.materixiv.ui.module.home
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
@@ -31,6 +33,13 @@ class MainActivity : TokenActivity() {
     private lateinit var headerView: View
     private var userId: String? = null
     private val bottomNavItemReselectListeners: MutableList<BottomNavItemReselectedListener> = mutableListOf()
+    private val onBackPressedCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            }
+        }
+    }
 
     override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
         setContentView(binding.root)
@@ -61,6 +70,17 @@ class MainActivity : TokenActivity() {
         headerView.findViewById<View>(R.id.logout).setOnClickListener {
             showLogoutDialog()
         }
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) { }
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) { }
+            override fun onDrawerClosed(drawerView: View) {
+                onBackPressedCallback.isEnabled = false
+            }
+            override fun onDrawerOpened(drawerView: View) {
+                onBackPressedCallback.isEnabled = true
+            }
+        })
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     override fun onTokenLoaded(token: Token) {
@@ -97,14 +117,6 @@ class MainActivity : TokenActivity() {
 
     fun openDrawer() {
         drawerLayout.openDrawer(GravityCompat.START, true)
-    }
-
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-            return
-        }
-        super.onBackPressed()
     }
 
     interface BottomNavItemReselectedListener {

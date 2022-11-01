@@ -76,7 +76,7 @@ class DownloadsActivity : KodeinActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> onBackPressed()
+            android.R.id.home -> onBackPressedDispatcher.onBackPressed()
             R.id.action_clear_all -> handleDeleteAll()
             R.id.action_clear_completed -> handleDeleteCompleted()
             R.id.action_retry_failed -> {

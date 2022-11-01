@@ -192,7 +192,7 @@ class NovelReaderActivity : TokenActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                onBackPressedDispatcher.onBackPressed()
                 return true
             }
             R.id.action_font_size -> adjustFontSize()

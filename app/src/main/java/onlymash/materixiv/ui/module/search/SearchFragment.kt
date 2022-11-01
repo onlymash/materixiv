@@ -99,7 +99,7 @@ class SearchFragment : ViewModelFragment<FragmentSearchBinding>() {
         })
         title.text = word
         leftButton.setImageDrawable(DrawerArrowDrawable(context).apply { progress = 1.0f })
-        leftButton.setOnClickListener { activity?.onBackPressed() }
+        leftButton.setOnClickListener { activity?.onBackPressedDispatcher?.onBackPressed() }
         title.setOnClickListener {
             if (illustId > 0) {
                 SearchDialog.create(type).show(childFragmentManager, "search")

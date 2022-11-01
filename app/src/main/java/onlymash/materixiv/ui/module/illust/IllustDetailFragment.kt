@@ -137,7 +137,7 @@ class IllustDetailFragment : ViewModelFragment<FragmentIllustDetailBinding>() {
         toolbar.apply {
             inflateMenu(R.menu.toolbar_illust_detail)
             setNavigationOnClickListener {
-                activity?.onBackPressed()
+                activity?.onBackPressedDispatcher?.onBackPressed()
             }
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {

@@ -87,8 +87,8 @@ class IllustPagerFragment : SearchBarPagerFragment<IllustPagerAdapter>(),
         val minTimeMillis = minCalendar.timeInMillis
         val validator = object : CalendarConstraints.DateValidator {
             override fun describeContents(): Int = 0
-            override fun writeToParcel(dest: Parcel?, flags: Int) {
-                dest?.writeLong(selectedTime)
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeLong(selectedTime)
             }
             override fun isValid(date: Long): Boolean {
                 return date in minTimeMillis..currentTimeMillis

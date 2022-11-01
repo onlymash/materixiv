@@ -3,16 +3,12 @@ package onlymash.materixiv.ui.module.illust
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -178,6 +174,18 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
         })
         setupBottomShortcut()
         startPostponedEnterTransition()
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+            }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return if (menuItem.itemId == android.R.id.home) {
+                    dismiss()
+                    true
+                } else false
+            }
+        })
     }
 
     private fun setupBottomShortcut() {
@@ -309,13 +317,6 @@ class IllustBrowseDialog : BindingDialog<DialogIllustBrowseBinding>(), DismissFr
                 null
             }
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            dismiss()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDismissStart() {

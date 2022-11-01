@@ -30,7 +30,9 @@ object HttpHeaders {
         val adjustedLocaleListCompat = LocaleListCompat.getAdjustedDefault()
         val preferredLocaleList = mutableListOf<Locale>()
         for (index in 0 until adjustedLocaleListCompat.size()) {
-            preferredLocaleList.add(adjustedLocaleListCompat.get(index))
+            adjustedLocaleListCompat.get(index)?.let {
+                preferredLocaleList.add(it)
+            }
         }
         return preferredLocaleList
     }

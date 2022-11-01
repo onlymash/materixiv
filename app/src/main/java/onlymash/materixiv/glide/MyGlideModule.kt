@@ -15,7 +15,7 @@ import onlymash.materixiv.network.pixiv.pixivClientBuilder
 import java.io.InputStream
 
 @GlideModule
-class MyGildeModule : AppGlideModule() {
+class MyGlideModule : AppGlideModule() {
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         val requestOptions = RequestOptions

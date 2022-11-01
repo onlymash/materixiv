@@ -80,7 +80,7 @@ class OkHttpDownloader : Downloader {
             .build()
         var httpInputStream: InputStream? = null
         try {
-            httpInputStream = client.newCall(request).execute().body?.byteStream()?.also { input ->
+            httpInputStream = client.newCall(request).execute().body.byteStream().also { input ->
                 val raf = RandomAccessFile(file, "rwd")
                 raf.seek(downloadedSize)
                 val buff = ByteArray(1024 * 16)
@@ -115,7 +115,7 @@ class OkHttpDownloader : Downloader {
         try {
             val response = client.newCall(request).execute()
             if (response.isSuccessful) {
-                val contentLength = response.body?.contentLength() ?: -1L
+                val contentLength = response.body.contentLength()
                 response.close()
                 return if (contentLength == 0L) -1L else contentLength
             }

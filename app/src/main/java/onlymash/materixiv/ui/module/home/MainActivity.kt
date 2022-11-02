@@ -1,9 +1,13 @@
 package onlymash.materixiv.ui.module.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -39,6 +43,9 @@ class MainActivity : TokenActivity() {
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
         }
+    }
+    private val requestNotificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+
     }
 
     override fun onLoadTokenBefore(savedInstanceState: Bundle?) {
@@ -81,6 +88,14 @@ class MainActivity : TokenActivity() {
             }
         })
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        checkNotificationPermission()
+    }
+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+            && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     override fun onTokenLoaded(token: Token) {

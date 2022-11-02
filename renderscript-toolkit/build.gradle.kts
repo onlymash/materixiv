@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace = "com.google.android.renderscript"
     compileSdk = 33
     buildToolsVersion = "33.0.0"
     defaultConfig {

@@ -40,6 +40,7 @@ fun ApplicationBuildType.setupSigning(signingConfigs: NamedDomainObjectContainer
 
 android {
     signingConfigs.setup()
+    namespace = "onlymash.materixiv"
     compileSdk = 33
     buildToolsVersion = "33.0.0"
     defaultConfig {

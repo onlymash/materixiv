@@ -47,7 +47,7 @@ android {
         applicationId = "onlymash.materixiv"
         minSdk = 21
         targetSdk = 33
-        versionCode = 10
+        versionCode = 11
         versionName = "0.0.4_beta04"
         renderscriptTargetApi = 21
         renderscriptSupportModeEnabled = false

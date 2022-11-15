@@ -48,7 +48,7 @@ android {
         minSdk = 21
         targetSdk = 33
         versionCode = 10
-        versionName = "0.0.4_beta03"
+        versionName = "0.0.4_beta04"
         renderscriptTargetApi = 21
         renderscriptSupportModeEnabled = false
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -69,11 +69,11 @@ android {
 //        isUniversalApk = true
 //    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_11.toString()
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-Xopt-in=kotlin.ExperimentalStdlibApi",
             "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi",
@@ -99,12 +99,12 @@ android {
 
 dependencies {
     val lifecycleVersion = "2.6.0-alpha03"
-    val navVersion = "2.6.0-alpha03"
-    val coroutinesVersion = "1.6.0"
-    val kodeinVersion = "7.15.0"
+    val navVersion = "2.6.0-alpha04"
+    val coroutinesVersion = "1.6.4"
+    val kodeinVersion = "7.16.0"
     val okhttpVersion = "5.0.0-alpha.10"
     val retrofitVersion = "2.9.0"
-    val roomVersion = "2.5.0-beta01"
+    val roomVersion = "2.5.0-beta02"
     val glideVersion = "4.14.2"
     val markwonVersion = "4.6.2"
 
@@ -141,7 +141,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.work:work-runtime-ktx:2.8.0-beta01")
+    implementation("androidx.work:work-runtime-ktx:2.8.0-beta02")
 
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
@@ -171,6 +171,6 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.9")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.4")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 }

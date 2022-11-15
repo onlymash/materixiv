@@ -75,14 +75,14 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
         freeCompilerArgs = freeCompilerArgs + listOf(
-            "-Xopt-in=kotlin.ExperimentalStdlibApi",
-            "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi",
-            "-Xopt-in=kotlinx.coroutines.DelicateCoroutinesApi",
-            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xopt-in=kotlinx.coroutines.FlowPreview",
-            "-Xopt-in=kotlinx.coroutines.ObsoleteCoroutinesApi",
-            "-Xopt-in=androidx.paging.ExperimentalPagingApi",
-            "-Xjvm-default=compatibility"
+            "-opt-in=kotlin.ExperimentalStdlibApi",
+            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+            "-opt-in=kotlinx.coroutines.DelicateCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.FlowPreview",
+            "-opt-in=kotlinx.coroutines.ObsoleteCoroutinesApi",
+            "-opt-in=androidx.paging.ExperimentalPagingApi",
+            "-Xjvm-default=all-compatibility"
         )
     }
     kapt {

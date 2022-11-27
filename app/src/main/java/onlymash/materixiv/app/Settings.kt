@@ -42,13 +42,18 @@ object Settings {
 
     val dohEnabled get() = sp.getValue(Keys.NETWORK_DOH, false)
 
+    val disableSni get() = sp.getValue(Keys.NETWORK_DISABLE_SNI, false)
+
     private val dohProviderString get() = sp.getValue(Keys.NETWORK_DOH_PROVIDER, "cloudflare")
 
     val dohProvider: DnsOverHttps
         get() {
             return when (dohProviderString) {
                 "google" -> DoHProviders.googleDns
-                "alidns" -> DoHProviders.aliDns
+                "dnssb" -> DoHProviders.dnsSb
+                "opendns" -> DoHProviders.openDns
+                "cleanbrowsing" -> DoHProviders.cleanBrowsing
+                "quad9" -> DoHProviders.quad9
                 else -> DoHProviders.cloudflareDns
             }
         }

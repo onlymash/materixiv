@@ -10,12 +10,46 @@ import java.net.UnknownHostException
 
 object DoHProviders {
 
-    val aliDns: DnsOverHttps
+    val cleanBrowsing: DnsOverHttps
         get() {
-            val bootsrapHostsV4 = getByIPv4("223.5.5.5", "223.6.6.6")
+            val bootsrapHostsV4 = getByIPv4("185.228.168.9", "185.228.168.9")
+            val bootsrapHostsV6 = getByIPv6("2a0d:2a00:1::2", "2a0d:2a00:2::2")
             return DnsOverHttps.Builder()
-                .url("https://dns.alidns.com/dns-query".toHttpUrl())
-                .bootstrapDnsHosts(bootsrapHostsV4)
+                .url("https://doh.cleanbrowsing.org/doh/security-filter".toHttpUrl())
+                .bootstrapDnsHosts(bootsrapHostsV4 + bootsrapHostsV6)
+                .client(OkHttpClient())
+                .build()
+        }
+
+    val dnsSb: DnsOverHttps
+        get() {
+            val bootsrapHostsV4 = getByIPv4("185.222.222.222", "45.11.45.11")
+            val bootsrapHostsV6 = getByIPv6("2a09::", "2a11::")
+            return DnsOverHttps.Builder()
+                .url("https://doh.sb/dns-query".toHttpUrl())
+                .bootstrapDnsHosts(bootsrapHostsV4 + bootsrapHostsV6)
+                .client(OkHttpClient())
+                .build()
+        }
+
+    val openDns: DnsOverHttps
+        get() {
+            val bootsrapHostsV4 = getByIPv4("208.67.222.222", "208.67.220.220")
+            val bootsrapHostsV6 = getByIPv6("2620:119:35::35", "2620:119:53::53")
+            return DnsOverHttps.Builder()
+                .url("https://doh.opendns.com/dns-query".toHttpUrl())
+                .bootstrapDnsHosts(bootsrapHostsV4 + bootsrapHostsV6)
+                .client(OkHttpClient())
+                .build()
+        }
+
+    val quad9: DnsOverHttps
+        get() {
+            val bootsrapHostsV4 = getByIPv4("9.9.9.11", "149.112.112.11")
+            val bootsrapHostsV6 = getByIPv6("2620:fe::11", "2620:fe::fe:11")
+            return DnsOverHttps.Builder()
+                .url("https://dns11.quad9.net/dns-query".toHttpUrl())
+                .bootstrapDnsHosts(bootsrapHostsV4 + bootsrapHostsV6)
                 .client(OkHttpClient())
                 .build()
         }

@@ -48,7 +48,7 @@ android {
         minSdk = 21
         targetSdk = 33
         versionCode = 11
-        versionName = "0.0.4_beta04"
+        versionName = "0.0.5_beta01"
         renderscriptTargetApi = 21
         renderscriptSupportModeEnabled = false
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -60,7 +60,9 @@ android {
             isShrinkResources= true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-        getByName("debug").applicationIdSuffix = ".debug"
+        getByName("debug") {
+            setupSigning(signingConfigs)
+        }
     }
 //    splits.abi {
 //        isEnable = true
@@ -117,7 +119,7 @@ dependencies {
     implementation("org.kodein.di:kodein-di-framework-android-core:$kodeinVersion")
     implementation("org.kodein.di:kodein-di-framework-android-x:$kodeinVersion")
 
-    implementation("com.google.android.material:material:1.8.0-alpha02")
+    implementation("com.google.android.material:material:1.8.0-alpha03")
     implementation("androidx.annotation:annotation:1.5.0")
     implementation("androidx.appcompat:appcompat:1.7.0-alpha01")
     implementation("androidx.activity:activity-ktx:1.7.0-alpha02")

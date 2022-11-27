@@ -101,11 +101,14 @@
     <string name="settings_category_network_doh">DNS over HTTPS</string>
     <string name="settings_category_network_doh_summary">Encrypted and secure DNS</string>
     <string name="settings_category_network_doh_provider">DNS Provider</string>
-    <string name="settings_category_network_doh_google">Google</string>
-    <string name="settings_category_network_doh_cloudflare">Cloudflare</string>
-    <string name="settings_category_network_doh_alidns">AliDNS</string>
-    <string name="settings_category_network_fuck_gfw">Fuck GFW</string>
-    <string name="settings_category_network_fuck_gfw_summary">Prevent blocked by GFW</string>
+    <string name="settings_category_network_doh_google" translatable="false">dns.google</string>
+    <string name="settings_category_network_doh_cloudflare" translatable="false">cloudflare-dns.com</string>
+    <string name="settings_category_network_doh_cleanbrowsing" translatable="false">cleanbrowsing.org</string>
+    <string name="settings_category_network_doh_dnssb" translatable="false">dns.sb</string>
+    <string name="settings_category_network_doh_opendns" translatable="false">opendns.com</string>
+    <string name="settings_category_network_doh_quad9" translatable="false">quad9.net</string>
+    <string name="settings_category_network_disable_sni">Disable SNI</string>
+    <string name="settings_category_network_disable_sni_summary">Removing SNI from HTTPS</string>
 
     <string name="msg_path_denied">Not supported path</string>
     <string name="msg_download_complete">Download complete</string>

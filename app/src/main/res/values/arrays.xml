@@ -38,14 +38,20 @@
     </string-array>
 
     <string-array name="doh_providers">
-        <item>@string/settings_category_network_doh_alidns</item>
         <item>@string/settings_category_network_doh_cloudflare</item>
         <item>@string/settings_category_network_doh_google</item>
+        <item>@string/settings_category_network_doh_dnssb</item>
+        <item>@string/settings_category_network_doh_cleanbrowsing</item>
+        <item>@string/settings_category_network_doh_opendns</item>
+        <item>@string/settings_category_network_doh_quad9</item>
     </string-array>
-
+    
     <string-array name="doh_providers_value">
-        <item>alidns</item>
         <item>cloudflare</item>
         <item>google</item>
+        <item>dnssb</item>
+        <item>cleanbrowsing</item>
+        <item>opendns</item>
+        <item>quad9</item>
     </string-array>
 </resources>

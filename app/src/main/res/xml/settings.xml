@@ -24,6 +24,13 @@
             app:defaultValue="cloudflare"
             app:useSimpleSummaryProvider="true"/>
 
+        <SwitchPreference
+            app:key="network_disable_sni"
+            app:title="@string/settings_category_network_disable_sni"
+            android:defaultValue="false"
+            app:isPreferenceVisible="false"
+            app:summary="@string/settings_category_network_disable_sni_summary"/>
+
     </PreferenceCategory>
     <PreferenceCategory
         app:key="category_storage"

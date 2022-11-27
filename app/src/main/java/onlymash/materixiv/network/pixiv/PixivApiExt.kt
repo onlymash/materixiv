@@ -11,6 +11,7 @@ import onlymash.materixiv.app.Settings
 import onlymash.materixiv.app.Values
 import onlymash.materixiv.data.api.PixivAppApi
 import onlymash.materixiv.data.api.PixivOauthApi
+import onlymash.materixiv.network.NoSniFactory
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
@@ -56,10 +57,17 @@ val pixivClientBuilder: OkHttpClient.Builder
         if (Settings.dohEnabled) {
             builder.dns(Settings.dohProvider)
         }
+//        if (Settings.disableSni) {
+//            builder.sslSocketFactory(NoSniFactory, NoSniFactory.defaultTrustManager)
+//        }
         return builder
     }
 
 private val loggingInterceptor: HttpLoggingInterceptor
-    get() = HttpLoggingInterceptor { message -> Log.d("PixivApi", message) }.apply {
+    get() = HttpLoggingInterceptor { message ->
+        if (BuildConfig.DEBUG) {
+            Log.d("PixivApi", message)
+        }
+    }.apply {
         level = HttpLoggingInterceptor.Level.BASIC
     }

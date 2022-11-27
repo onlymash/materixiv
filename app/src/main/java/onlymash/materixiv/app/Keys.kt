@@ -23,6 +23,7 @@ object Keys {
     const val STORAGE_FOLDER = "storage_folder"
     const val NETWORK_DOH = "network_doh"
     const val NETWORK_DOH_PROVIDER = "network_doh_provider"
+    const val NETWORK_DISABLE_SNI = "network_disable_sni"
 
     const val READER_FONT_SIZE = "reader_font_size"
 

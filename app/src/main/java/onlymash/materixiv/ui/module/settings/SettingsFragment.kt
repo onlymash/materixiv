@@ -30,6 +30,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     private var storageFolderPreference: Preference? = null
     private var dohPreference: SwitchPreference? = null
     private var dohProviderPreference: SimpleMenuPreference? = null
+    private var disableSniPreference: SwitchPreference? = null
     private var isDohEnabled: Boolean
         get() = sp.getValue(Keys.NETWORK_DOH, true)
         set(value) {
@@ -60,6 +61,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
         dohPreference = findPreference(Keys.NETWORK_DOH)
         dohProviderPreference = findPreference(Keys.NETWORK_DOH_PROVIDER)
+        disableSniPreference = findPreference(Keys.NETWORK_DISABLE_SNI)
         setupDohPreferenceVisible()
         sp?.registerOnSharedPreferenceChangeListener(this)
     }
@@ -80,6 +82,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         when (key) {
             Keys.STORAGE_FOLDER -> storageFolderPreference?.summary = folderSummary
             Keys.NETWORK_DOH, Keys.NETWORK_DOH_PROVIDER -> setupDohPreferenceVisible(true)
+            Keys.NETWORK_DISABLE_SNI -> disableSniPreference?.setSummary(R.string.settings_summary_restart)
         }
     }
 
